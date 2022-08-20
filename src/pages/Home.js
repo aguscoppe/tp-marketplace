@@ -28,7 +28,8 @@ const getCourses = ({ name, type, frequency, rating }) => {
   return filtered;
 };
 
-const Home = () => {
+const Home = ({ currentUser }) => {
+  console.log(currentUser);
   const [formContent, setFormContent] = useState({
     name: "",
     type: "",

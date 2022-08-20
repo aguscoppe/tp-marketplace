@@ -12,6 +12,7 @@ import {
 import { useState } from "react";
 import { VisibilityOff, Visibility } from "@mui/icons-material/";
 import { Link } from "react-router-dom";
+import { students, teachers } from "../data";
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -36,7 +37,25 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    console.log("Logueaste reyyyy");
+    let currentUser = {};
+    if (
+      teachers.some(
+        (el) => el.email === values.email && el.password === values.password
+      )
+    ) {
+      const teacherData = teachers.filter((el) => el.email === values.email);
+      currentUser = teacherData[0];
+    } else if (
+      students.some(
+        (el) => el.email === values.email && el.password === values.password
+      )
+    ) {
+      const studentData = students.filter((el) => el.email === values.email);
+      currentUser = studentData[0];
+    }
+    if (currentUser) {
+      localStorage.setItem("current-user", JSON.stringify(currentUser));
+    }
   };
 
   return (
@@ -59,14 +78,12 @@ const Login = () => {
           width: "200px",
           margin: "10px",
           backgroundColor: "#fff",
-          backgroundColor: "#fff",
         }}
       />
       <FormControl
         sx={{
           width: "200px",
           margin: "10px",
-          backgroundColor: "#fff",
           backgroundColor: "#fff",
         }}
         variant="outlined"
