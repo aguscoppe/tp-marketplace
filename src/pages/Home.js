@@ -65,7 +65,7 @@ const Home = () => {
         handleClick={handleClick}
       />
       {filteredCourses ? (
-        <Grid container>
+        <Grid container diaplay="flex" justifyContent="center">
           {filteredCourses.map((course) => (
             <Course key={course.name} courseData={course} />
           ))}

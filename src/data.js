@@ -17,9 +17,9 @@ const courses = [
     students: [],
     duration: 90,
     frequency: COURSE_FREQUENCY_ONCE,
-    cost: 2400,
+    price: 2400,
     description: "Esta es una materia de lengua",
-    rating: 0,
+    rating: 5,
     comments: [],
   },
   {
@@ -30,9 +30,9 @@ const courses = [
     students: [],
     duration: 90,
     frequency: COURSE_FREQUENCY_WEEKLY,
-    cost: 3200,
+    price: 3200,
     description: "Esta es una materia de matemática",
-    rating: 0,
+    rating: 4,
     comments: [],
   },
   {
@@ -43,9 +43,9 @@ const courses = [
     students: [],
     duration: 90,
     frequency: COURSE_FREQUENCY_MONTHLY,
-    cost: 1800,
+    price: 1800,
     description: "Esta es una materia de geografía",
-    rating: 0,
+    rating: 4,
     comments: [],
   },
 ];
@@ -59,7 +59,8 @@ const teachers = [
     password: "123",
     phone: "1155553333",
     role: TEACHER_ROLE,
-    experience: "",
+    experience:
+      "Profesor en la UBA desde 2016 con experiencia en varios rubros.",
   },
   {
     id: 2,
@@ -69,7 +70,8 @@ const teachers = [
     password: "123",
     phone: "1155553333",
     role: TEACHER_ROLE,
-    experience: "",
+    experience:
+      "Profesora en la UBA hace más de diez años con experiencia en varios rubros.",
   },
 ];
 
