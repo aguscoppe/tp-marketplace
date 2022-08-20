@@ -1,8 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Header from "../components/Header";
 import Course from "../components/Course";
 import { courses } from "../data";
+import { Grid } from "@mui/material";
+
+const getCourses = ({ name, type, frequency, rating }) => {
+  let filtered = courses;
+  if (name !== "") {
+    filtered = courses.filter(
+      (course) => course.name.toLowerCase() === name.toLowerCase()
+    );
+  }
+  if (type !== "") {
+    filtered = filtered.filter(
+      (course) => course.type.toLowerCase() === type.toLowerCase()
+    );
+  }
+  if (frequency !== "") {
+    filtered = filtered.filter(
+      (course) => course.frequency.toLowerCase() === frequency.toLowerCase()
+    );
+  }
+  if (rating !== "") {
+    filtered = filtered.filter((course) => course.rating === rating);
+  }
+  return filtered;
+};
 
 const Home = () => {
   const [formContent, setFormContent] = useState({
@@ -12,7 +36,7 @@ const Home = () => {
     rating: "",
   });
   const [beginSearch, setBeginSearch] = useState(false);
-  const { name } = formContent;
+  const [filteredCourses, setFilteredCourses] = useState([]);
 
   const handleChange = (e) => {
     setBeginSearch(false);
@@ -26,6 +50,12 @@ const Home = () => {
     setBeginSearch(true);
   };
 
+  useEffect(() => {
+    if (beginSearch) {
+      setFilteredCourses(getCourses(formContent));
+    }
+  }, [beginSearch]);
+
   return (
     <>
       <NavBar />
@@ -34,10 +64,13 @@ const Home = () => {
         handleChange={handleChange}
         handleClick={handleClick}
       />
-      {beginSearch &&
-        courses
-          /*.filter((course) => course.name === name)*/
-          .map((course) => <Course courseData={course} />)}
+      {filteredCourses ? (
+        <Grid container>
+          {filteredCourses.map((course) => (
+            <Course key={course.name} courseData={course} />
+          ))}
+        </Grid>
+      ) : null}
     </>
   );
 };
