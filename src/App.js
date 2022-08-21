@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import CourseDetail from "./pages/CourseDetail";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import "./style.css";
 
 const App = () => {
@@ -18,7 +19,7 @@ const App = () => {
         <Route path=":id" element={<CourseDetail />} />
       </Route>
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Home />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/reset-password" element={<Home />} />
     </Routes>
   );
