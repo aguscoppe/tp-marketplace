@@ -55,6 +55,7 @@ const Login = () => {
     }
     if (currentUser) {
       localStorage.setItem("current-user", JSON.stringify(currentUser));
+      // TODO: redirect to homepage
     }
   };
 

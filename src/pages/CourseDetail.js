@@ -1,8 +1,8 @@
-import { Box, Button, Card, Grid, Rating, Typography } from "@mui/material";
+import { Button, Card, Grid, Rating, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { courses, teachers } from "../data";
-import { Link } from "react-router-dom";
+import { STUDENT_ROLE } from "../constants";
 
 const styles = {
   "& .MuiTypography-root": {
@@ -17,15 +17,26 @@ const styles = {
   },
 };
 
-const CourseDetail = () => {
+const CourseDetail = ({ currentUser }) => {
   const { id } = useParams();
   const courseData = courses[id - 1];
   const { name, description, rating, price, duration, frequency, teacherId } =
     courseData;
   const teacherData = teachers[teacherId - 1];
+
+  const signUp = () => {
+    if (!currentUser || currentUser.role !== STUDENT_ROLE) {
+      alert(
+        "Debes estar registrado como alumno para poder inscribirte a esta clase."
+      );
+    } else {
+      alert("Hola alumno!");
+    }
+  };
+
   return (
     <>
-      <NavBar />
+      <NavBar currentUser={currentUser} />
       <Grid container justifyContent="center" alignItems="center" sx={styles}>
         <Grid item xs={6}>
           <Typography variant="h3">{name}</Typography>
@@ -34,9 +45,9 @@ const CourseDetail = () => {
           <Typography variant="h6">${price}</Typography>
           <Typography variant="h6">{frequency}</Typography>
           <Typography variant="h6">{duration} minutos</Typography>
-          <Link to="/login">
-            <Button variant="contained">INSCRIBIRSE</Button>
-          </Link>
+          <Button variant="contained" onClick={signUp}>
+            INSCRIBIRSE
+          </Button>
         </Grid>
         <Grid item xs={4}>
           <Card sx={{ margin: "20px", backgroundColor: "#eee" }}>

@@ -16,7 +16,6 @@ import {
 import { Circle, VisibilityOff, Visibility } from "@mui/icons-material/";
 import Navbar from "../components/NavBar";
 import { useState } from "react";
-import { teachers, students } from "../data";
 
 const ResetPassword = () => {
   const [values, setValues] = useState({
@@ -43,10 +42,7 @@ const ResetPassword = () => {
   };
 
   const checkPasswordMatch = () => {
-    console.log(values.repeated_password != "");
-
-    if (values.repeated_password != "") {
-      console.log(values.new_password !== values.repeated_password);
+    if (values.repeated_password !== "") {
       if (values.new_password !== values.repeated_password) {
         return false;
       } else {
