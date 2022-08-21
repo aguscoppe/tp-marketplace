@@ -11,25 +11,23 @@ const getCourses = ({ name, type, frequency, rating }) => {
     filtered = courses.filter(
       (course) => course.name.toLowerCase() === name.toLowerCase()
     );
-  }
-  if (type !== "") {
+  } else if (type !== "") {
     filtered = filtered.filter(
       (course) => course.type.toLowerCase() === type.toLowerCase()
     );
-  }
-  if (frequency !== "") {
+  } else if (frequency !== "") {
     filtered = filtered.filter(
       (course) => course.frequency.toLowerCase() === frequency.toLowerCase()
     );
-  }
-  if (rating !== "") {
+  } else if (rating !== "") {
     filtered = filtered.filter((course) => course.rating === rating);
+  } else {
+    return [];
   }
   return filtered;
 };
 
 const Home = ({ currentUser }) => {
-  console.log(currentUser);
   const [formContent, setFormContent] = useState({
     name: "",
     type: "",
@@ -59,7 +57,7 @@ const Home = ({ currentUser }) => {
 
   return (
     <>
-      <NavBar />
+      <NavBar currentUser={currentUser} />
       <Header
         formContent={formContent}
         handleChange={handleChange}

@@ -53,6 +53,7 @@ const Header = ({ formContent, handleChange, handleClick }) => {
     >
       <img
         src="https://webevolmind.b-cdn.net/wp-content/uploads/2022/03/escuelas-de-negocio-cabecera.webp"
+        alt="header"
         style={{ width: "500px" }}
       />
       <Typography variant="h2">¡Bienvenido!</Typography>
