@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import CourseDetail from "./pages/CourseDetail";
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
 import Profile from "./pages/Profile";
-import Forbidden from "./pages/Forbidden";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ResetPassword from "./pages/ResetPassword";
@@ -40,7 +39,7 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="*" element={<Forbidden />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };
