@@ -6,6 +6,8 @@ import {
   COURSE_FREQUENCY_ONCE,
   COURSE_FREQUENCY_WEEKLY,
   COURSE_FREQUENCY_MONTHLY,
+  COURSE_REQUEST,
+  COMMENT_REQUEST,
 } from "./constants";
 
 const courses = [
@@ -77,7 +79,7 @@ const teachers = [
 
 const students = [
   {
-    id: 1,
+    id: 10,
     name: "Juan",
     surname: "Pérez",
     email: "juan@mail.com",
@@ -94,4 +96,21 @@ const students = [
   },
 ];
 
-export { courses, teachers, students };
+const notifications = [
+  {
+    sourceId: 10,
+    destinationId: 2,
+    type: COURSE_REQUEST,
+    classId: 1,
+    message: "Me quiero inscribir en esta clase",
+  },
+  {
+    sourceId: 10,
+    destinationId: 2,
+    type: COMMENT_REQUEST,
+    classId: 1,
+    message: "Me gustó mucho esta clase!",
+  },
+];
+
+export { courses, teachers, students, notifications };
