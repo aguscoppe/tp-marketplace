@@ -13,6 +13,7 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../img/logo.png";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import HomeIcon from "@mui/icons-material/Home";
+import InfoIcon from "@mui/icons-material/Info";
 import SchoolIcon from "@mui/icons-material/School";
 import PersonIcon from "@mui/icons-material/Person";
 import { notifications } from "../data";
@@ -67,6 +68,10 @@ const userNavbar = (
     <NavLinkIcon urlPath="/">
       <HomeIcon />
       <Typography variant="body2">Home</Typography>
+    </NavLinkIcon>
+    <NavLinkIcon urlPath="/about">
+      <InfoIcon />
+      <Typography variant="body2">About</Typography>
     </NavLinkIcon>
     <NavLinkIcon urlPath="/courses">
       <SchoolIcon />
