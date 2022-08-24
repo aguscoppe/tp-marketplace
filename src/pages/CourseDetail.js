@@ -1,7 +1,7 @@
 import { Button, Card, Grid, Rating, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { courses, teachers } from "../data";
+import { courses, users } from "../data";
 import { STUDENT_ROLE } from "../constants";
 
 const styles = {
@@ -22,7 +22,7 @@ const CourseDetail = ({ currentUser }) => {
   const courseData = courses[id - 1];
   const { name, description, rating, price, duration, frequency, teacherId } =
     courseData;
-  const teacherData = teachers[teacherId - 1];
+  const teacherData = users[teacherId - 1];
 
   const signUp = () => {
     if (!currentUser || currentUser.role !== STUDENT_ROLE) {

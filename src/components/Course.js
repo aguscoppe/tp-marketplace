@@ -1,5 +1,5 @@
 import { Card, CardContent, Rating, Typography } from "@mui/material";
-import { courses, teachers } from "../data";
+import { courses, users } from "../data";
 import { Link } from "react-router-dom";
 
 const styles = {
@@ -15,7 +15,7 @@ const Course = ({ courseData }) => {
   const { id, name, type, frequency, rating } = courseData;
   const course = courses[id - 1];
   const { teacherId } = course;
-  const teacherData = teachers[teacherId - 1];
+  const teacherData = users[teacherId - 1];
 
   return (
     <Link to={`/class/${id}`} style={{ textDecoration: "none" }}>

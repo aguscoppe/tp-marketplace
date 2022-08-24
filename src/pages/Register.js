@@ -1,7 +1,7 @@
 import { Typography, TextField, Button, Grid, MenuItem } from "@mui/material";
 import Navbar from "../components/NavBar";
 import { useState } from "react";
-import { teachers, students } from "../data";
+import { users } from "../data";
 
 const Register = () => {
   const [usuario, setUsuario] = useState({
@@ -23,10 +23,7 @@ const Register = () => {
   };
 
   const handleRegister = () => {
-    if (
-      teachers.some((el) => el.email === usuario.email) ||
-      students.some((el) => el.email === usuario.email)
-    ) {
+    if (users.some((el) => el.email === usuario.email)) {
       //error de email ya registrado
     } else {
       //loguear usuario y guardarlo.

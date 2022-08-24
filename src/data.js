@@ -52,7 +52,7 @@ const courses = [
   },
 ];
 
-const teachers = [
+const users = [
   {
     id: 1,
     name: "Pedro",
@@ -75,9 +75,6 @@ const teachers = [
     experience:
       "Profesora en la UBA hace más de diez años con experiencia en varios rubros.",
   },
-];
-
-const students = [
   {
     id: 10,
     name: "Juan",
@@ -113,4 +110,4 @@ const notifications = [
   },
 ];
 
-export { courses, teachers, students, notifications };
+export { courses, users, notifications };
