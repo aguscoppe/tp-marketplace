@@ -13,6 +13,7 @@ import { useState } from "react";
 import { VisibilityOff, Visibility } from "@mui/icons-material/";
 import { Link, useResolvedPath } from "react-router-dom";
 import { users } from "../data";
+import Navbar from "../components/NavBar";
 
 const Login = () => {
   const [values, setValues] = useState({
@@ -53,73 +54,78 @@ const Login = () => {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Typography variant="h4" sx={{ fontWeight: 900 }}>
-        LOGIN
-      </Typography>
-      <TextField
-        variant="outlined"
-        label="email"
-        name="name"
-        value={values.email}
-        onChange={handleChange("email")}
-        sx={{
-          width: "200px",
-          margin: "10px",
-          backgroundColor: "#fff",
-        }}
-      />
-      <FormControl
-        sx={{
-          width: "200px",
-          margin: "10px",
-          backgroundColor: "#fff",
-        }}
-        variant="outlined"
+    <>
+      <Navbar />
+      <Grid
+        container
+        direction="column"
+        justifyContent="space-between"
+        alignItems="center"
       >
-        <InputLabel htmlFor="outlined-adornment-password">password</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          label="password"
-          name="password"
-          type={values.showPassword ? "text" : "password"}
-          value={values.password}
-          onChange={handleChange("password")}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {values.showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-      </FormControl>
-      <Button
-        variant="contained"
-        sx={{ height: "50px", margin: "10px", minWidth: "150px" }}
-        onClick={handleLogin}
-      >
-        Ingresar
-      </Button>
-      <Link to="/register" style={{ textDecoration: "none" }}>
-        <Button
+        <Typography variant="h4" sx={{ fontWeight: 900 }}>
+          LOGIN
+        </Typography>
+        <TextField
           variant="outlined"
-          sx={{ height: "50px", margin: "10px", minWidth: "150px" }}
+          label="email"
+          name="name"
+          value={values.email}
+          onChange={handleChange("email")}
+          sx={{
+            width: "200px",
+            margin: "10px",
+            backgroundColor: "#fff",
+          }}
+        />
+        <FormControl
+          sx={{
+            width: "200px",
+            margin: "10px",
+            backgroundColor: "#fff",
+          }}
+          variant="outlined"
         >
-          Registrarse
+          <InputLabel htmlFor="outlined-adornment-password">
+            password
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            label="password"
+            name="password"
+            type={values.showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={handleChange("password")}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <Button
+          variant="contained"
+          sx={{ height: "50px", margin: "10px", minWidth: "150px" }}
+          onClick={handleLogin}
+        >
+          Ingresar
         </Button>
-      </Link>
-    </Grid>
+        <Link to="/register" style={{ textDecoration: "none" }}>
+          <Button
+            variant="outlined"
+            sx={{ height: "50px", margin: "10px", minWidth: "150px" }}
+          >
+            Registrarse
+          </Button>
+        </Link>
+      </Grid>
+    </>
   );
 };
 
