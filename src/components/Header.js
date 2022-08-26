@@ -1,12 +1,12 @@
 import { Button, Grid, TextField, MenuItem, Typography } from "@mui/material";
 
-const typeItems = [
+export const typeItems = [
   { key: 1, value: "", label: "Tipo de clase" },
   { key: 2, value: "Individual", label: "Individual" },
   { key: 3, value: "Grupal", label: "Grupal" },
 ];
 
-const frequencyItems = [
+export const frequencyItems = [
   { key: 1, value: "", label: "Frecuencia" },
   { key: 2, value: "Única", label: "Única" },
   { key: 3, value: "Semanal", label: "Semanal" },
@@ -35,6 +35,11 @@ const style = {
   },
   "& .MuiFormLabel-root": {
     fontFamily: "Montserrat",
+  },
+  "& .MuiTextField-root": {
+    width: "200px",
+    margin: "10px",
+    backgroundColor: "#fff",
   },
   input: {
     fontFamily: "Montserrat",
@@ -72,11 +77,6 @@ const Header = ({ formContent, handleChange, handleClick }) => {
           value={name}
           name="name"
           onChange={handleChange}
-          sx={{
-            width: "200px",
-            margin: "10px",
-            backgroundColor: "#fff",
-          }}
         />
         <TextField
           value={type}
@@ -84,14 +84,9 @@ const Header = ({ formContent, handleChange, handleClick }) => {
           label="Tipo de clase"
           name="type"
           onChange={handleChange}
-          sx={{
-            width: "200px",
-            margin: "10px",
-            backgroundColor: "#fff",
-          }}
         >
           {typeItems.map((item) => (
-            <MenuItem key={item.id} value={item.value}>
+            <MenuItem key={item.label} value={item.value}>
               {item.label}
             </MenuItem>
           ))}
@@ -102,10 +97,9 @@ const Header = ({ formContent, handleChange, handleClick }) => {
           label="Frecuencia"
           name="frequency"
           onChange={handleChange}
-          sx={{ width: "200px", margin: "10px", backgroundColor: "#fff" }}
         >
           {frequencyItems.map((item) => (
-            <MenuItem key={item.id} value={item.value}>
+            <MenuItem key={item.label} value={item.value}>
               {item.label}
             </MenuItem>
           ))}
@@ -116,10 +110,9 @@ const Header = ({ formContent, handleChange, handleClick }) => {
           label="Calificación"
           name="rating"
           onChange={handleChange}
-          sx={{ width: "200px", margin: "10px", backgroundColor: "#fff" }}
         >
           {ratingItems.map((item) => (
-            <MenuItem key={item.id} value={item.value}>
+            <MenuItem key={item.label} value={item.value}>
               {item.label}
             </MenuItem>
           ))}

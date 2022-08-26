@@ -11,11 +11,12 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { VisibilityOff, Visibility } from "@mui/icons-material/";
-import { Link, useResolvedPath } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { users } from "../data";
 import Navbar from "../components/NavBar";
 
-const Login = () => {
+const Login = ({ currentUser }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(currentUser ? true : false);
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -50,9 +51,13 @@ const Login = () => {
     if (currentUser) {
       localStorage.setItem("current-user", JSON.stringify(currentUser));
       // TODO: redirect to homepage
+      setIsLoggedIn(true);
     }
   };
 
+  if (isLoggedIn) {
+    return <Navigate to="/" />;
+  }
   return (
     <>
       <Navbar />

@@ -18,7 +18,7 @@ const Course = ({ courseData }) => {
   const teacherData = users[teacherId - 1];
 
   return (
-    <Link to={`/class/${id}`} style={{ textDecoration: "none" }}>
+    <Link to={`/course/${id}`} style={{ textDecoration: "none" }}>
       <Card sx={styles}>
         <CardContent>
           <Typography variant="h4">{name}</Typography>
