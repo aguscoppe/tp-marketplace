@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   AppBar,
   Box,
-  Button,
   IconButton,
   Menu,
   Toolbar,
@@ -63,7 +62,7 @@ const NavLinkIcon = ({ urlPath, children }) => (
   </NavLink>
 );
 
-const userNavbar = (
+const commonNavLinks = (
   <>
     <NavLinkIcon urlPath="/">
       <HomeIcon />
@@ -73,6 +72,12 @@ const userNavbar = (
       <InfoIcon />
       <Typography variant="body2">About</Typography>
     </NavLinkIcon>
+  </>
+);
+
+const userNavbar = (
+  <>
+    {commonNavLinks}
     <NavLinkIcon urlPath="/courses">
       <SchoolIcon />
       <Typography variant="body2">Mis Clases</Typography>
@@ -86,12 +91,11 @@ const userNavbar = (
 
 const publicNavbar = (
   <>
-    <Link to="/login">
-      <Button variant="contained">Ingresar</Button>
-    </Link>
-    <Link to="/register">
-      <Button variant="outlined">Registrarse</Button>
-    </Link>
+    {commonNavLinks}
+    <NavLinkIcon urlPath="/login">
+      <PersonIcon />
+      <Typography variant="body2">Ingresar</Typography>
+    </NavLinkIcon>
   </>
 );
 
@@ -137,7 +141,10 @@ const NavBar = ({ currentUser }) => {
                       notification.destinationId === currentUser.id
                   )
                   .map((notification) => (
-                    <Notification data={notification} />
+                    <Notification
+                      key={notification.message}
+                      data={notification}
+                    />
                   ))}
               </Menu>
             </>

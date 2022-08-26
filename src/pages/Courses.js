@@ -5,6 +5,7 @@ import { courses } from "../data";
 import { Link } from "react-router-dom";
 
 const style = {
+  marginTop: "50px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -34,7 +35,7 @@ const Courses = ({ currentUser }) => {
               ))
           }
         </Grid>
-        <Link to="/courses/new">
+        <Link to="new">
           <Button variant="contained">Crear Clase</Button>
         </Link>
       </Box>

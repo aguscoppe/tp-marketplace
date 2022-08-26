@@ -7,7 +7,6 @@ import { STUDENT_ROLE } from "../constants";
 const styles = {
   "& .MuiTypography-root": {
     fontFamily: "Montserrat",
-    textTransform: "capitalize",
   },
   "& .MuiButton-root": {
     fontFamily: "Montserrat",
@@ -51,7 +50,7 @@ const CourseDetail = ({ currentUser }) => {
         </Grid>
         <Grid item xs={4}>
           <Card sx={{ margin: "20px", backgroundColor: "#eee" }}>
-            <Typography variant="h5">Sobre el instructor</Typography>
+            <Typography variant="h5">Sobre el Instructor</Typography>
             <Typography variant="h4">
               {teacherData.name} {teacherData.surname}
             </Typography>
