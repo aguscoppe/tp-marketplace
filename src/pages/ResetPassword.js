@@ -26,6 +26,8 @@ const ResetPassword = () => {
     showPassword: "",
   });
 
+  const [hasError, setHasError] = useState(false);
+
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
@@ -44,13 +46,13 @@ const ResetPassword = () => {
   const checkPasswordMatch = () => {
     if (values.repeated_password !== "") {
       if (values.new_password !== values.repeated_password) {
-        return false;
+        console.log("Los passwords NO matchean");
+        setHasError(true);
       } else {
-        return true;
+        console.log("Los passwords SI matchean");
+        setHasError(false);
       }
     }
-
-    return true;
   };
 
   const handlePasswordChange = () => {};
@@ -164,53 +166,29 @@ const ResetPassword = () => {
             }
           />
         </FormControl>
-        {checkPasswordMatch ? (
-          <FormControl
-            sx={{
-              width: "250px",
-              margin: "10px",
-              backgroundColor: "#fff",
-            }}
-            variant="outlined"
-          >
-            <InputLabel htmlFor="outlined-adornment-repeated-password">
-              Repetir Nueva Contraseña
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-repeated-password"
-              label="repeatPassword"
-              name="repeatPassword"
-              type="password"
-              value={values.repeated_password}
-              onBlur={checkPasswordMatch}
-              onChange={handleChange("repeated_password")}
-            />
-          </FormControl>
-        ) : (
-          <FormControl
-            error
-            helperText="Passwords do not match"
-            sx={{
-              width: "250px",
-              margin: "10px",
-              backgroundColor: "#fff",
-            }}
-            variant="outlined"
-          >
-            <InputLabel htmlFor="outlined-adornment-repeated-password">
-              Repetir Nueva Contraseña
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment-repeated-password"
-              label="repeatPassword"
-              name="repeatPassword"
-              type="password"
-              value={values.repeated_password}
-              onBlur={checkPasswordMatch}
-              onChange={handleChange("repeated_password")}
-            />
-          </FormControl>
-        )}
+        <FormControl
+          error={hasError}
+          helperText="Passwords do not match"
+          sx={{
+            width: "250px",
+            margin: "10px",
+            backgroundColor: "#fff",
+          }}
+          variant="outlined"
+        >
+          <InputLabel htmlFor="outlined-adornment-repeated-password">
+            Repetir Nueva Contraseña
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-repeated-password"
+            label="repeatPassword"
+            name="repeatPassword"
+            type="password"
+            value={values.repeated_password}
+            onBlur={checkPasswordMatch}
+            onChange={handleChange("repeated_password")}
+          />
+        </FormControl>
         <Button
           variant="contained"
           sx={{ height: "50px", margin: "10px", minWidth: "150px" }}
