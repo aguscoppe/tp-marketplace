@@ -1,6 +1,15 @@
-import { Card, CardContent, Rating, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  IconButton,
+  Rating,
+  Typography,
+} from "@mui/material";
 import { courses, users } from "../data";
 import { Link } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const styles = {
   width: "250px",
@@ -25,7 +34,25 @@ const Course = ({ courseData }) => {
           <Typography variant="h5">{`${teacherData.name} ${teacherData.surname}`}</Typography>
           <Typography>{type}</Typography>
           <Typography>{frequency}</Typography>
-          <Rating name="read-only" value={rating} readOnly />
+          {/* TODO: split logic for students and teachers */}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Rating name="read-only" value={rating} readOnly />
+            <Box>
+              <Link to={`edit/${id}`}>
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+              </Link>
+
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
     </Link>

@@ -1,16 +1,23 @@
 import { Button, Grid, TextField, MenuItem, Typography } from "@mui/material";
+import {
+  COURSE_TYPE_GROUP,
+  COURSE_TYPE_SINGLE,
+  COURSE_FREQUENCY_ONCE,
+  COURSE_FREQUENCY_WEEKLY,
+  COURSE_FREQUENCY_MONTHLY,
+} from "../constants";
 
 export const typeItems = [
   { key: 1, value: "", label: "Tipo de clase" },
-  { key: 2, value: "Individual", label: "Individual" },
-  { key: 3, value: "Grupal", label: "Grupal" },
+  { key: 2, value: COURSE_TYPE_SINGLE, label: "Individual" },
+  { key: 3, value: COURSE_TYPE_GROUP, label: "Grupal" },
 ];
 
 export const frequencyItems = [
   { key: 1, value: "", label: "Frecuencia" },
-  { key: 2, value: "Única", label: "Única" },
-  { key: 3, value: "Semanal", label: "Semanal" },
-  { key: 4, value: "Mensual", label: "Mensual" },
+  { key: 2, value: COURSE_FREQUENCY_ONCE, label: "Única" },
+  { key: 3, value: COURSE_FREQUENCY_WEEKLY, label: "Semanal" },
+  { key: 4, value: COURSE_FREQUENCY_MONTHLY, label: "Mensual" },
 ];
 
 const ratingItems = [

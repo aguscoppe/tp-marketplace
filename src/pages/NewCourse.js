@@ -10,6 +10,8 @@ import {
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { typeItems, frequencyItems } from "../components/Header";
+import { useParams } from "react-router-dom";
+import { courses } from "../data";
 
 const initialState = {
   name: "",
@@ -52,7 +54,11 @@ const style = {
 };
 
 const NewCourse = ({ currentUser }) => {
-  const [newCourse, setNewCourse] = useState(initialState);
+  const { id } = useParams();
+  const courseData = courses.filter((course) => course.id == id);
+  const [newCourse, setNewCourse] = useState(
+    courseData.length > 0 ? courseData[0] : initialState
+  );
   const { name, type, duration, frequency, price, description } = newCourse;
 
   const handleChange = (e) => {
@@ -68,6 +74,10 @@ const NewCourse = ({ currentUser }) => {
       teacherId: currentUser.id,
     }));
     // TODO: add new course to array
+    console.log(newCourse);
+  };
+
+  const saveChanges = () => {
     console.log(newCourse);
   };
 
@@ -157,13 +167,23 @@ const NewCourse = ({ currentUser }) => {
           multiline
           rows={4}
         />
-        <Button
-          variant="contained"
-          sx={{ height: "50px", margin: "10px" }}
-          onClick={handleClick}
-        >
-          Crear
-        </Button>
+        {courseData.length > 0 ? (
+          <Button
+            variant="contained"
+            sx={{ height: "50px", margin: "10px" }}
+            onClick={saveChanges}
+          >
+            Guardar
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            sx={{ height: "50px", margin: "10px" }}
+            onClick={handleClick}
+          >
+            Crear
+          </Button>
+        )}
       </Grid>
     </>
   );

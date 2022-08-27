@@ -17,7 +17,7 @@ import { Circle, VisibilityOff, Visibility } from "@mui/icons-material/";
 import Navbar from "../components/NavBar";
 import { useState } from "react";
 
-const ResetPassword = () => {
+const ResetPassword = ({ currentUser }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -58,7 +58,7 @@ const ResetPassword = () => {
   const handlePasswordChange = () => {};
   return (
     <>
-      <Navbar />
+      <Navbar currentUser={currentUser} />
       <Grid
         container
         direction="column"
@@ -80,7 +80,6 @@ const ResetPassword = () => {
             <ListItemIcon>
               <Circle sx={{ color: "#000" }} />
             </ListItemIcon>
-
             <ListItemText primary="Al menos un número" />
           </ListItem>
           <ListItem>

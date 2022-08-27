@@ -2,6 +2,7 @@ import { useState } from "react";
 import NavBar from "../components/NavBar";
 import Home from "./Home";
 import { Box, Button, Grid, TextField } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const style = {
   height: "100%",
@@ -27,6 +28,9 @@ const style = {
   },
   input: {
     fontFamily: "Montserrat",
+  },
+  a: {
+    textDecoration: "none",
   },
 };
 
@@ -111,7 +115,7 @@ const Profile = ({ currentUser }) => {
             multiline
             rows={4}
           />
-          <Box>
+          <Box display="flex" flexDirection="column">
             <Button
               variant="contained"
               sx={{ height: "50px", margin: "10px" }}
@@ -119,6 +123,14 @@ const Profile = ({ currentUser }) => {
             >
               Guardar
             </Button>
+            <Link to="reset-password">
+              <Button
+                variant="outlined"
+                sx={{ height: "50px", margin: "10px" }}
+              >
+                Cambiar Contraseña
+              </Button>
+            </Link>
             <Button
               variant="contained"
               sx={{ height: "50px", margin: "10px" }}
