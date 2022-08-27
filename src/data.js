@@ -76,6 +76,22 @@ const users = [
       "Profesora en la UBA hace más de diez años con experiencia en varios rubros.",
   },
   {
+    id: 3,
+    name: "Micaela",
+    surname: "Pérez",
+    email: "micaela@mail.com",
+    password: "123",
+    phone: "1155553333",
+    education: [
+      {
+        level: "",
+        status: "",
+        description: "",
+      },
+    ],
+    role: STUDENT_ROLE,
+  },
+  {
     id: 10,
     name: "Juan",
     surname: "Pérez",
@@ -95,19 +111,25 @@ const users = [
 
 const notifications = [
   {
-    sourceId: 10,
+    sourceId: 3,
     destinationId: 2,
     type: COURSE_REQUEST,
-    classId: 1,
+    time: "de 9hs a 18hs",
+    courseId: 2,
     message: "Me quiero inscribir en esta clase",
   },
   {
     sourceId: 10,
     destinationId: 2,
     type: COMMENT_REQUEST,
-    classId: 1,
+    courseId: 1,
     message: "Me gustó mucho esta clase!",
   },
 ];
 
-export { courses, users, notifications };
+const comments = [
+  { courseId: 1, studentId: 10, message: "Excelente clase!!" },
+  { courseId: 1, studentId: 3, message: "Recomiendo mucho esta clase" },
+];
+
+export { courses, users, notifications, comments };

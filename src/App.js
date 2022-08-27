@@ -27,11 +27,18 @@ const App = () => {
               path="new"
               element={<NewCourse currentUser={currentUser} />}
             />
+            <Route
+              path="edit/:id"
+              element={<NewCourse currentUser={currentUser} />}
+            />
           </Route>
-          <Route
-            path="/profile"
-            element={<Profile currentUser={currentUser} />}
-          />
+          <Route path="/profile">
+            <Route index element={<Profile currentUser={currentUser} />} />
+            <Route
+              path="reset-password"
+              element={<ResetPassword currentUser={currentUser} />}
+            />
+          </Route>
         </>
       ) : null}
       <Route exact path="/" element={<Home currentUser={currentUser} />} />
@@ -44,7 +51,7 @@ const App = () => {
       <Route path="/about" element={<About currentUser={currentUser} />} />
       <Route path="/login" element={<Login currentUser={currentUser} />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
