@@ -13,10 +13,20 @@ import "./style.css";
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState({});
-  useEffect(() => {
+
+  const signOut = () => {
+    setCurrentUser({});
+  };
+
+  const signIn = () => {
     const localUser = localStorage.getItem("current-user");
     setCurrentUser(JSON.parse(localUser));
+  };
+
+  useEffect(() => {
+    signIn();
   }, []);
+
   return (
     <Routes>
       {currentUser ? (
@@ -33,7 +43,10 @@ const App = () => {
             />
           </Route>
           <Route path="/profile">
-            <Route index element={<Profile currentUser={currentUser} />} />
+            <Route
+              index
+              element={<Profile currentUser={currentUser} signOut={signOut} />}
+            />
             <Route
               path="reset-password"
               element={<ResetPassword currentUser={currentUser} />}
@@ -49,7 +62,10 @@ const App = () => {
         />
       </Route>
       <Route path="/about" element={<About currentUser={currentUser} />} />
-      <Route path="/login" element={<Login currentUser={currentUser} />} />
+      <Route
+        path="/login"
+        element={<Login currentUser={currentUser} signIn={signIn} />}
+      />
       <Route path="/register" element={<Register />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -15,7 +15,7 @@ import { Link, Navigate } from "react-router-dom";
 import { users } from "../data";
 import Navbar from "../components/NavBar";
 
-const Login = ({ currentUser }) => {
+const Login = ({ currentUser, signIn }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(currentUser ? true : false);
   const [values, setValues] = useState({
     email: "",
@@ -50,8 +50,8 @@ const Login = ({ currentUser }) => {
     }
     if (currentUser) {
       localStorage.setItem("current-user", JSON.stringify(currentUser));
-      // TODO: redirect to homepage
       setIsLoggedIn(true);
+      signIn();
     }
   };
 

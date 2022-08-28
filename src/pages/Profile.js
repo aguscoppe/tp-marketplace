@@ -3,6 +3,8 @@ import NavBar from "../components/NavBar";
 import Home from "./Home";
 import { Box, Button, Grid, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
+import { STUDENT_ROLE, TEACHER_ROLE } from "../constants";
+import EducationForm from "../components/EducationForm";
 
 const style = {
   height: "100%",
@@ -34,24 +36,26 @@ const style = {
   },
 };
 
-const Profile = ({ currentUser }) => {
+const Profile = ({ currentUser, signOut }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [newCourse, setNewCourse] = useState({
+  const [currentProfile, setCurrentProfile] = useState({
     name: currentUser.name,
     surname: currentUser.surname,
     email: currentUser.email,
     phone: currentUser.phone,
     experience: currentUser.experience,
   });
-  const { name, surname, email, phone, experience } = newCourse;
+  const [showDialog, setShowDialog] = useState(false);
+  const { name, surname, email, phone, experience } = currentProfile;
 
-  const signOut = () => {
+  const handleLogout = () => {
     localStorage.removeItem("current-user");
     setIsLoggedIn(false);
+    signOut();
   };
 
   const handleChange = (e) => {
-    setNewCourse((prev) => ({
+    setCurrentProfile((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -60,6 +64,14 @@ const Profile = ({ currentUser }) => {
   const handleClick = () => {
     // TODO: update user profile
     console.log("submitted");
+  };
+
+  const openDialog = () => {
+    setShowDialog(true);
+  };
+
+  const closeDialog = () => {
+    setShowDialog(false);
   };
 
   if (isLoggedIn) {
@@ -105,16 +117,25 @@ const Profile = ({ currentUser }) => {
             name="phone"
             onChange={handleChange}
           />
-          <TextField
-            autoComplete="off"
-            variant="outlined"
-            label="Experiencia"
-            value={experience}
-            name="experience"
-            onChange={handleChange}
-            multiline
-            rows={4}
-          />
+          {currentUser.role === TEACHER_ROLE && (
+            <TextField
+              autoComplete="off"
+              variant="outlined"
+              label="Experiencia"
+              value={experience}
+              name="experience"
+              onChange={handleChange}
+              multiline
+              rows={4}
+            />
+          )}
+          {currentUser.role === STUDENT_ROLE && (
+            <>
+              <EducationForm open={showDialog} closeDialog={closeDialog} />
+              <Button onClick={openDialog}>+ Agrear Estudio Cursado</Button>
+            </>
+          )}
+
           <Box display="flex" flexDirection="column">
             <Button
               variant="contained"
@@ -134,7 +155,7 @@ const Profile = ({ currentUser }) => {
             <Button
               variant="contained"
               sx={{ height: "50px", margin: "10px" }}
-              onClick={signOut}
+              onClick={handleLogout}
               color="error"
             >
               Cerrar Sesión
