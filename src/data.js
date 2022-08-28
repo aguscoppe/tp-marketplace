@@ -16,7 +16,7 @@ const courses = [
     name: "Lengua",
     type: COURSE_TYPE_GROUP,
     teacherId: 2,
-    students: [],
+    students: [10],
     duration: 90,
     frequency: COURSE_FREQUENCY_ONCE,
     price: 2400,
