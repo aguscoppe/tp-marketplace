@@ -1,38 +1,46 @@
-import { useState } from "react";
-import NavBar from "../components/NavBar";
-import Home from "./Home";
-import { Box, Button, Grid, TextField } from "@mui/material";
-import { Link } from "react-router-dom";
-import { STUDENT_ROLE, TEACHER_ROLE } from "../constants";
-import EducationForm from "../components/EducationForm";
+import { useState } from 'react';
+import NavBar from '../components/NavBar';
+import Home from './Home';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  InputAdornment,
+} from '@mui/material';
+import { Link } from 'react-router-dom';
+import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
+import EducationForm from '../components/EducationForm';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const style = {
-  height: "100%",
-  "& .MuiTypography-root": {
-    fontFamily: "Montserrat",
+  height: '100%',
+  '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiButton-root": {
-    fontFamily: "Montserrat",
+  '& .MuiButton-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiInputBase-root": {
-    fontFamily: "Montserrat",
+  '& .MuiInputBase-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiFormLabel-root": {
-    fontFamily: "Montserrat",
+  '& .MuiFormLabel-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiTextField-root": {
-    width: "300px",
-    margin: "10px",
-    backgroundColor: "#fff",
+  '& .MuiTextField-root': {
+    width: '300px',
+    margin: '10px',
+    backgroundColor: '#fff',
   },
-  "& .MuiTextField-root:first-of-type": {
-    marginTop: "50px",
+  '& .MuiTextField-root:first-of-type': {
+    marginTop: '50px',
   },
   input: {
-    fontFamily: "Montserrat",
+    fontFamily: 'Montserrat',
   },
   a: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
 };
 
@@ -44,12 +52,20 @@ const Profile = ({ currentUser, signOut }) => {
     email: currentUser.email,
     phone: currentUser.phone,
     experience: currentUser.experience,
+    education: [],
   });
   const [showDialog, setShowDialog] = useState(false);
-  const { name, surname, email, phone, experience } = currentProfile;
+  const { name, surname, email, phone, experience, education } = currentProfile;
+
+  const addEducation = (newEducation) => {
+    setCurrentProfile((prev) => ({
+      ...prev,
+      education: [...prev.education, newEducation],
+    }));
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem("current-user");
+    localStorage.removeItem('current-user');
     setIsLoggedIn(false);
     signOut();
   };
@@ -63,7 +79,14 @@ const Profile = ({ currentUser, signOut }) => {
 
   const handleClick = () => {
     // TODO: update user profile
-    console.log("submitted");
+    console.log('submitted');
+  };
+
+  const handleRemove = (index) => {
+    setCurrentProfile((prev) => ({
+      ...prev,
+      education: prev.education.filter((el, i) => i !== index),
+    }));
   };
 
   const openDialog = () => {
@@ -81,49 +104,49 @@ const Profile = ({ currentUser, signOut }) => {
         <Grid
           container
           sx={style}
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
         >
           <TextField
-            autoComplete="off"
-            variant="outlined"
-            label="Nombre"
+            autoComplete='off'
+            variant='outlined'
+            label='Nombre'
             value={name}
-            name="name"
+            name='name'
             onChange={handleChange}
           />
           <TextField
-            autoComplete="off"
-            variant="outlined"
-            label="Apellido"
+            autoComplete='off'
+            variant='outlined'
+            label='Apellido'
             value={surname}
-            name="surname"
+            name='surname'
             onChange={handleChange}
           />
           <TextField
-            autoComplete="off"
-            variant="outlined"
-            label="Email"
+            autoComplete='off'
+            variant='outlined'
+            label='Email'
             value={email}
-            name="email"
+            name='email'
             onChange={handleChange}
           />
           <TextField
-            autoComplete="off"
-            variant="outlined"
-            label="Teléfono"
+            autoComplete='off'
+            variant='outlined'
+            label='Teléfono'
             value={phone}
-            name="phone"
+            name='phone'
             onChange={handleChange}
           />
           {currentUser.role === TEACHER_ROLE && (
             <TextField
-              autoComplete="off"
-              variant="outlined"
-              label="Experiencia"
+              autoComplete='off'
+              variant='outlined'
+              label='Experiencia'
               value={experience}
-              name="experience"
+              name='experience'
               onChange={handleChange}
               multiline
               rows={4}
@@ -131,32 +154,53 @@ const Profile = ({ currentUser, signOut }) => {
           )}
           {currentUser.role === STUDENT_ROLE && (
             <>
-              <EducationForm open={showDialog} closeDialog={closeDialog} />
+              {education.map((element, index) => (
+                <TextField
+                  autoComplete='off'
+                  variant='outlined'
+                  label='Estudios Cursados'
+                  value={`${element.name} (${element.level} - ${element.status})`}
+                  multiline
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='start'>
+                        <IconButton onClick={() => handleRemove(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              ))}
+              <EducationForm
+                open={showDialog}
+                closeDialog={closeDialog}
+                addEducation={addEducation}
+              />
               <Button onClick={openDialog}>+ Agrear Estudio Cursado</Button>
             </>
           )}
-
-          <Box display="flex" flexDirection="column">
+          <Box display='flex' flexDirection='column'>
             <Button
-              variant="contained"
-              sx={{ height: "50px", margin: "10px" }}
+              variant='contained'
+              sx={{ height: '50px', margin: '10px' }}
               onClick={handleClick}
             >
               Guardar
             </Button>
-            <Link to="reset-password">
+            <Link to='reset-password'>
               <Button
-                variant="outlined"
-                sx={{ height: "50px", margin: "10px" }}
+                variant='outlined'
+                sx={{ height: '50px', margin: '10px' }}
               >
                 Cambiar Contraseña
               </Button>
             </Link>
             <Button
-              variant="contained"
-              sx={{ height: "50px", margin: "10px" }}
+              variant='contained'
+              sx={{ height: '50px', margin: '10px' }}
               onClick={handleLogout}
-              color="error"
+              color='error'
             >
               Cerrar Sesión
             </Button>
