@@ -50,13 +50,12 @@ const CourseDetail = ({ currentUser }) => {
         (element.status === COURSE_STATUS_ACCEPTED ||
           element.status === COURSE_STATUS_FINISHED)
     ).length !== 0;
+
   const signUp = () => {
     alert('Hola alumno!');
   };
 
-  const filteredComments = comments.filter(
-    (comment) => comment.courseId === id
-  );
+  const filteredComments = comments.filter((comment) => comment.courseId == id);
 
   const getUserName = (id) => {
     const filtered = users.filter((user) => user.id === id);
