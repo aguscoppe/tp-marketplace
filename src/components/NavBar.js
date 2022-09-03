@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   AppBar,
   Box,
@@ -6,56 +6,56 @@ import {
   Menu,
   Toolbar,
   Typography,
-} from "@mui/material";
-import Notification from "./Notification";
-import { Link, NavLink } from "react-router-dom";
-import logo from "../img/logo.png";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import SchoolIcon from "@mui/icons-material/School";
-import PersonIcon from "@mui/icons-material/Person";
-import { notifications } from "../data";
+} from '@mui/material';
+import Notification from './Notification';
+import { Link, NavLink } from 'react-router-dom';
+import SchoolIcon from '@mui/icons-material/School';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import PersonIcon from '@mui/icons-material/Person';
+import { notifications } from '../data';
 
 const style = {
-  backgroundColor: "#333",
-  color: "#fff",
+  backgroundColor: '#333',
+  color: '#fff',
   a: {
-    textDecoration: "none",
-    margin: "0 8px",
-    "&:not(.active):hover": {
-      color: "#888",
+    textDecoration: 'none',
+    margin: '0 8px',
+    '&:not(.active):hover': {
+      color: '#888',
     },
     img: {
-      width: "50px",
+      width: '50px',
     },
   },
-  "& .MuiButton-root": {
-    fontFamily: "Montserrat",
+  '& .MuiButton-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiTypography-root": {
-    fontFamily: "Montserrat",
+  '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .active p": {
-    color: "#90caf9",
+  '& .active p': {
+    color: '#90caf9',
   },
-  "& .active svg": {
-    color: "#90caf9",
+  '& .active svg': {
+    color: '#90caf9',
   },
-  "& .MuiIconButton-root": {
-    color: "#eee",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    "&:hover": {
-      backgroundColor: "transparent",
+  '& .MuiIconButton-root': {
+    color: '#eee',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    '&:hover': {
+      backgroundColor: 'transparent',
     },
   },
 };
 
 const NavLinkIcon = ({ urlPath, children }) => (
   <NavLink
-    className={(navData) => (navData.isActive ? "active" : "")}
+    className={(navData) => (navData.isActive ? 'active' : '')}
     to={urlPath ? urlPath : undefined}
   >
     <IconButton>{children}</IconButton>
@@ -64,13 +64,13 @@ const NavLinkIcon = ({ urlPath, children }) => (
 
 const commonNavLinks = (
   <>
-    <NavLinkIcon urlPath="/">
+    <NavLinkIcon urlPath='/'>
       <HomeIcon />
-      <Typography variant="body2">Home</Typography>
+      <Typography variant='body2'>Home</Typography>
     </NavLinkIcon>
-    <NavLinkIcon urlPath="/about">
+    <NavLinkIcon urlPath='/about'>
       <InfoIcon />
-      <Typography variant="body2">About</Typography>
+      <Typography variant='body2'>Información</Typography>
     </NavLinkIcon>
   </>
 );
@@ -78,13 +78,13 @@ const commonNavLinks = (
 const userNavbar = (
   <>
     {commonNavLinks}
-    <NavLinkIcon urlPath="/courses">
-      <SchoolIcon />
-      <Typography variant="body2">Mis Clases</Typography>
+    <NavLinkIcon urlPath='/courses'>
+      <BookmarksIcon />
+      <Typography variant='body2'>Mis Clases</Typography>
     </NavLinkIcon>
-    <NavLinkIcon urlPath="/profile">
+    <NavLinkIcon urlPath='/profile'>
       <PersonIcon />
-      <Typography variant="body2">Mi Perfil</Typography>
+      <Typography variant='body2'>Mi Perfil</Typography>
     </NavLinkIcon>
   </>
 );
@@ -92,9 +92,9 @@ const userNavbar = (
 const publicNavbar = (
   <>
     {commonNavLinks}
-    <NavLinkIcon urlPath="/login">
+    <NavLinkIcon urlPath='/login'>
       <PersonIcon />
-      <Typography variant="body2">Ingresar</Typography>
+      <Typography variant='body2'>Ingresar</Typography>
     </NavLinkIcon>
   </>
 );
@@ -102,23 +102,38 @@ const publicNavbar = (
 const NavBar = ({ currentUser }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const notificationList = notifications.filter(
+    (notification) => notification.destinationId === currentUser?.id
+  );
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
-    <AppBar position="static" color="transparent" sx={style}>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Link to="/">
-          <img src={logo} alt="logo" />
+    <AppBar position='static' color='transparent' sx={style}>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Link to='/'>
+          <IconButton
+            sx={{
+              '& svg': {
+                color: '#f6c451',
+                fontSize: '50px',
+              },
+            }}
+          >
+            <SchoolIcon />
+          </IconButton>
         </Link>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           {currentUser ? (
@@ -126,26 +141,34 @@ const NavBar = ({ currentUser }) => {
               {userNavbar}
               <IconButton onClick={handleClick}>
                 <NotificationsIcon />
-                <Typography variant="body2">Notificationes</Typography>
+                <Typography variant='body2'>Notificationes</Typography>
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                PaperProps={{ style: { maxHeight: "400px" } }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                PaperProps={{ style: { maxHeight: '400px' } }}
               >
-                {notifications
-                  .filter(
-                    (notification) =>
-                      notification.destinationId === currentUser.id
-                  )
-                  .map((notification) => (
+                {notificationList.length > 0 ? (
+                  notificationList.map((notification) => (
                     <Notification
                       key={notification.message}
                       data={notification}
                     />
-                  ))}
+                  ))
+                ) : (
+                  <Typography
+                    variant='body2'
+                    sx={{
+                      textAlign: 'center',
+                      padding: '6px 12px',
+                      fontFamily: 'Montserrat',
+                    }}
+                  >
+                    No tienes notificaciones
+                  </Typography>
+                )}
               </Menu>
             </>
           ) : (

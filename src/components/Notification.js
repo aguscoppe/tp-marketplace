@@ -1,6 +1,6 @@
-import { Box, Button, Typography } from "@mui/material";
-import { COMMENT_REQUEST, COURSE_REQUEST } from "../constants";
-import { courses, users } from "../data";
+import { Box, Button, Typography } from '@mui/material';
+import { COMMENT_REQUEST, COURSE_REQUEST } from '../constants';
+import { courses, users } from '../data';
 
 const getCourseName = (id) => {
   const filtered = courses.filter((course) => course.id === id);
@@ -9,20 +9,20 @@ const getCourseName = (id) => {
 };
 
 const style = {
-  width: "300px",
-  padding: "6px 12px",
-  "&:not(:last-of-type)": {
-    borderBottom: "1px solid #ccc",
+  width: '300px',
+  padding: '6px 12px',
+  '&:not(:last-of-type)': {
+    borderBottom: '1px solid #ccc',
   },
-  "& .MuiButton-root": {
-    fontFamily: "Montserrat",
+  '& .MuiButton-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiTypography-root": {
-    fontFamily: "Montserrat",
+  '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .email": {
-    textDecoration: "underline",
-    color: "blue",
+  '& .email': {
+    textDecoration: 'underline',
+    color: 'blue',
   },
 };
 
@@ -32,54 +32,54 @@ const Notification = ({ data }) => {
   const [sourceUser] = sourceUserArray;
   return (
     <Box sx={style}>
-      <Typography variant="h6" textAlign="center">
-        Solicitud de {type === COMMENT_REQUEST ? "comentario" : "clase"}
+      <Typography variant='h6' textAlign='center'>
+        Solicitud de {type === COMMENT_REQUEST ? 'comentario' : 'clase'}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant='body2'>
         <strong>Alumno:</strong> {sourceUser.name} {sourceUser.surname}
       </Typography>
       {type === COURSE_REQUEST && (
         <>
-          <Typography variant="body2">
+          <Typography variant='body2'>
             <strong>Email: </strong>
-            <span className="email">{sourceUser.email}</span>
+            <span className='email'>{sourceUser.email}</span>
           </Typography>
-          <Typography variant="body2">
+          <Typography variant='body2'>
             <strong>Teléfono: </strong>
             {sourceUser.phone}
           </Typography>
         </>
       )}
-      <Typography variant="body2">
+      <Typography variant='body2'>
         <strong>Clase:</strong> {getCourseName(courseId)}
       </Typography>
       {time && (
-        <Typography variant="body2">
+        <Typography variant='body2'>
           <strong>Horario de referencia:</strong> {time}
         </Typography>
       )}
-      <Typography variant="body2">
+      <Typography variant='body2'>
         <strong>
-          {type === COMMENT_REQUEST ? "Comentario: " : "Mensaje: "}
+          {type === COMMENT_REQUEST ? 'Comentario: ' : 'Mensaje: '}
         </strong>
         {message}
       </Typography>
-      <Box display="flex" justifyContent="center">
+      <Box display='flex' justifyContent='center'>
         <Button
-          variant="contained"
-          color="success"
-          size="small"
-          sx={{ margin: "8px" }}
+          variant='contained'
+          color='success'
+          size='small'
+          sx={{ margin: '8px' }}
         >
           Aceptar
         </Button>
         <Button
-          variant="contained"
-          color="error"
-          size="small"
-          sx={{ margin: "8px" }}
+          variant='contained'
+          color='error'
+          size='small'
+          sx={{ margin: '8px' }}
         >
-          {type === COMMENT_REQUEST ? "Bloquear" : "Cancelar"}
+          {type === COMMENT_REQUEST ? 'Bloquear' : 'Cancelar'}
         </Button>
       </Box>
     </Box>
