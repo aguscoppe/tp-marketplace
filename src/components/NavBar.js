@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   AppBar,
+  Badge,
   Box,
   IconButton,
   Menu,
@@ -22,7 +23,7 @@ const style = {
   color: '#fff',
   a: {
     textDecoration: 'none',
-    margin: '0 8px',
+    margin: '8px',
     '&:not(.active):hover': {
       color: '#888',
     },
@@ -140,7 +141,9 @@ const NavBar = ({ currentUser }) => {
             <>
               {userNavbar}
               <IconButton onClick={handleClick}>
-                <NotificationsIcon />
+                <Badge badgeContent={notificationList.length} color='primary'>
+                  <NotificationsIcon />
+                </Badge>
                 <Typography variant='body2'>Notificationes</Typography>
               </IconButton>
               <Menu

@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
 import { courses, users, comments } from '../data';
@@ -51,10 +51,6 @@ const CourseDetail = ({ currentUser }) => {
           element.status === COURSE_STATUS_FINISHED)
     ).length !== 0;
 
-  const signUp = () => {
-    alert('Hola alumno!');
-  };
-
   const filteredComments = comments.filter((comment) => comment.courseId == id);
 
   const getUserName = (id) => {
@@ -75,9 +71,9 @@ const CourseDetail = ({ currentUser }) => {
           <Typography variant='h6'>{frequency}</Typography>
           <Typography variant='h6'>{duration} minutos</Typography>
           {currentUser?.role === STUDENT_ROLE && !isValidUser ? (
-            <Button variant='contained' onClick={signUp}>
-              Inscribirse
-            </Button>
+            <Link to={`/enroll/${id}`}>
+              <Button variant='contained'>Inscribirse</Button>
+            </Link>
           ) : null}
         </Grid>
         <Grid
