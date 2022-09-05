@@ -34,7 +34,7 @@ const Courses = ({ currentUser }) => {
       setCourseList(filteredCourses);
     } else {
       const filteredCourses = courses.filter(
-        (course, index) => course.students[index]?.studentId === currentUser.id
+        (course, index) => course.students[index] === currentUser.id
       );
       setCourseList(filteredCourses);
     }

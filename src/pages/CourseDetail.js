@@ -41,14 +41,14 @@ const CourseDetail = ({ currentUser }) => {
     frequency,
     teacherId,
     students,
+    status,
   } = courseData;
   const teacherData = users[teacherId - 1];
   const isValidUser =
     students.filter(
       (element) =>
-        element.studentId === currentUser.id &&
-        (element.status === COURSE_STATUS_ACCEPTED ||
-          element.status === COURSE_STATUS_FINISHED)
+        element === currentUser.id &&
+        (status === COURSE_STATUS_ACCEPTED || status === COURSE_STATUS_FINISHED)
     ).length !== 0;
 
   const filteredComments = comments.filter((comment) => comment.courseId == id);

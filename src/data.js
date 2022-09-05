@@ -6,8 +6,8 @@ import {
   COURSE_FREQUENCY_ONCE,
   COURSE_FREQUENCY_WEEKLY,
   COURSE_FREQUENCY_MONTHLY,
-  COURSE_REQUEST,
-  COMMENT_REQUEST,
+  COURSE_NOTIFICATION,
+  COMMENT_NOTIFICATION,
   COURSE_STATUS_ACCEPTED,
 } from './constants';
 
@@ -17,7 +17,8 @@ const courses = [
     name: 'Lengua',
     type: COURSE_TYPE_GROUP,
     teacherId: 2,
-    students: [{ studentId: 10, status: COURSE_STATUS_ACCEPTED }],
+    students: [10],
+    status: COURSE_STATUS_ACCEPTED,
     duration: 90,
     frequency: COURSE_FREQUENCY_ONCE,
     price: 2400,
@@ -114,7 +115,7 @@ const notifications = [
   {
     sourceId: 3,
     destinationId: 2,
-    type: COURSE_REQUEST,
+    type: COURSE_NOTIFICATION,
     time: 'de 9hs a 18hs',
     courseId: 2,
     message: 'Me quiero inscribir en esta clase',
@@ -122,7 +123,7 @@ const notifications = [
   {
     sourceId: 10,
     destinationId: 2,
-    type: COMMENT_REQUEST,
+    type: COMMENT_NOTIFICATION,
     courseId: 1,
     message: 'Me gustó mucho esta clase!',
   },

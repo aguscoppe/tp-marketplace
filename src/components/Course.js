@@ -4,15 +4,31 @@ import {
   Card,
   CardContent,
   IconButton,
+  MenuItem,
   Rating,
+  TextField,
   Typography,
 } from '@mui/material';
 import { courses, users } from '../data';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CommentIcon from '@mui/icons-material/Comment';
-import { TEACHER_ROLE } from '../constants';
+import {
+  COURSE_STATUS_ACCEPTED,
+  COURSE_STATUS_CANCELLED,
+  COURSE_STATUS_FINISHED,
+  COURSE_STATUS_PENDING,
+  TEACHER_ROLE,
+} from '../constants';
+
+const statusItems = [
+  { key: 1, value: '', label: 'Estado' },
+  { key: 2, value: COURSE_STATUS_PENDING, label: 'Pendiente' },
+  { key: 3, value: COURSE_STATUS_ACCEPTED, label: 'Aceptada' },
+  { key: 4, value: COURSE_STATUS_CANCELLED, label: 'Cacelada' },
+  { key: 5, value: COURSE_STATUS_FINISHED, label: 'Finalizada' },
+];
 
 const styles = {
   width: '250px',
@@ -27,7 +43,8 @@ const styles = {
 };
 
 const Course = ({ courseData, currentUser }) => {
-  const { id, name, type, frequency, rating } = courseData;
+  const { pathname } = useLocation();
+  const { id, name, type, frequency, rating, status } = courseData;
   const [ratingValue, setRatingValue] = useState(rating);
   const course = courses[id - 1];
   const { teacherId } = course;
@@ -78,6 +95,22 @@ const Course = ({ courseData, currentUser }) => {
             )}
           </Box>
         </Box>
+        {pathname.includes('courses') && (
+          <TextField
+            value={status || ''}
+            select
+            label='Estado'
+            name='status'
+            sx={{ marginTop: '10px', width: '100%' }}
+            onChange={() => console.log('cambio de estado')}
+          >
+            {statusItems.map((item) => (
+              <MenuItem key={item.label} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
       </CardContent>
     </Card>
   );

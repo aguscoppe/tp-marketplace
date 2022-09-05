@@ -1,6 +1,8 @@
-import { Box, Button, Typography } from '@mui/material';
-import { COMMENT_REQUEST, COURSE_REQUEST } from '../constants';
+import { Box, Button, Dialog, TextField, Typography } from '@mui/material';
+import { useState } from 'react';
+import { COMMENT_NOTIFICATION, COURSE_NOTIFICATION } from '../constants';
 import { courses, users } from '../data';
+import BlockCommentDialog from './BlockCommentDialog';
 
 const getCourseName = (id) => {
   const filtered = courses.filter((course) => course.id === id);
@@ -27,18 +29,32 @@ const style = {
 };
 
 const Notification = ({ data }) => {
+  const [showBlockInput, setShowBlockInput] = useState(false);
   const { type, message, time, sourceId, courseId } = data;
   const sourceUserArray = users.filter((user) => user.id === sourceId);
   const [sourceUser] = sourceUserArray;
+
+  const sendComment = (comment) => {
+    console.log(comment);
+  };
+
+  const blockComment = () => {
+    setShowBlockInput(true);
+  };
+
+  const closeDialog = () => {
+    setShowBlockInput(false);
+  };
+
   return (
     <Box sx={style}>
       <Typography variant='h6' textAlign='center'>
-        Solicitud de {type === COMMENT_REQUEST ? 'comentario' : 'clase'}
+        Solicitud de {type}
       </Typography>
       <Typography variant='body2'>
         <strong>Alumno:</strong> {sourceUser.name} {sourceUser.surname}
       </Typography>
-      {type === COURSE_REQUEST && (
+      {type === COURSE_NOTIFICATION && (
         <>
           <Typography variant='body2'>
             <strong>Email: </strong>
@@ -60,10 +76,15 @@ const Notification = ({ data }) => {
       )}
       <Typography variant='body2'>
         <strong>
-          {type === COMMENT_REQUEST ? 'Comentario: ' : 'Mensaje: '}
+          {type === COMMENT_NOTIFICATION ? 'Comentario: ' : 'Mensaje: '}
         </strong>
         {message}
       </Typography>
+      <BlockCommentDialog
+        open={showBlockInput}
+        closeDialog={closeDialog}
+        sendComment={sendComment}
+      />
       <Box display='flex' justifyContent='center'>
         <Button
           variant='contained'
@@ -78,8 +99,9 @@ const Notification = ({ data }) => {
           color='error'
           size='small'
           sx={{ margin: '8px' }}
+          onClick={type === COMMENT_NOTIFICATION ? blockComment : undefined}
         >
-          {type === COMMENT_REQUEST ? 'Bloquear' : 'Cancelar'}
+          {type === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
         </Button>
       </Box>
     </Box>

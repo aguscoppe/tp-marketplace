@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
-import EducationForm from '../components/EducationForm';
+import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const style = {
@@ -172,7 +172,7 @@ const Profile = ({ currentUser, signOut }) => {
                   }}
                 />
               ))}
-              <EducationForm
+              <EducationInputDialog
                 open={showDialog}
                 closeDialog={closeDialog}
                 addEducation={addEducation}
