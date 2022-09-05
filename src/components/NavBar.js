@@ -9,8 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import Notification from './Notification';
-import { Link, NavLink } from 'react-router-dom';
-import SchoolIcon from '@mui/icons-material/School';
+import { NavLink } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
@@ -36,6 +35,8 @@ const style = {
   },
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
+    fontSize: '12px',
+    marginTop: '2px',
   },
   '& .active p': {
     color: '#90caf9',
@@ -48,6 +49,10 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    '& svg': {
+      width: '20px',
+      height: '20px',
+    },
     '&:hover': {
       backgroundColor: 'transparent',
     },
@@ -117,19 +122,7 @@ const NavBar = ({ currentUser }) => {
 
   return (
     <AppBar position='static' color='transparent' sx={style}>
-      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link to='/'>
-          <IconButton
-            sx={{
-              '& svg': {
-                color: '#f6c451',
-                fontSize: '50px',
-              },
-            }}
-          >
-            <SchoolIcon />
-          </IconButton>
-        </Link>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Box
           sx={{
             display: 'flex',

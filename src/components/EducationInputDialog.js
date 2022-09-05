@@ -67,8 +67,7 @@ const style = {
   },
 };
 
-const EducationForm = ({ open, closeDialog, addEducation }) => {
-  // TODO: move into profile
+const EducationInputDialog = ({ open, closeDialog, addEducation }) => {
   const [education, setEducation] = useState({
     name: '',
     level: '',
@@ -142,4 +141,4 @@ const EducationForm = ({ open, closeDialog, addEducation }) => {
   );
 };
 
-export default EducationForm;
+export default EducationInputDialog;
