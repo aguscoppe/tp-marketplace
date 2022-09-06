@@ -1,31 +1,31 @@
-const TEACHER_ROLE = 'profesor';
-const STUDENT_ROLE = 'alumno';
+const TEACHER_ROLE = "profesor";
+const STUDENT_ROLE = "alumno";
 
-const COURSE_TYPE_SINGLE = 'individual';
-const COURSE_TYPE_GROUP = 'grupal';
+const COURSE_TYPE_SINGLE = "individual";
+const COURSE_TYPE_GROUP = "grupal";
 
-const COURSE_FREQUENCY_ONCE = 'única';
-const COURSE_FREQUENCY_WEEKLY = 'semanal';
-const COURSE_FREQUENCY_MONTHLY = 'mensual';
+const COURSE_FREQUENCY_ONCE = "única";
+const COURSE_FREQUENCY_WEEKLY = "semanal";
+const COURSE_FREQUENCY_MONTHLY = "mensual";
 
-const COURSE_NOTIFICATION = 'inscripcion';
-const COMMENT_NOTIFICATION = 'comentario';
-const BLOCK_NOTIFICATION = 'bloqueo';
+const COURSE_NOTIFICATION = "inscripcion";
+const COMMENT_NOTIFICATION = "comentario";
+const BLOCK_NOTIFICATION = "bloqueo";
 
-const EDUCATION_LEVEL_PRIMARY = 'primario';
-const EDUCATION_LEVEL_SECONDARY = 'secundario';
-const EDUCATION_LEVEL_TERTIARY = 'terciario';
-const EDUCATION_LEVEL_UNIVERSITY = 'universitario';
+const EDUCATION_LEVEL_PRIMARY = "primario";
+const EDUCATION_LEVEL_SECONDARY = "secundario";
+const EDUCATION_LEVEL_TERTIARY = "terciario";
+const EDUCATION_LEVEL_UNIVERSITY = "universitario";
 
-const EDUCATION_STATUS_ONGOING = 'en curso';
-const EDUCATION_STATUS_PAUSED = 'pausado';
-const EDUCATION_STATUS_DROPPED = 'abandonado';
-const EDUCATION_STATUS_FINISHED = 'finalizado';
+const EDUCATION_STATUS_ONGOING = "en curso";
+const EDUCATION_STATUS_PAUSED = "pausado";
+const EDUCATION_STATUS_DROPPED = "abandonado";
+const EDUCATION_STATUS_FINISHED = "finalizado";
 
-const COURSE_STATUS_PENDING = 'solicitada';
-const COURSE_STATUS_ACCEPTED = 'aceptada';
-const COURSE_STATUS_FINISHED = 'finalizada';
-const COURSE_STATUS_CANCELLED = 'cancelada';
+const COURSE_STATUS_PENDING = "solicitada";
+const COURSE_STATUS_ACCEPTED = "aceptada";
+const COURSE_STATUS_FINISHED = "finalizada";
+const COURSE_STATUS_CANCELLED = "cancelada";
 
 export {
   TEACHER_ROLE,

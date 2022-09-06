@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NavBar from "../components/NavBar";
 import {
+  Box,
   Button,
   Grid,
   TextField,
@@ -10,7 +11,7 @@ import {
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { typeItems, frequencyItems } from "../components/Header";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { courses } from "../data";
 
 const initialState = {
@@ -32,6 +33,7 @@ const style = {
     fontFamily: "Montserrat",
   },
   "& .MuiButton-root": {
+    width: "300px",
     fontFamily: "Montserrat",
   },
   "& .MuiInputBase-root": {
@@ -47,6 +49,9 @@ const style = {
   },
   "& .MuiTextField-root:first-of-type": {
     marginTop: "50px",
+  },
+  a: {
+    textDecoration: "none",
   },
   input: {
     fontFamily: "Montserrat",
@@ -168,13 +173,23 @@ const NewCourse = ({ currentUser }) => {
           rows={4}
         />
         {courseData.length > 0 ? (
-          <Button
-            variant="contained"
-            sx={{ height: "50px", margin: "10px" }}
-            onClick={saveChanges}
-          >
-            Guardar
-          </Button>
+          <Box display="flex" flexDirection="column">
+            <Link to={`/students/${id}`}>
+              <Button
+                variant="outlined"
+                sx={{ height: "50px", margin: "10px" }}
+              >
+                Lista de alumnos
+              </Button>
+            </Link>
+            <Button
+              variant="contained"
+              sx={{ height: "50px", margin: "10px" }}
+              onClick={saveChanges}
+            >
+              Guardar
+            </Button>
+          </Box>
         ) : (
           <Button
             variant="contained"
