@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -10,12 +11,8 @@ import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
 import { courses, users, comments } from '../data';
-import {
-  COURSE_STATUS_ACCEPTED,
-  COURSE_STATUS_FINISHED,
-  STUDENT_ROLE,
-} from '../constants';
-import { getFullName } from '../utils';
+import { STUDENT_ROLE } from '../constants';
+import { getFullName, isUserEnrolled } from '../utils';
 
 const styles = {
   marginTop: '60px',
@@ -33,26 +30,11 @@ const styles = {
 const CourseDetail = ({ currentUser }) => {
   const { id } = useParams();
   const courseData = courses[id - 1];
-  const {
-    name,
-    description,
-    rating,
-    price,
-    duration,
-    frequency,
-    teacherId,
-    students,
-    status,
-  } = courseData;
+  const { name, description, rating, price, duration, frequency, teacherId } =
+    courseData;
   const teacherData = users[teacherId - 1];
-  const isValidUser =
-    students.filter(
-      (element) =>
-        element === currentUser?.id &&
-        (status === COURSE_STATUS_ACCEPTED || status === COURSE_STATUS_FINISHED)
-    ).length !== 0;
-
   const filteredComments = comments.filter((comment) => comment.courseId == id);
+  const [ratingValue, setRatingValue] = useState(rating);
 
   return (
     <>
@@ -61,11 +43,18 @@ const CourseDetail = ({ currentUser }) => {
         <Grid item xs={6}>
           <Typography variant='h3'>{name}</Typography>
           <Typography variant='h5'>{description}</Typography>
-          <Rating name='read-only' value={rating} readOnly />
+          <Rating
+            value={ratingValue}
+            onChange={(event, newValue) => {
+              setRatingValue(newValue);
+            }}
+            readOnly={!isUserEnrolled(currentUser?.id, id)}
+          />
           <Typography variant='h6'>${price}</Typography>
           <Typography variant='h6'>{frequency}</Typography>
           <Typography variant='h6'>{duration} minutos</Typography>
-          {currentUser?.role === STUDENT_ROLE && !isValidUser ? (
+          {currentUser?.role === STUDENT_ROLE &&
+          !isUserEnrolled(currentUser?.id, id) ? (
             <Link to={`/enroll/${id}`}>
               <Button variant='contained'>Inscribirse</Button>
             </Link>
@@ -92,7 +81,7 @@ const CourseDetail = ({ currentUser }) => {
           <Typography variant='h4' sx={{ marginTop: '60px 0' }}>
             Comentarios
           </Typography>
-          {isValidUser && (
+          {isUserEnrolled(currentUser?.id, id) && (
             <>
               <TextField sx={{ width: '85%' }} />
               <Button variant='contained'>Comentar</Button>

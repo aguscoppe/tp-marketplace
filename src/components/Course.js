@@ -27,8 +27,8 @@ import { isUserEnrolled } from '../utils';
 const statusItems = [
   { key: 1, value: '', label: 'Estado' },
   { key: 2, value: COURSE_STATUS_PENDING, label: 'Pendiente' },
-  { key: 3, value: COURSE_STATUS_ACCEPTED, label: 'Aceptada' },
-  { key: 4, value: COURSE_STATUS_CANCELLED, label: 'Cacelada' },
+  { key: 3, value: COURSE_STATUS_CANCELLED, label: 'Cancelada' },
+  { key: 4, value: COURSE_STATUS_ACCEPTED, label: 'Aceptada' },
   { key: 5, value: COURSE_STATUS_FINISHED, label: 'Finalizada' },
 ];
 
@@ -46,11 +46,19 @@ const styles = {
 
 const Course = ({ courseData, currentUser }) => {
   const { pathname } = useLocation();
-  const { id, name, type, frequency, rating, status } = courseData;
-  const [ratingValue, setRatingValue] = useState(rating);
+  const { id, name, type, frequency, rating, students } = courseData;
+  const [enrolledStudents] = students.filter(
+    (student) => student.id === currentUser?.id
+  );
+  const [courseStatus, setCourseSatus] = useState(enrolledStudents?.status);
+  const [courseRating, setCourseRating] = useState(rating);
   const course = courses[id - 1];
   const { teacherId } = course;
   const teacherData = users[teacherId - 1];
+
+  const handleStatusChange = (e) => {
+    setCourseSatus(e.target.value);
+  };
 
   return (
     <Card sx={styles}>
@@ -63,10 +71,9 @@ const Course = ({ courseData, currentUser }) => {
         </Link>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Rating
-            name='simple-controlled'
-            value={ratingValue}
+            value={courseRating}
             onChange={(event, newValue) => {
-              setRatingValue(newValue);
+              setCourseRating(newValue);
             }}
             readOnly={!isUserEnrolled(currentUser?.id, id)}
           />
@@ -99,15 +106,15 @@ const Course = ({ courseData, currentUser }) => {
         </Box>
         {currentUser?.role === STUDENT_ROLE && pathname.includes('courses') && (
           <TextField
-            value={status || ''}
+            value={courseStatus || ''}
             select
             label='Estado'
             name='status'
             sx={{ marginTop: '10px', width: '100%' }}
-            onChange={() => console.log('cambio de estado')}
+            onChange={handleStatusChange}
           >
             {statusItems.map((item, index) =>
-              index >= 3 ? (
+              index >= 2 ? (
                 <MenuItem key={item.label} value={item.value}>
                   {item.label}
                 </MenuItem>

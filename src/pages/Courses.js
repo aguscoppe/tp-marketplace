@@ -5,7 +5,7 @@ import NavBar from '../components/NavBar';
 import Course from '../components/Course';
 import { courses } from '../data';
 import { TEACHER_ROLE } from '../constants';
-import { getPublishedCourses } from '../utils';
+import { getPublishedCourses, isUserEnrolled } from '../utils';
 
 const style = {
   marginTop: '50px',
@@ -35,8 +35,8 @@ const Courses = ({ currentUser }) => {
       setCourseList(filteredCourses);
     } else {
       const publishedCourses = getPublishedCourses();
-      const filteredCourses = publishedCourses.filter((course, index) =>
-        course.students.filter((student) => student.id === currentUser?.id)
+      const filteredCourses = publishedCourses.filter((course) =>
+        isUserEnrolled(currentUser?.id, course.id)
       );
       setCourseList(filteredCourses);
     }
