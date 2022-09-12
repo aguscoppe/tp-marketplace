@@ -1,41 +1,21 @@
-import { useEffect, useState } from "react";
-import NavBar from "../components/NavBar";
-import Header from "../components/Header";
-import Course from "../components/Course";
-import { courses } from "../data";
-import { Grid } from "@mui/material";
-
-const getCourses = ({ name, type, frequency, rating }) => {
-  let filtered = courses;
-  if (name !== "") {
-    filtered = courses.filter(
-      (course) => course.name.toLowerCase() === name.toLowerCase()
-    );
-  } else if (type !== "") {
-    filtered = filtered.filter(
-      (course) => course.type.toLowerCase() === type.toLowerCase()
-    );
-  } else if (frequency !== "") {
-    filtered = filtered.filter(
-      (course) => course.frequency.toLowerCase() === frequency.toLowerCase()
-    );
-  } else if (rating !== "") {
-    filtered = filtered.filter((course) => course.rating === rating);
-  } else {
-    return [];
-  }
-  return filtered;
-};
+import { useEffect, useState } from 'react';
+import NavBar from '../components/NavBar';
+import Header from '../components/Header';
+import SearchBar from '../components/SearchBar';
+import Course from '../components/Course';
+import { Grid } from '@mui/material';
+import { getPublishedCourses, filterCourses } from '../utils';
 
 const Home = ({ currentUser }) => {
+  const courses = getPublishedCourses();
   const [formContent, setFormContent] = useState({
-    name: "",
-    type: "",
-    frequency: "",
-    rating: "",
+    name: '',
+    type: '',
+    frequency: '',
+    rating: '',
   });
   const [beginSearch, setBeginSearch] = useState(false);
-  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState(courses);
 
   const handleChange = (e) => {
     setBeginSearch(false);
@@ -51,20 +31,21 @@ const Home = ({ currentUser }) => {
 
   useEffect(() => {
     if (beginSearch) {
-      setFilteredCourses(getCourses(formContent));
+      setFilteredCourses(filterCourses(formContent));
     }
   }, [beginSearch]);
 
   return (
     <>
       <NavBar currentUser={currentUser} />
-      <Header
+      <Header />
+      <SearchBar
         formContent={formContent}
         handleChange={handleChange}
         handleClick={handleClick}
       />
       {filteredCourses ? (
-        <Grid container diaplay="flex" justifyContent="center">
+        <Grid container diaplay='flex' justifyContent='center'>
           {filteredCourses.map((course) => (
             <Course key={course.name} courseData={course} />
           ))}
