@@ -1,60 +1,64 @@
-import { useState } from "react";
-import NavBar from "../components/NavBar";
+import { useState } from 'react';
+import NavBar from '../components/NavBar';
 import {
   Box,
   Button,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  FormHelperText,
   Grid,
-  TextField,
-  MenuItem,
   InputAdornment,
-} from "@mui/material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import { typeItems, frequencyItems } from "../components/Header";
-import { Link, useParams } from "react-router-dom";
-import { courses } from "../data";
+  MenuItem,
+  TextField,
+} from '@mui/material';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { typeItems, frequencyItems } from '../components/SearchBar';
+import { Link, useParams } from 'react-router-dom';
+import { courses } from '../data';
 
 const initialState = {
-  name: "",
-  type: "",
+  name: '',
+  type: '',
   teacherId: null,
   students: [],
   duration: 60,
-  frequency: "",
+  frequency: '',
   price: 0,
-  description: "",
+  description: '',
+  published: false,
   rating: 0,
-  comments: [],
 };
 
 const style = {
-  height: "100%",
-  "& .MuiTypography-root": {
-    fontFamily: "Montserrat",
+  height: '100%',
+  '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiButton-root": {
-    width: "300px",
-    fontFamily: "Montserrat",
+  '& .MuiButton-root': {
+    width: '300px',
+    fontFamily: 'Montserrat',
   },
-  "& .MuiInputBase-root": {
-    fontFamily: "Montserrat",
+  '& .MuiInputBase-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiFormLabel-root": {
-    fontFamily: "Montserrat",
+  '& .MuiFormLabel-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiTextField-root": {
-    width: "300px",
-    margin: "10px",
-    backgroundColor: "#fff",
+  '& .MuiTextField-root': {
+    width: '300px',
+    margin: '10px',
+    backgroundColor: '#fff',
   },
-  "& .MuiTextField-root:first-of-type": {
-    marginTop: "50px",
+  '& .MuiTextField-root:first-of-type': {
+    marginTop: '50px',
   },
   a: {
-    textDecoration: "none",
+    textDecoration: 'none',
   },
   input: {
-    fontFamily: "Montserrat",
+    fontFamily: 'Montserrat',
   },
 };
 
@@ -64,7 +68,27 @@ const NewCourse = ({ currentUser }) => {
   const [newCourse, setNewCourse] = useState(
     courseData.length > 0 ? courseData[0] : initialState
   );
-  const { name, type, duration, frequency, price, description } = newCourse;
+  const {
+    name,
+    type,
+    duration,
+    frequency,
+    price,
+    description,
+    published,
+    students,
+  } = newCourse;
+
+  const handleCheckbox = () => {
+    if (students.length > 0) {
+      alert('No puedes despublicar una clase con alumnos inscriptos');
+    } else {
+      setNewCourse((prev) => ({
+        ...prev,
+        published: !prev.published,
+      }));
+    }
+  };
 
   const handleChange = (e) => {
     setNewCourse((prev) => ({
@@ -92,23 +116,23 @@ const NewCourse = ({ currentUser }) => {
       <Grid
         container
         sx={style}
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
+        flexDirection='column'
+        alignItems='center'
+        justifyContent='center'
       >
         <TextField
-          autoComplete="off"
-          variant="outlined"
-          label="Materia"
+          autoComplete='off'
+          variant='outlined'
+          label='Materia'
           value={name}
-          name="name"
+          name='name'
           onChange={handleChange}
         />
         <TextField
           value={type}
           select
-          label="Tipo de clase"
-          name="type"
+          label='Tipo de clase'
+          name='type'
           onChange={handleChange}
         >
           {typeItems.map((item) => (
@@ -120,8 +144,8 @@ const NewCourse = ({ currentUser }) => {
         <TextField
           value={frequency}
           select
-          label="Frecuencia"
-          name="frequency"
+          label='Frecuencia'
+          name='frequency'
           onChange={handleChange}
         >
           {frequencyItems.map((item) => (
@@ -131,69 +155,86 @@ const NewCourse = ({ currentUser }) => {
           ))}
         </TextField>
         <TextField
-          autoComplete="off"
-          variant="outlined"
-          label="Duración (en minutos)"
+          autoComplete='off'
+          variant='outlined'
+          label='Duración (en minutos)'
           value={duration}
-          name="duration"
+          name='duration'
           onChange={handleChange}
-          type="number"
+          type='number'
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <AccessTimeIcon />
               </InputAdornment>
             ),
           }}
         />
         <TextField
-          autoComplete="off"
-          variant="outlined"
-          label="Costo"
+          autoComplete='off'
+          variant='outlined'
+          label='Costo'
           value={price}
-          name="price"
+          name='price'
           onChange={handleChange}
-          type="number"
+          type='number'
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <AttachMoneyIcon />
               </InputAdornment>
             ),
           }}
         />
         <TextField
-          autoComplete="off"
-          variant="outlined"
-          label="Descripción"
+          autoComplete='off'
+          variant='outlined'
+          label='Descripción'
           value={description}
-          name="description"
+          name='description'
           onChange={handleChange}
           multiline
           rows={4}
         />
-        {courseData.length > 0 ? (
-          <Box display="flex" flexDirection="column">
+        <FormGroup sx={{ width: '300px' }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                onChange={handleCheckbox}
+                checked={published}
+                name='published'
+              />
+            }
+            label='Publicar'
+          />
+        </FormGroup>
+        <FormHelperText sx={{ width: '300px', fontFamily: 'Montserrat' }}>
+          Los alumnos solo podrán inscribirse a una clase si está publicada
+        </FormHelperText>
+        {published && students.length > 0 ? (
+          <Box display='flex' flexDirection='column'>
             <Link to={`/students/${id}`}>
               <Button
-                variant="outlined"
-                sx={{ height: "50px", margin: "10px" }}
+                variant='outlined'
+                sx={{ height: '50px', margin: '10px' }}
               >
                 Lista de alumnos
               </Button>
             </Link>
-            <Button
-              variant="contained"
-              sx={{ height: "50px", margin: "10px" }}
-              onClick={saveChanges}
-            >
-              Guardar
-            </Button>
           </Box>
+        ) : null}
+        {id ? (
+          <Button
+            variant='contained'
+            sx={{ height: '50px', margin: '10px' }}
+            onClick={saveChanges}
+          >
+            Guardar
+          </Button>
         ) : (
           <Button
-            variant="contained"
-            sx={{ height: "50px", margin: "10px" }}
+            variant='contained'
+            sx={{ height: '50px', margin: '10px' }}
             onClick={handleClick}
           >
             Crear
