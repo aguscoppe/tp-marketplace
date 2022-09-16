@@ -82,30 +82,33 @@ const Login = ({ currentUser, signIn }) => {
             marginTop: "50px",
             marginBottom: "50px",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
             minWidth: "400px",
             minHeight: "500px",
             backgroundColor: "#595959",
             borderRadius: "30px",
+            padding: "40px",
+            boxShadow: 20,
           }}
         >
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 900,
+              color: "#FFFFFF",
+              fontFamily: "Montserrat",
+            }}
+          >
+            Ingresar
+          </Typography>
           <Grid
             container
             direction="column"
             justifyContent="space-between"
             alignItems="center"
+            marginTop="30px"
           >
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 900,
-                color: "#FFFFFF",
-                fontFamily: "Montserrat",
-              }}
-            >
-              LOGIN
-            </Typography>
             <TextField
               variant="outlined"
               label="Correo electronico"
@@ -152,33 +155,34 @@ const Login = ({ currentUser, signIn }) => {
                 }
               />
             </FormControl>
-            <Link
-              to="/reset-password"
-              style={{
-                textDecoration: "none",
-              }}
-            >
-              <Typography
-                sx={{
-                  color: "#FFFFFF",
-                  fontFamily: "Montserrat",
-                  fontSize: "14px",
-                  justifySelf: "end",
-                  "&:hover": {
-                    color: "#90caf9",
-                  },
+            <Box sx={{ width: "90%", display: "flex", justifyContent: "end" }}>
+              <Link
+                to="/reset-password"
+                style={{
+                  textDecoration: "none",
                 }}
               >
-                Olvide mi contraseña
-              </Typography>
-            </Link>
+                <Typography
+                  sx={{
+                    color: "#FFFFFF",
+                    fontFamily: "Montserrat",
+                    fontSize: "14px",
+                    "&:hover": {
+                      color: "#90caf9",
+                    },
+                  }}
+                >
+                  Olvide mi contraseña
+                </Typography>
+              </Link>
+            </Box>
             <Button
               variant="contained"
               sx={{
                 height: "50px",
                 marginTop: "20px",
                 marginBottom: "20px",
-                minWidth: "150px",
+                minWidth: "200px",
                 fontFamily: "Montserrat",
               }}
               onClick={handleLogin}
@@ -189,7 +193,7 @@ const Login = ({ currentUser, signIn }) => {
               sx={{
                 color: "#FFFFFF",
                 fontFamily: "Montserrat",
-                marginTop: "30px",
+                marginTop: "50px",
               }}
             >
               ¿No tienes cuenta?{" "}
