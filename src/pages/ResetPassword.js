@@ -22,6 +22,12 @@ const ResetPassword = ({ currentUser }) => {
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPositionX: "right",
+          a: {
+            color: "#fff",
+            "&:hover": {
+              color: "#90caf9",
+            },
+          },
         }}
       >
         <Box
@@ -93,9 +99,6 @@ const ResetPassword = ({ currentUser }) => {
           <Typography
             sx={{
               color: "#90caf9",
-              "&:visited": {
-                color: "#90caf9",
-              },
             }}
           >
             <Link
