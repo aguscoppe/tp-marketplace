@@ -1,32 +1,9 @@
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
-  Typography,
-  TextField,
-  Button,
-  Grid,
-  FormControl,
-  InputLabel,
-  InputAdornment,
-  IconButton,
-  OutlinedInput,
-} from "@mui/material";
-import { Link, Navigate } from "react-router-dom";
+import { Box, Typography, TextField, Button } from "@mui/material";
+import { Link } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import { useState } from "react";
 
 const ResetPassword = ({ currentUser }) => {
-  const [values, setValues] = useState({
-    email: "",
-    password: "",
-    new_password: "",
-    repeated_password: "",
-    showPassword: "",
-  });
-
   const handleRecovery = () => {
     console.log("Recuperaste tu contraseña!");
   };
@@ -45,6 +22,12 @@ const ResetPassword = ({ currentUser }) => {
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backgroundPositionX: "right",
+          a: {
+            color: "#fff",
+            "&:hover": {
+              color: "#90caf9",
+            },
+          },
         }}
       >
         <Box
@@ -116,9 +99,6 @@ const ResetPassword = ({ currentUser }) => {
           <Typography
             sx={{
               color: "#90caf9",
-              "&:visited": {
-                color: "#90caf9",
-              },
             }}
           >
             <Link
