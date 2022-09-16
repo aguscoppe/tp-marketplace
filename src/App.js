@@ -56,10 +56,6 @@ const App = () => {
               index
               element={<Profile currentUser={currentUser} signOut={signOut} />}
             />
-            <Route
-              path="reset-password"
-              element={<ResetPassword currentUser={currentUser} />}
-            />
           </Route>
         </>
       ) : null}
@@ -79,6 +75,10 @@ const App = () => {
       <Route
         path="/login"
         element={<Login currentUser={currentUser} signIn={signIn} />}
+      />
+      <Route
+        path="reset-password"
+        element={<ResetPassword currentUser={currentUser} />}
       />
       <Route path="/register" element={<Register />} />
       <Route path="*" element={<Navigate to="/" replace />} />
