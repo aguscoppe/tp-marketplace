@@ -2,10 +2,11 @@ import NavBar from "../components/NavBar";
 import { Box, Grid, Typography } from "@mui/material";
 
 const styles = {
+  boxShadow: 20,
   marginLeft: "150px",
   width: "35vw",
   minHeight: "500px",
-  backgroundColor: "#FFF",
+  backgroundColor: "#fff",
   borderRadius: "30px",
   h5: {
     textAlign: "center",
@@ -22,7 +23,6 @@ const About = ({ currentUser }) => {
       <NavBar currentUser={currentUser} />
       <Box
         sx={{
-          boxShadow: 20,
           display: "flex",
           width: "100%",
           justifyContent: "start",
