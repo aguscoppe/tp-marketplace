@@ -1,4 +1,5 @@
 import {
+  Box,
   List,
   ListItem,
   ListItemText,
@@ -13,7 +14,7 @@ import {
   IconButton,
   OutlinedInput,
 } from "@mui/material";
-import { Circle, VisibilityOff, Visibility } from "@mui/icons-material/";
+import { Link, Navigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import { useState } from "react";
 
@@ -26,176 +27,110 @@ const ResetPassword = ({ currentUser }) => {
     showPassword: "",
   });
 
-  const [hasError, setHasError] = useState(false);
-
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleRecovery = () => {
+    console.log("Recuperaste tu contraseña!");
   };
 
-  const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const checkPasswordMatch = () => {
-    if (values.repeated_password !== "") {
-      if (values.new_password !== values.repeated_password) {
-        console.log("Los passwords NO matchean");
-        setHasError(true);
-      } else {
-        console.log("Los passwords SI matchean");
-        setHasError(false);
-      }
-    }
-  };
-
-  const handlePasswordChange = () => {};
   return (
     <>
       <Navbar currentUser={currentUser} />
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
+      <Box
+        sx={{
+          width: "100vw",
+          height: "90.5vh",
+          display: "flex",
+          justifyContent: "center",
+          background:
+            'url("https://sephorconsulting.es/kitdigital/wp-content/uploads/2022/01/mujer-ordenador.png"), #1976d2',
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backgroundPositionX: "right",
+        }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 900, margin: "10px" }}>
-          CAMBIAR CONTRASEÑA
-        </Typography>
-        <Typography variant="h6">Su contraseña deberá contener:</Typography>
-        <List dense>
-          <ListItem>
-            <ListItemIcon>
-              <Circle sx={{ color: "#000" }} />
-            </ListItemIcon>
-            <ListItemText primary="Al menos una mayúscula" />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Circle sx={{ color: "#000" }} />
-            </ListItemIcon>
-            <ListItemText primary="Al menos un número" />
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <Circle sx={{ color: "#000" }} />
-            </ListItemIcon>
-            <ListItemText primary="Al menos un carácter especial" />
-          </ListItem>
-        </List>
-        <TextField
-          variant="outlined"
-          label="Email"
-          value={values.email}
-          onChange={handleChange("email")}
+        <Box
           sx={{
-            width: "250px",
-            margin: "10px",
-            backgroundColor: "#fff",
+            boxShadow: 20,
+            minWidth: "400px",
+            height: "470px",
+            backgroundColor: "#595959",
+            marginTop: "100px",
+            marginBottom: "50px",
+            color: "#FFF",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            borderRadius: "20px",
           }}
-        />
-        <FormControl
-          sx={{
-            width: "250px",
-            margin: "10px",
-            backgroundColor: "#fff",
-          }}
-          variant="outlined"
         >
-          <InputLabel htmlFor="outlined-adornment-password">
-            Contraseña actual
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            label="Contraseña actual"
-            name="password"
-            type={values.showPassword ? "text" : "password"}
-            value={values.password}
-            onChange={handleChange("password")}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
+          <Box sx={{ maxWidth: "300px", textAlign: "center" }}>
+            <Typography
+              variant="h4"
+              sx={{
+                marginTop: "20px",
+                fontWeight: "bold",
+                fontFamily: "Montserrat",
+              }}
+            >
+              ¿Olvidaste tu contraseña?
+            </Typography>
+            <Typography
+              sx={{
+                marginTop: "20px",
+                fontFamily: "Montserrat",
+                textAlign: "justify",
+              }}
+            >
+              Ingresa tu correo electrónico y te estaremos enviando un mail con
+              las instrucciones para que puedas ingresar
+            </Typography>
+          </Box>
+          <TextField
+            variant="outlined"
+            label="Correo electronico"
+            name="email"
+            sx={{
+              marginTop: "50px",
+              minWidth: "150px",
+              backgroundColor: "#fff",
+              borderRadius: "8px",
+              fontFamily: "Montserrat",
+              width: "300px",
+            }}
           />
-        </FormControl>
-        <FormControl
-          sx={{
-            width: "250px",
-            margin: "10px",
-            backgroundColor: "#fff",
-          }}
-          variant="outlined"
-        >
-          <InputLabel htmlFor="outlined-adornment-new-password">
-            Nueva Contraseña
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-new-password"
-            label="newPassword"
-            name="newPassword"
-            type={values.showPassword ? "text" : "password"}
-            value={values.new_password}
-            onChange={handleChange("new_password")}
-            onBlur={checkPasswordMatch}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl
-          error={hasError}
-          helperText="Passwords do not match"
-          sx={{
-            width: "250px",
-            margin: "10px",
-            backgroundColor: "#fff",
-          }}
-          variant="outlined"
-        >
-          <InputLabel htmlFor="outlined-adornment-repeated-password">
-            Repetir Nueva Contraseña
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-repeated-password"
-            label="repeatPassword"
-            name="repeatPassword"
-            type="password"
-            value={values.repeated_password}
-            onBlur={checkPasswordMatch}
-            onChange={handleChange("repeated_password")}
-          />
-        </FormControl>
-        <Button
-          variant="contained"
-          sx={{ height: "50px", margin: "10px", minWidth: "150px" }}
-          onClick={handlePasswordChange}
-        >
-          FINALIZAR
-        </Button>
-      </Grid>
+          <Button
+            variant="contained"
+            sx={{
+              height: "50px",
+              marginTop: "20px",
+              marginBottom: "20px",
+              minWidth: "150px",
+              fontFamily: "Montserrat",
+              borderRadius: "8px",
+              width: "300px",
+            }}
+            onClick={handleRecovery}
+          >
+            Recuperar contraseña
+          </Button>
+          <Typography
+            sx={{
+              color: "#90caf9",
+              "&:visited": {
+                color: "#90caf9",
+              },
+            }}
+          >
+            <Link
+              to="/login"
+              style={{
+                textDecoration: "none",
+              }}
+            >
+              Volver al Login
+            </Link>
+          </Typography>
+        </Box>
+      </Box>
     </>
   );
 };
