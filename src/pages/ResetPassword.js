@@ -53,7 +53,7 @@ const ResetPassword = ({ currentUser }) => {
             minWidth: "400px",
             height: "470px",
             backgroundColor: "#595959",
-            marginTop: "100px",
+            marginTop: "80px",
             marginBottom: "50px",
             color: "#FFF",
             display: "flex",
@@ -78,10 +78,11 @@ const ResetPassword = ({ currentUser }) => {
                 marginTop: "20px",
                 fontFamily: "Montserrat",
                 textAlign: "justify",
+                letterSpacing: 0,
               }}
             >
               Ingresa tu correo electrónico y te estaremos enviando un mail con
-              las instrucciones para que puedas ingresar
+              las instrucciones para volver a ingresar.
             </Typography>
           </Box>
           <TextField
