@@ -10,9 +10,11 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
-import { courses, users, comments } from '../data';
+import { users, comments } from '../data';
 import { STUDENT_ROLE } from '../constants';
 import { getFullName, isUserEnrolled } from '../utils';
+import { useCourseById } from '../hooks';
+import { useUserById } from '../hooks';
 
 const styles = {
   marginTop: '60px',
@@ -27,9 +29,10 @@ const styles = {
   },
 };
 
-const CourseDetail = ({ currentUser }) => {
+const CourseDetail = ({ currentUserId }) => {
+  const currentUser = useUserById(currentUserId);
   const { id } = useParams();
-  const courseData = courses[id - 1];
+  const courseData = useCourseById(id);
   const { name, description, rating, price, duration, frequency, teacherId } =
     courseData;
   const teacherData = users[teacherId - 1];
@@ -38,7 +41,7 @@ const CourseDetail = ({ currentUser }) => {
 
   return (
     <>
-      <NavBar currentUser={currentUser} />
+      <NavBar currentUserId={currentUserId} />
       <Grid container justifyContent='space-around' sx={styles}>
         <Grid item xs={6}>
           <Typography variant='h3'>{name}</Typography>
@@ -71,9 +74,9 @@ const CourseDetail = ({ currentUser }) => {
         >
           <Typography variant='h5'>Sobre el Instructor</Typography>
           <Typography variant='h4'>
-            {teacherData.name} {teacherData.surname}
+            {teacherData?.name} {teacherData?.surname}
           </Typography>
-          <Typography variant='body1'>{teacherData.experience}</Typography>
+          <Typography variant='body1'>{teacherData?.experience}</Typography>
         </Grid>
       </Grid>
       <Grid container flexDirection='column' sx={styles}>

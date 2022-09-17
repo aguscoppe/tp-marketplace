@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import CourseDetail from "./pages/CourseDetail";
-import Home from "./pages/Home";
-import Courses from "./pages/Courses";
-import Profile from "./pages/Profile";
-import About from "./pages/About";
-import NewCourse from "./pages/NewCourse";
-import StudentTable from "./pages/StudentTable";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import ResetPassword from "./pages/ResetPassword";
-import "./style.css";
-import Enroll from "./pages/Enroll";
-import { STUDENT_ROLE } from "./constants";
+import { useEffect, useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import CourseDetail from './pages/CourseDetail';
+import Home from './pages/Home';
+import Courses from './pages/Courses';
+import Profile from './pages/Profile';
+import About from './pages/About';
+import NewCourse from './pages/NewCourse';
+import StudentTable from './pages/StudentTable';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ResetPassword from './pages/ResetPassword';
+import './style.css';
+import Enroll from './pages/Enroll';
+import { STUDENT_ROLE } from './constants';
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUserId, setCurrentUserId] = useState({});
 
   const signOut = () => {
-    setCurrentUser({});
+    setCurrentUserId({});
   };
 
   const signIn = () => {
-    const localUser = localStorage.getItem("current-user");
-    setCurrentUser(JSON.parse(localUser));
+    const localUser = localStorage.getItem('current-user');
+    setCurrentUserId(JSON.parse(localUser));
   };
 
   useEffect(() => {
@@ -32,56 +32,61 @@ const App = () => {
 
   return (
     <Routes>
-      {currentUser ? (
+      {currentUserId ? (
         <>
-          <Route path="/courses">
-            <Route index element={<Courses currentUser={currentUser} />} />
+          <Route path='/courses'>
+            <Route index element={<Courses currentUserId={currentUserId} />} />
             <Route
-              path="new"
-              element={<NewCourse currentUser={currentUser} />}
+              path='new'
+              element={<NewCourse currentUserId={currentUserId} />}
             />
             <Route
-              path="edit/:id"
-              element={<NewCourse currentUser={currentUser} />}
-            />
-          </Route>
-          <Route path="/students">
-            <Route
-              path=":id"
-              element={<StudentTable currentUser={currentUser} />}
+              path='edit/:id'
+              element={<NewCourse currentUserId={currentUserId} />}
             />
           </Route>
-          <Route path="/profile">
+          <Route path='/students'>
+            <Route
+              path=':id'
+              element={<StudentTable currentUserId={currentUserId} />}
+            />
+          </Route>
+          <Route path='/profile'>
             <Route
               index
-              element={<Profile currentUser={currentUser} signOut={signOut} />}
+              element={
+                <Profile currentUserId={currentUserId} signOut={signOut} />
+              }
             />
           </Route>
         </>
       ) : null}
-      {currentUser?.role === STUDENT_ROLE ? (
-        <Route path="/enroll">
-          <Route path=":id" element={<Enroll currentUser={currentUser} />} />
+      {currentUserId?.role === STUDENT_ROLE ? (
+        <Route path='/enroll'>
+          <Route
+            path=':id'
+            element={<Enroll currentUserId={currentUserId} />}
+          />
         </Route>
       ) : null}
-      <Route exact path="/" element={<Home currentUser={currentUser} />} />
-      <Route path="/course">
+      <Route exact path='/' element={<Home currentUserId={currentUserId} />} />
+      <Route path='/course'>
         <Route
-          path=":id"
-          element={<CourseDetail currentUser={currentUser} />}
+          path=':id'
+          element={<CourseDetail currentUserId={currentUserId} />}
         />
       </Route>
-      <Route path="/about" element={<About currentUser={currentUser} />} />
+      <Route path='/about' element={<About currentUserId={currentUserId} />} />
       <Route
-        path="/login"
-        element={<Login currentUser={currentUser} signIn={signIn} />}
+        path='/login'
+        element={<Login currentUserId={currentUserId} signIn={signIn} />}
       />
       <Route
-        path="reset-password"
-        element={<ResetPassword currentUser={currentUser} />}
+        path='reset-password'
+        element={<ResetPassword currentUserId={currentUserId} />}
       />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='*' element={<Navigate to='/' replace />} />
     </Routes>
   );
 };
