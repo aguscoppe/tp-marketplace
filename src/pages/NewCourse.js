@@ -15,7 +15,7 @@ import {
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { typeItems, frequencyItems } from '../components/SearchBar';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { courses } from '../data';
 import uuid from 'react-uuid';
 import { endpoint } from '../hooks';
@@ -108,6 +108,7 @@ const NewCourse = ({ currentUserId }) => {
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(newCourse),
     });
+    <Navigate to='/courses' />;
   };
 
   const saveChanges = () => {

@@ -80,7 +80,7 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
             onChange={(event, newValue) => {
               setCourseRating(newValue);
             }}
-            readOnly={!isUserEnrolled(currentUser?.id, id)}
+            readOnly={!isUserEnrolled(currentUserId, courseData)}
           />
           <Box>
             {currentUser?.role === TEACHER_ROLE ? (

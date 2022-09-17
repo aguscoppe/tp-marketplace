@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -32,32 +32,40 @@ const styles = {
 const CourseDetail = ({ currentUserId }) => {
   const currentUser = useUserById(currentUserId);
   const { id } = useParams();
-  const courseData = useCourseById(id);
-  const { name, description, rating, price, duration, frequency, teacherId } =
-    courseData;
-  const teacherData = users[teacherId - 1];
+  const course = useCourseById(id);
+  const [courseData, setCourseData] = useState({});
+  const [userEnrolled, setUserEnrolled] = useState(false);
+
+  useEffect(() => {
+    if (course !== undefined && Object.keys(course).length > 0) {
+      setCourseData(course);
+      const result = isUserEnrolled(currentUserId, course);
+      setUserEnrolled(result);
+    }
+  }, [course, currentUserId]);
+
+  const teacherData = users[courseData?.teacherId - 1];
   const filteredComments = comments.filter((comment) => comment.courseId == id);
-  const [ratingValue, setRatingValue] = useState(rating);
+  const [ratingValue, setRatingValue] = useState(courseData?.rating);
 
   return (
     <>
       <NavBar currentUserId={currentUserId} />
       <Grid container justifyContent='space-around' sx={styles}>
         <Grid item xs={6}>
-          <Typography variant='h3'>{name}</Typography>
-          <Typography variant='h5'>{description}</Typography>
+          <Typography variant='h3'>{courseData?.name}</Typography>
+          <Typography variant='h5'>{courseData?.description}</Typography>
           <Rating
             value={ratingValue}
             onChange={(event, newValue) => {
               setRatingValue(newValue);
             }}
-            readOnly={!isUserEnrolled(currentUser?.id, id)}
+            readOnly={!userEnrolled}
           />
-          <Typography variant='h6'>${price}</Typography>
-          <Typography variant='h6'>{frequency}</Typography>
-          <Typography variant='h6'>{duration} minutos</Typography>
-          {currentUser?.role === STUDENT_ROLE &&
-          !isUserEnrolled(currentUser?.id, id) ? (
+          <Typography variant='h6'>${courseData?.price}</Typography>
+          <Typography variant='h6'>{courseData?.frequency}</Typography>
+          <Typography variant='h6'>{courseData?.duration} minutos</Typography>
+          {currentUser?.role === STUDENT_ROLE && !userEnrolled ? (
             <Link to={`/enroll/${id}`}>
               <Button variant='contained'>Inscribirse</Button>
             </Link>
@@ -84,7 +92,7 @@ const CourseDetail = ({ currentUserId }) => {
           <Typography variant='h4' sx={{ marginTop: '60px 0' }}>
             Comentarios
           </Typography>
-          {isUserEnrolled(currentUser?.id, id) && (
+          {userEnrolled && (
             <>
               <TextField sx={{ width: '85%' }} />
               <Button variant='contained'>Comentar</Button>

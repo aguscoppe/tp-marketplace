@@ -5,21 +5,12 @@
       "name": "Lengua",
       "type": "grupal",
       "teacherId": 2,
-      "students": [
-        {
-          "id": 10,
-          "status": "aceptada"
-        },
-        {
-          "id": 3,
-          "status": "solicitada"
-        }
-      ],
+      "students": [],
       "duration": 90,
-      "frequency": "única",
-      "price": 2400,
+      "frequency": "semanal",
+      "price": 3200,
       "description": "Esta es una materia de lengua",
-      "rating": 5,
+      "rating": 4,
       "published": true
     },
     {

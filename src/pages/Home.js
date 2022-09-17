@@ -4,8 +4,21 @@ import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import Course from '../components/Course';
 import { Grid } from '@mui/material';
-import { filterCourses } from '../utils';
-import { useUserById, usePublishedCourses } from '../hooks';
+import { endpoint, useUserById, usePublishedCourses } from '../hooks';
+
+const createQuery = (paramsObj) => {
+  let params = new URLSearchParams(paramsObj);
+  let keysForDel = [];
+  params.forEach((value, key) => {
+    if (value === '') {
+      keysForDel.push(key);
+    }
+  });
+  keysForDel.forEach((key) => {
+    params.delete(key);
+  });
+  return params.toString();
+};
 
 const Home = ({ currentUserId }) => {
   const currentUser = useUserById(currentUserId);
@@ -25,9 +38,14 @@ const Home = ({ currentUserId }) => {
 
   useEffect(() => {
     if (beginSearch) {
-      setFilteredCourses(filterCourses(filterCourses, formContent));
+      const params = createQuery(formContent);
+      fetch(`${endpoint}/courses?published=true&${params}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setFilteredCourses(data);
+        });
     }
-  }, [beginSearch]);
+  }, [beginSearch, formContent]);
 
   const handleChange = (e) => {
     setBeginSearch(false);
