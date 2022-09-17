@@ -15,11 +15,9 @@ import { VisibilityOff, Visibility } from '@mui/icons-material/';
 import { Link, Navigate } from 'react-router-dom';
 import { users } from '../data';
 import Navbar from '../components/NavBar';
-import { useUserById } from '../hooks';
 
 const Login = ({ currentUserId, signIn }) => {
-  const currentUser = useUserById(currentUserId);
-  const [isLoggedIn, setIsLoggedIn] = useState(currentUser ? true : false);
+  const [isLoggedIn, setIsLoggedIn] = useState(currentUserId ? true : false);
   const [values, setValues] = useState({
     email: '',
     password: '',

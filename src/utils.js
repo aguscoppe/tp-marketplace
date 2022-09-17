@@ -18,17 +18,11 @@ const getPublishedCourses = () => {
   return courses.filter((course) => course.published);
 };
 
-const isUserEnrolled = (userId, courseId) => {
-  /*
-  if (!userId || !courseId) {
-    return false;
-  }
-  const [user] = getUser(userId);
-  const [course] = getCourse(parseInt(courseId));
-  const filtered = course.students.filter((student) => student?.id === user.id);
+const isUserEnrolled = (userId, courseData) => {
+  const filtered = courseData.students.filter(
+    (student) => student?.id === userId
+  );
   return filtered.length > 0;
-  */
-  return true;
 };
 
 const filterCourses = ({ name, type, frequency, rating }) => {

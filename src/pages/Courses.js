@@ -46,7 +46,6 @@ const Courses = ({ currentUserId }) => {
   useEffect(() => {
     if (user !== undefined) {
       if (user.role === TEACHER_ROLE) {
-        console.log('entramo');
         setCourseList(coursesByTeacherId);
       }
       if (user?.role === STUDENT_ROLE) {
