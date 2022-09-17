@@ -1,8 +1,8 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
-import { COMMENT_NOTIFICATION, COURSE_NOTIFICATION } from "../constants";
-import { courses, users } from "../data";
-import BlockCommentDialog from "./BlockCommentDialog";
+import { Box, Button, Typography } from '@mui/material';
+import { useState } from 'react';
+import { COMMENT_NOTIFICATION, COURSE_NOTIFICATION } from '../constants';
+import { courses, users } from '../data';
+import BlockCommentDialog from './BlockCommentDialog';
 
 const getCourseName = (id) => {
   const filtered = courses.filter((course) => course.id === id);
@@ -11,20 +11,20 @@ const getCourseName = (id) => {
 };
 
 const style = {
-  width: "300px",
-  padding: "6px 12px",
-  "&:not(:last-of-type)": {
-    borderBottom: "1px solid #ccc",
+  width: '300px',
+  padding: '6px 12px',
+  '&:not(:last-of-type)': {
+    borderBottom: '1px solid #ccc',
   },
-  "& .MuiButton-root": {
-    fontFamily: "Montserrat",
+  '& .MuiButton-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiTypography-root": {
-    fontFamily: "Montserrat",
+  '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .email": {
-    textDecoration: "underline",
-    color: "blue",
+  '& .email': {
+    textDecoration: 'underline',
+    color: 'blue',
   },
 };
 
@@ -38,7 +38,11 @@ const Notification = ({ data }) => {
     console.log(comment);
   };
 
-  const blockComment = () => {
+  const handleAccept = () => {};
+
+  const handleCancel = () => {};
+
+  const handleBlock = () => {
     setShowBlockInput(true);
   };
 
@@ -48,35 +52,35 @@ const Notification = ({ data }) => {
 
   return (
     <Box sx={style}>
-      <Typography variant="h6" textAlign="center">
+      <Typography variant='h6' textAlign='center'>
         Solicitud de {type}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant='body2'>
         <strong>Alumno:</strong> {sourceUser.name} {sourceUser.surname}
       </Typography>
       {type === COURSE_NOTIFICATION && (
         <>
-          <Typography variant="body2">
+          <Typography variant='body2'>
             <strong>Email: </strong>
-            <span className="email">{sourceUser.email}</span>
+            <span className='email'>{sourceUser.email}</span>
           </Typography>
-          <Typography variant="body2">
+          <Typography variant='body2'>
             <strong>Teléfono: </strong>
             {sourceUser.phone}
           </Typography>
         </>
       )}
-      <Typography variant="body2">
+      <Typography variant='body2'>
         <strong>Clase:</strong> {getCourseName(courseId)}
       </Typography>
       {time && (
-        <Typography variant="body2">
+        <Typography variant='body2'>
           <strong>Horario de referencia:</strong> {time}
         </Typography>
       )}
-      <Typography variant="body2">
+      <Typography variant='body2'>
         <strong>
-          {type === COMMENT_NOTIFICATION ? "Comentario: " : "Mensaje: "}
+          {type === COMMENT_NOTIFICATION ? 'Comentario: ' : 'Mensaje: '}
         </strong>
         {message}
       </Typography>
@@ -85,23 +89,24 @@ const Notification = ({ data }) => {
         closeDialog={closeDialog}
         sendComment={sendComment}
       />
-      <Box display="flex" justifyContent="center">
+      <Box display='flex' justifyContent='center'>
         <Button
-          variant="contained"
-          color="success"
-          size="small"
-          sx={{ margin: "8px" }}
+          variant='contained'
+          color='success'
+          size='small'
+          sx={{ margin: '8px' }}
+          onClick={handleAccept}
         >
           Aceptar
         </Button>
         <Button
-          variant="contained"
-          color="error"
-          size="small"
-          sx={{ margin: "8px" }}
-          onClick={type === COMMENT_NOTIFICATION ? blockComment : undefined}
+          variant='contained'
+          color='error'
+          size='small'
+          sx={{ margin: '8px' }}
+          onClick={type === COMMENT_NOTIFICATION ? handleBlock : handleCancel}
         >
-          {type === COMMENT_NOTIFICATION ? "Bloquear" : "Cancelar"}
+          {type === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
         </Button>
       </Box>
     </Box>

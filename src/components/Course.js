@@ -9,7 +9,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { courses, users } from '../data';
 import { Link, useLocation } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -23,6 +22,7 @@ import {
   TEACHER_ROLE,
 } from '../constants';
 import { isUserEnrolled } from '../utils';
+import { useCourseStudents, useUserById, endpoint } from '../hooks';
 
 const statusItems = [
   { key: 1, value: '', label: 'Estado' },
@@ -44,20 +44,25 @@ const styles = {
   },
 };
 
-const Course = ({ courseData, currentUser }) => {
+const Course = ({ courseData, currentUserId, removeCourse }) => {
+  const currentUser = useUserById(currentUserId);
+  const { id, name, type, frequency, rating, teacherId } = courseData;
   const { pathname } = useLocation();
-  const { id, name, type, frequency, rating, students } = courseData;
-  const [enrolledStudents] = students.filter(
-    (student) => student.id === currentUser?.id
-  );
+  const enrolledStudents = useCourseStudents(id);
+  const teacherData = useUserById(teacherId);
   const [courseStatus, setCourseSatus] = useState(enrolledStudents?.status);
   const [courseRating, setCourseRating] = useState(rating);
-  const course = courses[id - 1];
-  const { teacherId } = course;
-  const teacherData = users[teacherId - 1];
 
   const handleStatusChange = (e) => {
     setCourseSatus(e.target.value);
+  };
+
+  const handleRemoveCourse = () => {
+    removeCourse();
+    fetch(`${endpoint}/courses/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-type': 'application/json' },
+    });
   };
 
   return (
@@ -86,11 +91,7 @@ const Course = ({ courseData, currentUser }) => {
                   </IconButton>
                 </Link>
                 <Link to=''>
-                  <IconButton
-                    onClick={() => {
-                      console.log(`deleting course ${id}`);
-                    }}
-                  >
+                  <IconButton onClick={handleRemoveCourse}>
                     <DeleteIcon />
                   </IconButton>
                 </Link>

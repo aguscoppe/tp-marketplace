@@ -2,6 +2,7 @@ import { useState } from 'react';
 import NavBar from '../components/NavBar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { endpoint, useUserById } from '../hooks';
 
 const initialState = {
   studentId: null,
@@ -43,9 +44,14 @@ const style = {
   },
 };
 
-const Enroll = ({ currentUser }) => {
+const Enroll = ({ currentUserId }) => {
+  const currentUser = useUserById(currentUserId);
   const { id } = useParams();
-  const [newEnrollment, setNewEnrollment] = useState(initialState);
+  const [newEnrollment, setNewEnrollment] = useState({
+    ...initialState,
+    courseId: id,
+    studentId: currentUser?.id,
+  });
   const { phone, mail, timeRangeFrom, timeRangeTo, message } = newEnrollment;
 
   const handleChange = (e) => {
@@ -56,18 +62,16 @@ const Enroll = ({ currentUser }) => {
   };
 
   const handleClick = () => {
-    setNewEnrollment((prev) => ({
-      ...prev,
-      courseId: id,
-      studentId: currentUser?.id,
-    }));
-    // TODO: create new notification
-    console.log(newEnrollment);
+    fetch(`${endpoint}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newEnrollment),
+    });
   };
 
   return (
     <>
-      <NavBar currentUser={currentUser} />
+      <NavBar currentUserId={currentUserId} />
       <Grid
         container
         sx={style}

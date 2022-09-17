@@ -17,19 +17,8 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { typeItems, frequencyItems } from '../components/SearchBar';
 import { Link, useParams } from 'react-router-dom';
 import { courses } from '../data';
-
-const initialState = {
-  name: '',
-  type: '',
-  teacherId: null,
-  students: [],
-  duration: 60,
-  frequency: '',
-  price: 0,
-  description: '',
-  published: false,
-  rating: 0,
-};
+import uuid from 'react-uuid';
+import { endpoint } from '../hooks';
 
 const style = {
   height: '100%',
@@ -62,7 +51,19 @@ const style = {
   },
 };
 
-const NewCourse = ({ currentUser }) => {
+const NewCourse = ({ currentUserId }) => {
+  const initialState = {
+    name: '',
+    type: '',
+    teacherId: currentUserId,
+    students: [],
+    duration: 60,
+    frequency: '',
+    price: 0,
+    description: '',
+    published: false,
+    rating: 0,
+  };
   const { id } = useParams();
   const courseData = courses.filter((course) => course.id == id);
   const [newCourse, setNewCourse] = useState(
@@ -100,19 +101,26 @@ const NewCourse = ({ currentUser }) => {
   const handleClick = () => {
     setNewCourse((prev) => ({
       ...prev,
-      teacherId: currentUser.id,
+      id: uuid(),
     }));
-    // TODO: add new course to array
-    console.log(newCourse);
+    fetch(`${endpoint}/courses`, {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newCourse),
+    });
   };
 
   const saveChanges = () => {
-    console.log(newCourse);
+    fetch(`${endpoint}/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newCourse),
+    });
   };
 
   return (
     <>
-      <NavBar currentUser={currentUser} />
+      <NavBar currentUserId={currentUserId} />
       <Grid
         container
         sx={style}

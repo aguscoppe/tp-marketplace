@@ -16,6 +16,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import PersonIcon from '@mui/icons-material/Person';
 import { notifications } from '../data';
+import { useUserById } from '../hooks';
 
 const style = {
   backgroundColor: '#333',
@@ -105,7 +106,8 @@ const publicNavbar = (
   </>
 );
 
-const NavBar = ({ currentUser }) => {
+const NavBar = ({ currentUserId }) => {
+  const currentUser = useUserById(currentUserId);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const notificationList = notifications.filter(

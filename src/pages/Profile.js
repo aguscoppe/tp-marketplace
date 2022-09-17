@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import Home from './Home';
 import {
@@ -9,10 +9,10 @@ import {
   TextField,
   InputAdornment,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
 import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { endpoint, useUserById } from '../hooks';
 
 const style = {
   height: '100%',
@@ -44,18 +44,24 @@ const style = {
   },
 };
 
-const Profile = ({ currentUser, signOut }) => {
+const Profile = ({ currentUserId, signOut }) => {
+  const currentUser = useUserById(currentUserId);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentProfile, setCurrentProfile] = useState({
-    name: currentUser.name,
-    surname: currentUser.surname,
-    email: currentUser.email,
-    phone: currentUser.phone,
-    experience: currentUser.experience,
+    name: '',
+    surname: '',
+    email: '',
+    phone: '',
+    experience: '',
     education: [],
   });
   const [showDialog, setShowDialog] = useState(false);
-  const { name, surname, email, phone, experience, education } = currentProfile;
+
+  useEffect(() => {
+    if (currentUser !== undefined) {
+      setCurrentProfile(() => currentUser);
+    }
+  }, [currentUser]);
 
   const addEducation = (newEducation) => {
     setCurrentProfile((prev) => ({
@@ -78,8 +84,12 @@ const Profile = ({ currentUser, signOut }) => {
   };
 
   const handleClick = () => {
-    // TODO: update user profile
-    console.log('submitted');
+    localStorage.setItem('current-user', currentProfile.id);
+    fetch(`${endpoint}/users/${currentUser.id}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(currentProfile),
+    });
   };
 
   const handleRemove = (index) => {
@@ -100,7 +110,7 @@ const Profile = ({ currentUser, signOut }) => {
   if (isLoggedIn) {
     return (
       <>
-        <NavBar currentUser={currentUser} />
+        <NavBar currentUserId={currentUserId} />
         <Grid
           container
           sx={style}
@@ -112,7 +122,7 @@ const Profile = ({ currentUser, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Nombre'
-            value={name}
+            value={currentProfile.name !== undefined ? currentProfile.name : ''}
             name='name'
             onChange={handleChange}
           />
@@ -120,7 +130,7 @@ const Profile = ({ currentUser, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Apellido'
-            value={surname}
+            value={currentProfile.surname ? currentProfile.surname : ''}
             name='surname'
             onChange={handleChange}
           />
@@ -128,7 +138,7 @@ const Profile = ({ currentUser, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Email'
-            value={email}
+            value={currentProfile.email ? currentProfile.email : ''}
             name='email'
             onChange={handleChange}
           />
@@ -136,25 +146,25 @@ const Profile = ({ currentUser, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Teléfono'
-            value={phone}
+            value={currentProfile.phone ? currentProfile.phone : ''}
             name='phone'
             onChange={handleChange}
           />
-          {currentUser.role === TEACHER_ROLE && (
+          {currentUser?.role === TEACHER_ROLE && (
             <TextField
               autoComplete='off'
               variant='outlined'
               label='Experiencia'
-              value={experience}
+              value={currentProfile.experience}
               name='experience'
               onChange={handleChange}
               multiline
               rows={4}
             />
           )}
-          {currentUser.role === STUDENT_ROLE && (
+          {currentUser?.role === STUDENT_ROLE && (
             <>
-              {education.map((element, index) => (
+              {currentProfile?.education.map((element, index) => (
                 <TextField
                   autoComplete='off'
                   variant='outlined'
@@ -188,14 +198,6 @@ const Profile = ({ currentUser, signOut }) => {
             >
               Guardar
             </Button>
-            <Link to='reset-password'>
-              <Button
-                variant='outlined'
-                sx={{ height: '50px', margin: '10px' }}
-              >
-                Cambiar Contraseña
-              </Button>
-            </Link>
             <Button
               variant='contained'
               sx={{ height: '50px', margin: '10px' }}

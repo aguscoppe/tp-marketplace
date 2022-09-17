@@ -4,10 +4,12 @@ import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import Course from '../components/Course';
 import { Grid } from '@mui/material';
-import { getPublishedCourses, filterCourses } from '../utils';
+import { filterCourses } from '../utils';
+import { useUserById, usePublishedCourses } from '../hooks';
 
-const Home = ({ currentUser }) => {
-  const courses = getPublishedCourses();
+const Home = ({ currentUserId }) => {
+  const currentUser = useUserById(currentUserId);
+  const publishedCourses = usePublishedCourses();
   const [formContent, setFormContent] = useState({
     name: '',
     type: '',
@@ -15,7 +17,17 @@ const Home = ({ currentUser }) => {
     rating: '',
   });
   const [beginSearch, setBeginSearch] = useState(false);
-  const [filteredCourses, setFilteredCourses] = useState(courses);
+  const [filteredCourses, setFilteredCourses] = useState(publishedCourses);
+
+  useEffect(() => {
+    setFilteredCourses(publishedCourses);
+  }, [publishedCourses]);
+
+  useEffect(() => {
+    if (beginSearch) {
+      setFilteredCourses(filterCourses(filterCourses, formContent));
+    }
+  }, [beginSearch]);
 
   const handleChange = (e) => {
     setBeginSearch(false);
@@ -29,15 +41,9 @@ const Home = ({ currentUser }) => {
     setBeginSearch(true);
   };
 
-  useEffect(() => {
-    if (beginSearch) {
-      setFilteredCourses(filterCourses(formContent));
-    }
-  }, [beginSearch]);
-
   return (
     <>
-      <NavBar currentUser={currentUser} />
+      <NavBar currentUserId={currentUserId} />
       <Header />
       <SearchBar
         formContent={formContent}
