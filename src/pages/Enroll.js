@@ -1,18 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { endpoint, useUserById } from '../hooks';
-
-const initialState = {
-  studentId: null,
-  courseId: null,
-  phone: '',
-  mail: '',
-  timeRangeFrom: '',
-  timeRangeTo: '',
-  message: '',
-};
+import { endpoint, useTeacherByCourseId } from '../hooks';
+import uuid from 'react-uuid';
+import { COURSE_NOTIFICATION } from '../constants';
 
 const style = {
   height: '100%',
@@ -45,14 +37,29 @@ const style = {
 };
 
 const Enroll = ({ currentUserId }) => {
-  const currentUser = useUserById(currentUserId);
   const { id } = useParams();
-  const [newEnrollment, setNewEnrollment] = useState({
-    ...initialState,
+  const initialState = {
     courseId: id,
-    studentId: currentUser?.id,
-  });
+    sourceId: currentUserId,
+    type: COURSE_NOTIFICATION,
+    phone: '',
+    mail: '',
+    timeRangeFrom: '',
+    timeRangeTo: '',
+    message: '',
+  };
+  const teacher = useTeacherByCourseId(id);
+  const [newEnrollment, setNewEnrollment] = useState(initialState);
   const { phone, mail, timeRangeFrom, timeRangeTo, message } = newEnrollment;
+
+  useEffect(() => {
+    if (teacher !== undefined) {
+      setNewEnrollment((prev) => ({
+        ...prev,
+        destinationId: teacher.id,
+      }));
+    }
+  }, [teacher]);
 
   const handleChange = (e) => {
     setNewEnrollment((prev) => ({
@@ -62,6 +69,10 @@ const Enroll = ({ currentUserId }) => {
   };
 
   const handleClick = () => {
+    setNewEnrollment((prev) => ({
+      ...prev,
+      id: uuid(),
+    }));
     fetch(`${endpoint}/notifications`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },

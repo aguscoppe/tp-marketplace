@@ -64,6 +64,15 @@ const Profile = ({ currentUserId, signOut }) => {
   }, [currentUser]);
 
   const addEducation = (newEducation) => {
+    const updatedProfile = {
+      ...currentProfile,
+      education: [...currentProfile.education, newEducation],
+    };
+    fetch(`${endpoint}/users/${currentUserId}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(updatedProfile),
+    });
     setCurrentProfile((prev) => ({
       ...prev,
       education: [...prev.education, newEducation],
@@ -164,12 +173,17 @@ const Profile = ({ currentUserId, signOut }) => {
           )}
           {currentUser?.role === STUDENT_ROLE && (
             <>
-              {currentProfile?.education.map((element, index) => (
+              {currentProfile?.education?.map((element, index) => (
                 <TextField
+                  key={index}
                   autoComplete='off'
                   variant='outlined'
                   label='Estudios Cursados'
-                  value={`${element.name} (${element.level} - ${element.status})`}
+                  value={
+                    element === undefined
+                      ? ''
+                      : `${element.name} (${element.level} - ${element.status})`
+                  }
                   multiline
                   InputProps={{
                     endAdornment: (

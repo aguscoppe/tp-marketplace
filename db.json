@@ -86,9 +86,14 @@
       "phone": "1155553333",
       "education": [
         {
-          "level": "",
-          "status": "",
-          "description": ""
+          "name": "Colegio N°5",
+          "level": "primario",
+          "status": "finalizado"
+        },
+        {
+          "name": "Colegio Nacional Buenos Aires",
+          "level": "secundario",
+          "status": "finalizado"
         }
       ],
       "role": "alumno"
@@ -96,19 +101,33 @@
   ],
   "notifications": [
     {
+      "id": 1,
+      "courseId": 2,
       "sourceId": 3,
       "destinationId": 2,
       "type": "inscripcion",
       "time": "de 9hs a 18hs",
-      "courseId": 2,
       "message": "Me quiero inscribir en esta clase"
     },
     {
+      "id": 2,
       "sourceId": 10,
       "destinationId": 2,
       "type": "comentario",
       "courseId": 1,
       "message": "Me gustó mucho esta clase!"
+    },
+    {
+      "courseId": "1",
+      "sourceId": 10,
+      "type": "inscripcion",
+      "phone": "555",
+      "mail": "mail@mail.com",
+      "timeRangeFrom": "5",
+      "timeRangeTo": "6",
+      "message": "Hola!",
+      "destinationId": 2,
+      "id": 3
     }
   ],
   "comments": [

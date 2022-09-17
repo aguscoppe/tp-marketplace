@@ -7,15 +7,17 @@ import Profile from './pages/Profile';
 import About from './pages/About';
 import NewCourse from './pages/NewCourse';
 import StudentTable from './pages/StudentTable';
+import Enroll from './pages/Enroll';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import './style.css';
-import Enroll from './pages/Enroll';
 import { STUDENT_ROLE } from './constants';
+import { useUserById } from './hooks';
 
 const App = () => {
   const [currentUserId, setCurrentUserId] = useState({});
+  const user = useUserById(currentUserId);
 
   const signOut = () => {
     setCurrentUserId({});
@@ -61,7 +63,7 @@ const App = () => {
           </Route>
         </>
       ) : null}
-      {currentUserId?.role === STUDENT_ROLE ? (
+      {user?.role === STUDENT_ROLE ? (
         <Route path='/enroll'>
           <Route
             path=':id'
