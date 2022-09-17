@@ -84,6 +84,13 @@ const useUserById = (id) => {
   return user;
 };
 
+const useTeacherByCourseId = (id) => {
+  const course = useCourseById(id);
+  const teacherId = course?.teacherId;
+  const user = useUserById(teacherId);
+  return user;
+};
+
 export {
   endpoint,
   useCourses,
@@ -92,4 +99,5 @@ export {
   useCoursesByTeacherId,
   useCourseById,
   useUserById,
+  useTeacherByCourseId,
 };

@@ -48,9 +48,9 @@ const Courses = ({ currentUserId }) => {
       if (user.role === TEACHER_ROLE) {
         setCourseList(coursesByTeacherId);
       }
-      if (user?.role === STUDENT_ROLE) {
+      if (user.role === STUDENT_ROLE) {
         const filteredCourses = publishedCourses.filter((course) =>
-          isUserEnrolled(user?.id, course.id)
+          isUserEnrolled(currentUserId, course)
         );
         setCourseList(filteredCourses);
       }
