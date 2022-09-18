@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Course from '../components/Course';
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
-import { isUserEnrolled } from '../utils';
 import {
+  useCoursesByStudentId,
   useCoursesByTeacherId,
-  usePublishedCourses,
   useUserById,
 } from '../hooks';
 
@@ -33,7 +32,7 @@ const Courses = ({ currentUserId }) => {
   const [currentUser, setCurrentUser] = useState({});
   const [courseList, setCourseList] = useState([]);
   const coursesByTeacherId = useCoursesByTeacherId(currentUserId);
-  const publishedCourses = usePublishedCourses();
+  const coursesByStudentId = useCoursesByStudentId(currentUserId);
 
   const removeCourse = (id) => {
     setCourseList((prev) => prev.filter((course) => course.id !== id));
@@ -49,13 +48,10 @@ const Courses = ({ currentUserId }) => {
         setCourseList(coursesByTeacherId);
       }
       if (user.role === STUDENT_ROLE) {
-        const filteredCourses = publishedCourses.filter((course) =>
-          isUserEnrolled(currentUserId, course)
-        );
-        setCourseList(filteredCourses);
+        // setCourseList(coursesByStudentId);
       }
     }
-  }, [user, coursesByTeacherId]);
+  }, [user, coursesByTeacherId, coursesByStudentId]);
 
   return (
     <>
