@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { isUserEnrolled } from './utils';
 
 const endpoint = 'http://localhost:3004';
 
@@ -26,6 +27,18 @@ const usePublishedCourses = () => {
   return publishedCourses;
 };
 
+const useNotifications = (id) => {
+  const [notifications, setNotifications] = useState([]);
+  useEffect(() => {
+    fetch(`${endpoint}/notifications?destinationId=${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setNotifications(data);
+      });
+  }, [id]);
+  return notifications;
+};
+
 const useCourseStudents = (id) => {
   const publishedCourses = usePublishedCourses();
   const filtered = publishedCourses.filter((course) => course.id === id);
@@ -45,16 +58,34 @@ const useCoursesByTeacherId = (id) => {
 };
 
 const useCoursesByStudentId = (id) => {
-  const [coursesByStudentId, setCoursesByStudentId] = useState([]);
+  return [];
+  /*
+  const publishedCourses = usePublishedCourses();
   useEffect(() => {
-    fetch(`${endpoint}/courses?published=true`)
-      .then((res) => res.json())
-      .then((data) => {
-        const filteredData = data.filter((course) => course.id === id);
-        setCoursesByStudentId(filteredData);
-      });
-  }, [id]);
-  return coursesByStudentId;
+    if (publishedCourses !== undefined) {
+      const filteredData = publishedCourses
+        .map((course) => (isUserEnrolled(id, course) ? course.id : null))
+        .filter((element) => element);
+      setCoursesByStudentId(filteredData);
+    }
+  }, [id, publishedCourses]);
+  */
+  /*
+  const [coursesByStudentId, setCoursesByStudentId] = useState([]);
+  const publishedCourses = [2, 3];
+  const courses = await Promise.all(
+    publishedCourses.map((courseId) =>
+      fetch(`${endpoint}/courses?id=${courseId}`)
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          return data[0];
+        })
+    )
+  );
+  return courses;
+*/
 };
 
 const useCourseById = (id) => {
@@ -68,6 +99,19 @@ const useCourseById = (id) => {
       });
   }, [id]);
   return course;
+};
+
+const useCourseName = (id) => {
+  const [name, setName] = useState('');
+  useEffect(() => {
+    fetch(`${endpoint}/courses?id=${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const [courseData] = data;
+        setName(courseData.name);
+      });
+  }, [id]);
+  return name;
 };
 
 const useUserById = (id) => {
@@ -95,7 +139,10 @@ export {
   endpoint,
   useCourses,
   usePublishedCourses,
+  useNotifications,
+  useCourseName,
   useCourseStudents,
+  useCoursesByStudentId,
   useCoursesByTeacherId,
   useCourseById,
   useUserById,

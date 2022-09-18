@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   AppBar,
   Badge,
@@ -15,8 +15,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 import PersonIcon from '@mui/icons-material/Person';
-import { notifications } from '../data';
-import { useUserById } from '../hooks';
+import { useNotifications } from '../hooks';
 
 const style = {
   backgroundColor: '#333',
@@ -107,12 +106,16 @@ const publicNavbar = (
 );
 
 const NavBar = ({ currentUserId }) => {
-  const currentUser = useUserById(currentUserId);
+  const notifications = useNotifications(currentUserId);
+  const [notificationList, setNotificationList] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const notificationList = notifications.filter(
-    (notification) => notification.destinationId === currentUser?.id
-  );
+
+  useEffect(() => {
+    if (notifications !== undefined) {
+      setNotificationList(notifications);
+    }
+  }, [notifications]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -132,7 +135,7 @@ const NavBar = ({ currentUserId }) => {
             alignItems: 'center',
           }}
         >
-          {currentUser ? (
+          {currentUserId ? (
             <>
               {userNavbar}
               <IconButton onClick={handleClick}>
