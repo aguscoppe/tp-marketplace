@@ -97,7 +97,18 @@ const Notification = ({ data }) => {
 
   const handleAccept = (type) => {
     if (type === COMMENT_NOTIFICATION) {
-      console.log(type);
+      const newComment = {
+        id: uuid(),
+        courseId: courseId,
+        studentId: sourceId,
+        message: message,
+      };
+      fetch(`${endpoint}/comments`, {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newComment),
+      });
+      deleteNotification();
     }
   };
 

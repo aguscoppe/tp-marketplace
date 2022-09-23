@@ -7,6 +7,10 @@
       "teacherId": 2,
       "students": [
         {
+          "id": 3,
+          "status": "solicitada"
+        },
+        {
           "id": 10,
           "status": "aceptada"
         }
@@ -112,11 +116,13 @@
   "notifications": [],
   "comments": [
     {
+      "id": 1,
       "courseId": 1,
       "studentId": 10,
       "message": "Excelente clase!!"
     },
     {
+      "id": 2,
       "courseId": 1,
       "studentId": 3,
       "message": "Recomiendo mucho esta clase"

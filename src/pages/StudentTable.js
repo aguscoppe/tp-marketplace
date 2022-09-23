@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   IconButton,
@@ -16,7 +16,6 @@ import {
 import NavBar from '../components/NavBar';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { courses } from '../data';
 import { getFullName } from '../utils';
 import {
   COURSE_STATUS_ACCEPTED,
@@ -24,6 +23,7 @@ import {
   COURSE_STATUS_FINISHED,
   COURSE_STATUS_PENDING,
 } from '../constants';
+import { endpoint, useCourseById } from '../hooks';
 
 const styles = {
   margin: '60px auto',
@@ -36,29 +36,48 @@ const styles = {
 
 const StudentTable = ({ currentUserId }) => {
   const { id } = useParams();
+  const courseData = useCourseById(id);
+  const [students, setStudents] = useState([]);
   const [editing, setEditing] = useState({ studentId: null, isEditing: false });
   const [newStatus, setNewStatus] = useState('');
   const { studentId, isEditing } = editing;
-  const [filtered] = courses.filter((course) => course.id == id);
-  const { students } = filtered;
 
-  const handleClick = (id) => {
-    if (isEditing) {
-      setNewStatus('');
+  useEffect(() => {
+    if (courseData !== undefined) {
+      setStudents(courseData.students);
     }
-    return setEditing((prev) => ({
+  }, [courseData]);
+
+  const handleClick = (id) =>
+    setEditing((prev) => ({
       isEditing: !prev.isEditing,
       studentId: id,
     }));
-  };
 
   const handleChange = (e, id) => {
     const newValue = e.target.value;
-    setNewStatus(newValue);
+    if (newValue !== COURSE_STATUS_PENDING) {
+      setNewStatus(newValue);
+    } else {
+      alert('No puedes realizar esta acción');
+    }
   };
 
   const handleSave = () => {
-    console.log(newStatus);
+    if (newStatus !== '') {
+      const newStudentData = students.filter(
+        (student) => student.id !== studentId
+      );
+      const newData = {
+        ...courseData,
+        students: [...newStudentData, { id: studentId, status: newStatus }],
+      };
+      fetch(`${endpoint}/courses/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newData),
+      });
+    }
   };
 
   return (
@@ -72,12 +91,12 @@ const StudentTable = ({ currentUserId }) => {
                 <Typography variant='h6'>Alumno</Typography>
               </TableCell>
               <TableCell>
-                <Typography variant='h6'>Clase</Typography>
+                <Typography variant='h6'>Estado</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {students.map((student) => (
+            {students?.map((student) => (
               <TableRow key={student.id}>
                 <TableCell>
                   <Typography variant='body2'>
