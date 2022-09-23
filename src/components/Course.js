@@ -22,7 +22,7 @@ import {
   TEACHER_ROLE,
 } from '../constants';
 import { isUserEnrolled } from '../utils';
-import { useCourseStudents, useUserById, endpoint } from '../hooks';
+import { useUserById, endpoint } from '../hooks';
 
 const statusItems = [
   { key: 1, value: '', label: 'Estado' },
@@ -46,23 +46,54 @@ const styles = {
 
 const Course = ({ courseData, currentUserId, removeCourse }) => {
   const currentUser = useUserById(currentUserId);
-  const { id, name, type, frequency, rating, teacherId } = courseData;
+  const { id, name, type, frequency, rating, teacherId, students } = courseData;
   const { pathname } = useLocation();
-  const enrolledStudents = useCourseStudents(id);
+  const enrolledStudents = students.filter(
+    (student) => student.id === currentUserId
+  );
   const teacherData = useUserById(teacherId);
-  const [courseStatus, setCourseSatus] = useState(enrolledStudents?.status);
+  const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
   const [courseRating, setCourseRating] = useState(rating);
 
   const handleStatusChange = (e) => {
-    setCourseSatus(e.target.value);
+    if (
+      courseStatus !== COURSE_STATUS_CANCELLED &&
+      courseStatus !== COURSE_STATUS_PENDING &&
+      e.target.value !== COURSE_STATUS_PENDING &&
+      e.target.value !== ''
+    ) {
+      const newStudentData = students.filter(
+        (student) => student.id !== currentUserId
+      );
+      const newData = {
+        ...courseData,
+        students: [
+          ...newStudentData,
+          { id: currentUserId, status: e.target.value },
+        ],
+      };
+      fetch(`${endpoint}/courses/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newData),
+      });
+      setCourseSatus(e.target.value);
+    } else {
+      alert('No puedes realizar esta acción');
+    }
   };
 
   const handleRemoveCourse = () => {
-    removeCourse();
-    fetch(`${endpoint}/courses/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-type': 'application/json' },
-    });
+    const answer = window.confirm(
+      '¿Estás seguro/a de que quieres realizar esta acción?'
+    );
+    if (answer) {
+      removeCourse();
+      fetch(`${endpoint}/courses/${id}`, {
+        method: 'DELETE',
+        headers: { 'Content-type': 'application/json' },
+      });
+    }
   };
 
   return (
@@ -114,13 +145,11 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
             sx={{ marginTop: '10px', width: '100%' }}
             onChange={handleStatusChange}
           >
-            {statusItems.map((item, index) =>
-              index >= 2 ? (
-                <MenuItem key={item.label} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ) : null
-            )}
+            {statusItems.map((item, index) => (
+              <MenuItem key={item.label} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
           </TextField>
         )}
       </CardContent>

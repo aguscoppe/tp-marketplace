@@ -3,9 +3,9 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Course from '../components/Course';
-import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
+import { TEACHER_ROLE } from '../constants';
 import {
-  useCoursesByStudentId,
+  useCourseDataByStudentId,
   useCoursesByTeacherId,
   useUserById,
 } from '../hooks';
@@ -32,7 +32,7 @@ const Courses = ({ currentUserId }) => {
   const [currentUser, setCurrentUser] = useState({});
   const [courseList, setCourseList] = useState([]);
   const coursesByTeacherId = useCoursesByTeacherId(currentUserId);
-  const coursesByStudentId = useCoursesByStudentId(currentUserId);
+  const coursesByStudentId = useCourseDataByStudentId(currentUserId);
 
   const removeCourse = (id) => {
     setCourseList((prev) => prev.filter((course) => course.id !== id));
@@ -43,22 +43,23 @@ const Courses = ({ currentUserId }) => {
   }, [user]);
 
   useEffect(() => {
-    if (user !== undefined) {
-      if (user.role === TEACHER_ROLE) {
-        setCourseList(coursesByTeacherId);
-      }
-      if (user.role === STUDENT_ROLE) {
-        // setCourseList(coursesByStudentId);
-      }
+    if (coursesByStudentId?.length > 0) {
+      setCourseList(coursesByStudentId);
     }
-  }, [user, coursesByTeacherId, coursesByStudentId]);
+  }, [coursesByStudentId]);
+
+  useEffect(() => {
+    if (coursesByTeacherId?.length > 0) {
+      setCourseList(coursesByTeacherId);
+    }
+  }, [coursesByTeacherId]);
 
   return (
     <>
       <NavBar currentUserId={currentUserId} />
       <Box sx={style}>
         <Grid container diaplay='flex' justifyContent='center'>
-          {courseList.length > 0 ? (
+          {courseList?.length > 0 ? (
             courseList.map((course) => (
               <Course
                 key={course.name}

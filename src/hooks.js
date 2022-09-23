@@ -27,6 +27,31 @@ const usePublishedCourses = () => {
   return publishedCourses;
 };
 
+const useCourseById = (id) => {
+  const [course, setCourse] = useState([]);
+  useEffect(() => {
+    fetch(`${endpoint}/courses?id=${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const [courseData] = data;
+        setCourse(courseData);
+      });
+  }, [id]);
+  return course;
+};
+
+const useComments = (courseId) => {
+  const [comments, setComments] = useState([]);
+  useEffect(() => {
+    fetch(`${endpoint}/comments?courseId=${courseId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setComments(data);
+      });
+  }, []);
+  return comments;
+};
+
 const useNotifications = (id) => {
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
@@ -41,8 +66,18 @@ const useNotifications = (id) => {
 
 const useCourseStudents = (id) => {
   const publishedCourses = usePublishedCourses();
-  const filtered = publishedCourses.filter((course) => course.id === id);
-  return filtered.students;
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    if (publishedCourses?.length) {
+      const filtered = publishedCourses.filter(
+        (course) => course.id === id
+      ).students;
+      setCourses(filtered);
+    }
+  }, [publishedCourses]);
+
+  return courses;
 };
 
 const useCoursesByTeacherId = (id) => {
@@ -58,47 +93,46 @@ const useCoursesByTeacherId = (id) => {
 };
 
 const useCoursesByStudentId = (id) => {
-  return [];
-  /*
+  const [filteredCourses, setFilteredCourses] = useState([]);
   const publishedCourses = usePublishedCourses();
   useEffect(() => {
     if (publishedCourses !== undefined) {
       const filteredData = publishedCourses
         .map((course) => (isUserEnrolled(id, course) ? course.id : null))
         .filter((element) => element);
-      setCoursesByStudentId(filteredData);
+      setFilteredCourses(filteredData);
     }
   }, [id, publishedCourses]);
-  */
-  /*
-  const [coursesByStudentId, setCoursesByStudentId] = useState([]);
-  const publishedCourses = [2, 3];
-  const courses = await Promise.all(
-    publishedCourses.map((courseId) =>
-      fetch(`${endpoint}/courses?id=${courseId}`)
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          return data[0];
-        })
-    )
-  );
-  return courses;
-*/
+  return filteredCourses;
 };
 
-const useCourseById = (id) => {
-  const [course, setCourse] = useState([]);
+const useCourseDataByStudentId = (id) => {
+  const filteredCourses = useCoursesByStudentId(id);
+  const [courseList, setCourseList] = useState([]);
+  async function fetchData() {
+    const courses = await Promise.all(
+      filteredCourses.map((courseId) =>
+        fetch(`${endpoint}/courses?id=${courseId}`)
+          .then((res) => {
+            return res.json();
+          })
+          .then((data) => {
+            return data[0];
+          })
+      )
+    );
+    if (courses?.length > 0) {
+      setCourseList(courses);
+    }
+    return courses;
+  }
   useEffect(() => {
-    fetch(`${endpoint}/courses?id=${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const [courseData] = data;
-        setCourse(courseData);
-      });
-  }, [id]);
-  return course;
+    if (filteredCourses !== undefined) {
+      fetchData();
+    }
+  }, [filteredCourses]);
+
+  return courseList;
 };
 
 const useCourseName = (id) => {
@@ -139,10 +173,12 @@ export {
   endpoint,
   useCourses,
   usePublishedCourses,
+  useComments,
   useNotifications,
   useCourseName,
   useCourseStudents,
   useCoursesByStudentId,
+  useCourseDataByStudentId,
   useCoursesByTeacherId,
   useCourseById,
   useUserById,

@@ -10,10 +10,9 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
-import { users, comments } from '../data';
 import { STUDENT_ROLE } from '../constants';
 import { getFullName, isUserEnrolled } from '../utils';
-import { useCourseById } from '../hooks';
+import { useComments, useCourseById, useTeacherByCourseId } from '../hooks';
 import { useUserById } from '../hooks';
 
 const styles = {
@@ -33,8 +32,13 @@ const CourseDetail = ({ currentUserId }) => {
   const currentUser = useUserById(currentUserId);
   const { id } = useParams();
   const course = useCourseById(id);
+  const comments = useComments(id);
+  const teacher = useTeacherByCourseId(id);
   const [courseData, setCourseData] = useState({});
   const [userEnrolled, setUserEnrolled] = useState(false);
+  const [filteredComments, setFilteredComments] = useState([]);
+  const [teacherData, setTeacherData] = useState([]);
+  const [ratingValue, setRatingValue] = useState(courseData?.rating);
 
   useEffect(() => {
     if (course !== undefined && Object.keys(course).length > 0) {
@@ -44,9 +48,21 @@ const CourseDetail = ({ currentUserId }) => {
     }
   }, [course, currentUserId]);
 
-  const teacherData = users[courseData?.teacherId - 1];
-  const filteredComments = comments.filter((comment) => comment.courseId == id);
-  const [ratingValue, setRatingValue] = useState(courseData?.rating);
+  useEffect(() => {
+    if (comments !== undefined) {
+      setFilteredComments(comments.filter((comment) => comment.courseId == id));
+    }
+  }, [comments]);
+
+  useEffect(() => {
+    if (teacher !== undefined) {
+      setTeacherData(teacher);
+    }
+  }, [teacher]);
+
+  const handleSubmitComment = () => {
+    console.log('agregar handleChange, value, etc a TextField');
+  };
 
   return (
     <>
@@ -95,7 +111,9 @@ const CourseDetail = ({ currentUserId }) => {
           {userEnrolled && (
             <>
               <TextField sx={{ width: '85%' }} />
-              <Button variant='contained'>Comentar</Button>
+              <Button variant='contained' onClick={handleSubmitComment}>
+                Comentar
+              </Button>
             </>
           )}
           {filteredComments.length > 0 ? (

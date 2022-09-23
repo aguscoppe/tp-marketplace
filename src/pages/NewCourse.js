@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import {
   Box,
@@ -15,10 +15,9 @@ import {
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { typeItems, frequencyItems } from '../components/SearchBar';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { courses } from '../data';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import uuid from 'react-uuid';
-import { endpoint } from '../hooks';
+import { endpoint, useCourseById } from '../hooks';
 
 const style = {
   height: '100%',
@@ -65,10 +64,10 @@ const NewCourse = ({ currentUserId }) => {
     rating: 0,
   };
   const { id } = useParams();
-  const courseData = courses.filter((course) => course.id == id);
-  const [newCourse, setNewCourse] = useState(
-    courseData.length > 0 ? courseData[0] : initialState
-  );
+  const course = useCourseById(id);
+  const navigate = useNavigate();
+  const [courseData, setCourseData] = useState([]);
+  const [newCourse, setNewCourse] = useState(initialState);
   const {
     name,
     type,
@@ -79,6 +78,13 @@ const NewCourse = ({ currentUserId }) => {
     published,
     students,
   } = newCourse;
+
+  useEffect(() => {
+    if (course !== undefined) {
+      setCourseData(course);
+      setNewCourse(course);
+    }
+  }, [course]);
 
   const handleCheckbox = () => {
     if (students.length > 0) {
@@ -108,7 +114,7 @@ const NewCourse = ({ currentUserId }) => {
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(newCourse),
     });
-    <Navigate to='/courses' />;
+    navigate('/courses');
   };
 
   const saveChanges = () => {
@@ -117,6 +123,7 @@ const NewCourse = ({ currentUserId }) => {
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(newCourse),
     });
+    navigate('/courses');
   };
 
   return (

@@ -1,5 +1,6 @@
-import { users, courses } from './data';
+import { users } from './data';
 
+/*
 const getCourse = (id) => {
   return courses.filter((course) => course.id === id);
 };
@@ -8,21 +9,8 @@ const getUser = (id) => {
   return users.filter((user) => user.id === id);
 };
 
-const getFullName = (id) => {
-  const filtered = users.filter((user) => user.id === id);
-  const [user] = filtered;
-  return `${user.name} ${user.surname}`;
-};
-
 const getPublishedCourses = () => {
   return courses.filter((course) => course.published);
-};
-
-const isUserEnrolled = (userId, courseData) => {
-  const filtered = courseData.students.filter(
-    (student) => student?.id === userId
-  );
-  return filtered.length > 0;
 };
 
 const filterCourses = ({ name, type, frequency, rating }) => {
@@ -49,11 +37,19 @@ const filterCourses = ({ name, type, frequency, rating }) => {
   return filtered;
 };
 
-export {
-  filterCourses,
-  getCourse,
-  getUser,
-  getFullName,
-  getPublishedCourses,
-  isUserEnrolled,
+*/
+
+const isUserEnrolled = (userId, courseData) => {
+  const filtered = courseData.students.filter(
+    (student) => student?.id === userId
+  );
+  return filtered.length > 0;
 };
+
+const getFullName = (id) => {
+  const filtered = users.filter((user) => user.id === id);
+  const [user] = filtered;
+  return `${user.name} ${user.surname}`;
+};
+
+export { getFullName, isUserEnrolled };
