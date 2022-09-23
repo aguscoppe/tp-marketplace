@@ -1,6 +1,8 @@
 # Teacher-Student Marketplace App
 
-An app that allows two types of users: teachers and students
+An app that allows two types of users: 
+- Teachers 
+- Students
 
 ## Teachers
 Users with the teacher role are allowed to create, edit and publish courses
