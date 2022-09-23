@@ -14,7 +14,7 @@ Users with the teacher role are allowed to look up, sign-up, comment and rate co
 ## How to get started
 
 - Clone or download the project
-- Start the project by running the following commands:
+- Start the project by running the following commands separately:
 
 ```sh
 npm start
