@@ -9,18 +9,18 @@ import {
   InputAdornment,
   OutlinedInput,
   InputLabel,
-} from '@mui/material';
-import { useState } from 'react';
-import { VisibilityOff, Visibility } from '@mui/icons-material/';
-import { Link, Navigate } from 'react-router-dom';
-import { users } from '../data';
-import Navbar from '../components/NavBar';
+} from "@mui/material";
+import { useState } from "react";
+import { VisibilityOff, Visibility } from "@mui/icons-material/";
+import { Link, Navigate } from "react-router-dom";
+import { users } from "../data";
+import Navbar from "../components/NavBar";
 
 const Login = ({ currentUserId, signIn }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(currentUserId ? true : false);
   const [values, setValues] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     showPassword: false,
   });
 
@@ -50,103 +50,116 @@ const Login = ({ currentUserId, signIn }) => {
       currentUser = user[0];
     }
     if (currentUser) {
-      localStorage.setItem('current-user', currentUser.id);
+      localStorage.setItem("current-user", currentUser.id);
       setIsLoggedIn(true);
       signIn();
     }
   };
 
   if (isLoggedIn) {
-    return <Navigate to='/' />;
+    return <Navigate to="/" />;
   }
   return (
     <>
       <Navbar />
       <Box
         sx={{
-          display: 'flex',
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: "flex",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
           background:
             'url("https://sephorconsulting.es/kitdigital/wp-content/uploads/2022/01/mujer-ordenador.png"), #1976d2',
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat',
-          backgroundPositionX: 'right',
-          height: '90.5vh',
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backgroundPositionX: "right",
+          height: "92vh",
+          "@media (max-width: 480px)": {
+            width: "100vw",
+          },
         }}
       >
         <Box
           sx={{
-            marginTop: '50px',
-            marginBottom: '50px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            minWidth: '400px',
-            minHeight: '500px',
-            backgroundColor: '#595959',
-            borderRadius: '30px',
-            padding: '40px',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "400px",
+            Height: "500px",
+            backgroundColor: "#595959",
+            borderRadius: "30px",
+            padding: "40px",
             boxShadow: 20,
+            "@media (max-width: 480px)": {
+              width: "100%",
+              height: "100%",
+              borderRadius: "0px",
+              justifyContent: "center",
+            },
           }}
         >
           <Typography
-            variant='h4'
+            variant="h4"
             sx={{
               fontWeight: 900,
-              color: '#FFFFFF',
-              fontFamily: 'Montserrat',
+              color: "#FFFFFF",
+              fontFamily: "Montserrat",
             }}
           >
             Ingresar
           </Typography>
           <Grid
             container
-            direction='column'
-            justifyContent='space-between'
-            alignItems='center'
-            marginTop='30px'
+            direction="column"
+            justifyContent="space-between"
+            alignItems="center"
+            marginTop="30px"
+            sx={{
+              width: "400px",
+              "@media (max-width: 480px)": {
+                width: "100vw",
+              },
+            }}
           >
             <TextField
-              variant='outlined'
-              label='Correo electronico'
-              name='name'
+              variant="outlined"
+              label="Correo electronico"
+              name="name"
               value={values.email}
-              onChange={handleChange('email')}
+              onChange={handleChange("email")}
               sx={{
-                width: '300px',
-                margin: '10px',
-                backgroundColor: '#fff',
-                borderRadius: '8px',
+                width: "300px",
+                margin: "10px",
+                backgroundColor: "#fff",
+                borderRadius: "8px",
               }}
             />
             <FormControl
               sx={{
-                width: '300px',
-                margin: '10px',
-                backgroundColor: '#fff',
-                borderRadius: '8px',
+                width: "300px",
+                margin: "10px",
+                backgroundColor: "#fff",
+                borderRadius: "8px",
               }}
-              variant='outlined'
+              variant="outlined"
             >
-              <InputLabel htmlFor='outlined-adornment-password'>
+              <InputLabel htmlFor="outlined-adornment-password">
                 Contraseña
               </InputLabel>
               <OutlinedInput
-                id='outlined-adornment-password'
-                label='password'
-                name='password'
-                type={values.showPassword ? 'text' : 'password'}
+                id="outlined-adornment-password"
+                label="password"
+                name="password"
+                type={values.showPassword ? "text" : "password"}
                 value={values.password}
-                onChange={handleChange('password')}
+                onChange={handleChange("password")}
                 endAdornment={
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     <IconButton
-                      aria-label='toggle password visibility'
+                      aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
-                      edge='end'
+                      edge="end"
                     >
                       {values.showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -154,20 +167,26 @@ const Login = ({ currentUserId, signIn }) => {
                 }
               />
             </FormControl>
-            <Box sx={{ width: '90%', display: 'flex', justifyContent: 'end' }}>
+            <Box
+              sx={{
+                width: "300px",
+                display: "flex",
+                justifyContent: "end",
+              }}
+            >
               <Link
-                to='/reset-password'
+                to="/reset-password"
                 style={{
-                  textDecoration: 'none',
+                  textDecoration: "none",
                 }}
               >
                 <Typography
                   sx={{
-                    color: '#FFFFFF',
-                    fontFamily: 'Montserrat',
-                    fontSize: '14px',
-                    '&:hover': {
-                      color: '#90caf9',
+                    color: "#FFFFFF",
+                    fontFamily: "Montserrat",
+                    fontSize: "14px",
+                    "&:hover": {
+                      color: "#90caf9",
                     },
                   }}
                 >
@@ -176,13 +195,13 @@ const Login = ({ currentUserId, signIn }) => {
               </Link>
             </Box>
             <Button
-              variant='contained'
+              variant="contained"
               sx={{
-                height: '50px',
-                marginTop: '20px',
-                marginBottom: '20px',
-                minWidth: '200px',
-                fontFamily: 'Montserrat',
+                height: "50px",
+                marginTop: "20px",
+                marginBottom: "20px",
+                minWidth: "200px",
+                fontFamily: "Montserrat",
               }}
               onClick={handleLogin}
             >
@@ -190,18 +209,21 @@ const Login = ({ currentUserId, signIn }) => {
             </Button>
             <Typography
               sx={{
-                color: '#FFFFFF',
-                fontFamily: 'Montserrat',
-                marginTop: '50px',
+                color: "#FFFFFF",
+                fontFamily: "Montserrat",
+                marginTop: "50px",
               }}
             >
-              ¿No tienes cuenta?{' '}
-              <Link to='/register' style={{ textDecoration: 'none' }}>
+              ¿No tienes cuenta?{" "}
+              <Link to="/register" style={{ textDecoration: "none" }}>
                 <Typography
                   sx={{
-                    color: '#90caf9',
-                    display: 'inline',
-                    fontWeight: 'bold',
+                    color: "#009bdd",
+                    display: "inline",
+                    fontWeight: "bold",
+                    "&:hover": {
+                      color: "#90caf9",
+                    },
                   }}
                 >
                   Registrate
