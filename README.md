@@ -1,5 +1,22 @@
-# Run the following commands:
+# Teacher-Student Marketplace App
 
-### `npm start`
+An app that allows two types of users: 
+- Teachers 
+- Students
 
-### `json-server --watch db.json --port 3004`
+## Teachers
+Users with the teacher role are allowed to create, edit and publish courses
+
+## Students
+
+Users with the teacher role are allowed to look up, sign-up, comment and rate courses
+
+## How to get started
+
+- Clone or download the project
+- Start the project by running the following commands separately:
+
+```sh
+npm start
+json-server --watch db.json --port 3004
+```
