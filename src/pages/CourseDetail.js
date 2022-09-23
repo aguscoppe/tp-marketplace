@@ -61,7 +61,7 @@ const CourseDetail = ({ currentUserId }) => {
   }, [teacher]);
 
   const handleSubmitComment = () => {
-    console.log('agregar handleChange, value, etc a TextField');
+    console.log('agregar handleChange, value, etc a TextField!!!');
   };
 
   return (
