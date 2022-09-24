@@ -61,6 +61,7 @@ const BlockCommentDialog = ({ open, closeDialog, sendComment }) => {
         <Button
           variant='contained'
           color='success'
+          disabled={comment === ''}
           onClick={() => {
             closeDialog();
             setComment('');

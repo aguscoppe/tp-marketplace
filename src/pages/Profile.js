@@ -52,6 +52,7 @@ const Profile = ({ currentUserId, signOut }) => {
     surname: '',
     email: '',
     phone: '',
+    degree: '',
     experience: '',
     education: [],
   });
@@ -102,10 +103,21 @@ const Profile = ({ currentUserId, signOut }) => {
   };
 
   const handleRemove = (index) => {
-    setCurrentProfile((prev) => ({
-      ...prev,
-      education: prev.education.filter((el, i) => i !== index),
-    }));
+    const answer = window.confirm(
+      '¿Estás seguro/a de que quieres realizar esta acción?'
+    );
+    if (answer) {
+      const newData = {
+        ...currentProfile,
+        education: currentProfile.education.filter((el, i) => i !== index),
+      };
+      fetch(`${endpoint}/users/${currentUserId}`, {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newData),
+      });
+      setCurrentProfile(newData);
+    }
   };
 
   const openDialog = () => {
@@ -160,16 +172,26 @@ const Profile = ({ currentUserId, signOut }) => {
             onChange={handleChange}
           />
           {currentUser?.role === TEACHER_ROLE && (
-            <TextField
-              autoComplete='off'
-              variant='outlined'
-              label='Experiencia'
-              value={currentProfile.experience}
-              name='experience'
-              onChange={handleChange}
-              multiline
-              rows={4}
-            />
+            <>
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Título'
+                value={currentProfile.degree}
+                name='degree'
+                onChange={handleChange}
+              />
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Experiencia'
+                value={currentProfile.experience}
+                name='experience'
+                onChange={handleChange}
+                multiline
+                rows={4}
+              />
+            </>
           )}
           {currentUser?.role === STUDENT_ROLE && (
             <>
@@ -208,6 +230,14 @@ const Profile = ({ currentUserId, signOut }) => {
             <Button
               variant='contained'
               sx={{ height: '50px', margin: '10px' }}
+              disabled={
+                currentProfile.name === '' ||
+                currentProfile.surname === '' ||
+                currentProfile.email === '' ||
+                currentProfile.phone === '' ||
+                currentProfile.degree === '' ||
+                currentProfile.experience === ''
+              }
               onClick={handleClick}
             >
               Guardar

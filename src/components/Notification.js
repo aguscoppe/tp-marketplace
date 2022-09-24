@@ -114,6 +114,7 @@ const Notification = ({ data }) => {
 
   const handleBlock = () => {
     setShowBlockInput(true);
+    deleteNotification();
   };
 
   const closeDialog = () => {
