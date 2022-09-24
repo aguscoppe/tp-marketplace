@@ -72,7 +72,8 @@
       "password": "123",
       "phone": "1155553333",
       "role": "profesor",
-      "experience": "Profesor en la UBA desde 2016 con experiencia en varios rubros."
+      "degree": "Docente de Nivel Inicial",
+      "experience": "Me desempeño en este rol desde el 2004 y he trabajado en tres colegios primarios de la Ciudad de Buenos Aires."
     },
     {
       "name": "Sandra",
@@ -81,7 +82,8 @@
       "password": "123",
       "phone": "1155553333",
       "role": "profesor",
-      "experience": "Profesora en la UBA hace más de diez años con experiencia en varios rubros.",
+      "degree": "Docente de Nivel Secundario",
+      "experience": "Profesora recibida en la UBA desde hace más de diez años, con experiencia en diversos rubros.",
       "education": [],
       "id": 2
     },
