@@ -64,8 +64,8 @@ const BlockCommentDialog = ({ open, closeDialog, sendComment }) => {
           disabled={comment === ''}
           onClick={() => {
             closeDialog();
-            setComment('');
             sendComment(comment);
+            setComment('');
           }}
         >
           Enviar
