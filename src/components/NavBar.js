@@ -13,7 +13,7 @@ import { NavLink } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
-import BookmarksIcon from "@mui/icons-material/Bookmarks";
+import SchoolIcon from "@mui/icons-material/School";
 import PersonIcon from "@mui/icons-material/Person";
 import { useNotifications } from "../hooks";
 
@@ -23,6 +23,10 @@ const style = {
   color: "#fff",
   "@media (max-width: 480px)": {
     alignItems: "center",
+    justifyContent: "center",
+  },
+  "@media (max-height: 700px)": {
+    height: "auto",
   },
   a: {
     textDecoration: "none",
@@ -63,6 +67,12 @@ const style = {
   },
 };
 
+const hideText = {
+  "@media (max-width: 480px)": {
+    display: "none",
+  },
+};
+
 const NavLinkIcon = ({ urlPath, children }) => (
   <NavLink
     className={(navData) => (navData.isActive ? "active" : "")}
@@ -76,11 +86,15 @@ const commonNavLinks = (
   <>
     <NavLinkIcon urlPath="/">
       <HomeIcon />
-      <Typography variant="body2">Home</Typography>
+      <Typography variant="body2" sx={hideText}>
+        Home
+      </Typography>
     </NavLinkIcon>
     <NavLinkIcon urlPath="/about">
       <InfoIcon />
-      <Typography variant="body2">Información</Typography>
+      <Typography variant="body2" sx={hideText}>
+        Información
+      </Typography>
     </NavLinkIcon>
   </>
 );
@@ -89,12 +103,16 @@ const userNavbar = (
   <>
     {commonNavLinks}
     <NavLinkIcon urlPath="/courses">
-      <BookmarksIcon />
-      <Typography variant="body2">Mis Clases</Typography>
+      <SchoolIcon />
+      <Typography variant="body2" sx={hideText}>
+        Mis Clases
+      </Typography>
     </NavLinkIcon>
     <NavLinkIcon urlPath="/profile">
       <PersonIcon />
-      <Typography variant="body2">Mi Perfil</Typography>
+      <Typography variant="body2" sx={hideText}>
+        Mi Perfil
+      </Typography>
     </NavLinkIcon>
   </>
 );
@@ -104,7 +122,9 @@ const publicNavbar = (
     {commonNavLinks}
     <NavLinkIcon urlPath="/login">
       <PersonIcon />
-      <Typography variant="body2">Ingresar</Typography>
+      <Typography variant="body2" sx={hideText}>
+        Ingresar
+      </Typography>
     </NavLinkIcon>
   </>
 );
@@ -131,12 +151,22 @@ const NavBar = ({ currentUserId }) => {
 
   return (
     <AppBar position="static" color="transparent" sx={style}>
-      <Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          width: "100vw",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
+            "@media (max-width: 480px)": {
+              width: "100%",
+              justifyContent: "space-evenly",
+            },
           }}
         >
           {currentUserId ? (
@@ -146,7 +176,9 @@ const NavBar = ({ currentUserId }) => {
                 <Badge badgeContent={notificationList.length} color="primary">
                   <NotificationsIcon />
                 </Badge>
-                <Typography variant="body2">Notificationes</Typography>
+                <Typography variant="body2" sx={hideText}>
+                  Notificationes
+                </Typography>
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
