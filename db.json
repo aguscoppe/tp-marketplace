@@ -31,6 +31,10 @@
         {
           "id": 3,
           "status": "aceptada"
+        },
+        {
+          "id": 10,
+          "status": "aceptada"
         }
       ],
       "duration": 90,
@@ -45,7 +49,12 @@
       "name": "Geografía",
       "type": "individual",
       "teacherId": 1,
-      "students": [],
+      "students": [
+        {
+          "id": 10,
+          "status": "cancelada"
+        }
+      ],
       "duration": 90,
       "frequency": "mensual",
       "price": 1800,
@@ -69,6 +78,7 @@
       "name": "Sandra",
       "surname": "Sánchez",
       "email": "sandra@mail.com",
+      "password": "123",
       "phone": "1155553333",
       "role": "profesor",
       "experience": "Profesora en la UBA hace más de diez años con experiencia en varios rubros.",

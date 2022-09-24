@@ -125,6 +125,7 @@ const EducationInputDialog = ({ open, closeDialog, addEducation }) => {
         <Button
           variant='contained'
           color='success'
+          disabled={name === ''}
           onClick={() => {
             closeDialog();
             setEducation({});

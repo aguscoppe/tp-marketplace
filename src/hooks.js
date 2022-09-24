@@ -15,6 +15,18 @@ const useCourses = () => {
   return courses;
 };
 
+const useUsers = () => {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetch(`${endpoint}/users`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data);
+      });
+  }, []);
+  return users;
+};
+
 const usePublishedCourses = () => {
   const [publishedCourses, setPublishedCourses] = useState([]);
   useEffect(() => {
@@ -172,6 +184,7 @@ const useTeacherByCourseId = (id) => {
 export {
   endpoint,
   useCourses,
+  useUsers,
   usePublishedCourses,
   useComments,
   useNotifications,

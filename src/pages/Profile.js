@@ -102,10 +102,21 @@ const Profile = ({ currentUserId, signOut }) => {
   };
 
   const handleRemove = (index) => {
-    setCurrentProfile((prev) => ({
-      ...prev,
-      education: prev.education.filter((el, i) => i !== index),
-    }));
+    const answer = window.confirm(
+      '¿Estás seguro/a de que quieres realizar esta acción?'
+    );
+    if (answer) {
+      const newData = {
+        ...currentProfile,
+        education: currentProfile.education.filter((el, i) => i !== index),
+      };
+      fetch(`${endpoint}/users/${currentUserId}`, {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newData),
+      });
+      setCurrentProfile(newData);
+    }
   };
 
   const openDialog = () => {

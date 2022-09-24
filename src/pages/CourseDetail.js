@@ -10,10 +10,16 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
-import { STUDENT_ROLE } from '../constants';
+import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
 import { getFullName, isUserEnrolled } from '../utils';
-import { useComments, useCourseById, useTeacherByCourseId } from '../hooks';
-import { useUserById } from '../hooks';
+import {
+  endpoint,
+  useUserById,
+  useComments,
+  useCourseById,
+  useTeacherByCourseId,
+} from '../hooks';
+import uuid from 'react-uuid';
 
 const styles = {
   marginTop: '60px',
@@ -38,13 +44,15 @@ const CourseDetail = ({ currentUserId }) => {
   const [userEnrolled, setUserEnrolled] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
   const [teacherData, setTeacherData] = useState([]);
-  const [ratingValue, setRatingValue] = useState(courseData?.rating);
+  const [newComment, setNewComment] = useState('');
+  const [ratingValue, setRatingValue] = useState(0);
 
   useEffect(() => {
     if (course !== undefined && Object.keys(course).length > 0) {
       setCourseData(course);
       const result = isUserEnrolled(currentUserId, course);
       setUserEnrolled(result);
+      setRatingValue(course.rating);
     }
   }, [course, currentUserId]);
 
@@ -61,7 +69,24 @@ const CourseDetail = ({ currentUserId }) => {
   }, [teacher]);
 
   const handleSubmitComment = () => {
-    console.log('agregar handleChange, value, etc a TextField');
+    const comment = {
+      id: uuid(),
+      courseId: id,
+      sourceId: currentUserId,
+      destinationId: courseData.teacherId,
+      type: COMMENT_NOTIFICATION,
+      message: newComment,
+    };
+    fetch(`${endpoint}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(comment),
+    });
+    setNewComment('');
+  };
+
+  const handleChange = (e) => {
+    setNewComment(e.target.value);
   };
 
   return (
@@ -110,8 +135,16 @@ const CourseDetail = ({ currentUserId }) => {
           </Typography>
           {userEnrolled && (
             <>
-              <TextField sx={{ width: '85%' }} />
-              <Button variant='contained' onClick={handleSubmitComment}>
+              <TextField
+                value={newComment}
+                onChange={handleChange}
+                sx={{ width: '85%' }}
+              />
+              <Button
+                variant='contained'
+                disabled={newComment === ''}
+                onClick={handleSubmitComment}
+              >
                 Comentar
               </Button>
             </>
