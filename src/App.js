@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <Routes>
-      {currentUserId ? (
+      {currentUserId !== {} ? (
         <>
           <Route path='/courses'>
             <Route index element={<Courses currentUserId={currentUserId} />} />

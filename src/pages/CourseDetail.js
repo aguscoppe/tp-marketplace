@@ -11,7 +11,7 @@ import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
 import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
-import { getFullName, isUserEnrolled } from '../utils';
+import { useFullName, isUserEnrolled } from '../utils';
 import {
   endpoint,
   useUserById,
@@ -20,6 +20,7 @@ import {
   useTeacherByCourseId,
 } from '../hooks';
 import uuid from 'react-uuid';
+import { capitalize } from '../utils';
 
 const styles = {
   marginTop: '60px',
@@ -40,6 +41,7 @@ const CourseDetail = ({ currentUserId }) => {
   const course = useCourseById(id);
   const comments = useComments(id);
   const teacher = useTeacherByCourseId(id);
+  const getFullName = useFullName();
   const [courseData, setCourseData] = useState({});
   const [userEnrolled, setUserEnrolled] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -93,7 +95,7 @@ const CourseDetail = ({ currentUserId }) => {
     <>
       <NavBar currentUserId={currentUserId} />
       <Grid container justifyContent='space-around' sx={styles}>
-        <Grid item xs={6}>
+        <Grid item xs={11} md={6}>
           <Typography variant='h3'>{courseData?.name}</Typography>
           <Typography variant='h5'>{courseData?.description}</Typography>
           <Rating
@@ -104,7 +106,11 @@ const CourseDetail = ({ currentUserId }) => {
             readOnly={!userEnrolled}
           />
           <Typography variant='h6'>${courseData?.price}</Typography>
-          <Typography variant='h6'>{courseData?.frequency}</Typography>
+          <Typography variant='h6'>Clase de {courseData?.subject}</Typography>
+          <Typography variant='h6'>{capitalize(courseData?.type)}</Typography>
+          <Typography variant='h6'>
+            {capitalize(courseData?.frequency)}
+          </Typography>
           <Typography variant='h6'>{courseData?.duration} minutos</Typography>
           {currentUser?.role === STUDENT_ROLE && !userEnrolled ? (
             <Link to={`/enroll/${id}`}>
@@ -114,7 +120,8 @@ const CourseDetail = ({ currentUserId }) => {
         </Grid>
         <Grid
           item
-          xs={4}
+          xs={11}
+          md={4}
           sx={{
             backgroundColor: '#eee',
             padding: '16px',
@@ -154,7 +161,7 @@ const CourseDetail = ({ currentUserId }) => {
               <Comment
                 key={comment.message}
                 message={comment.message}
-                userName={getFullName(comment.studentId)}
+                userId={comment.studentId}
               />
             ))
           ) : (

@@ -21,7 +21,7 @@ import {
   STUDENT_ROLE,
   TEACHER_ROLE,
 } from '../constants';
-import { isUserEnrolled } from '../utils';
+import { isUserEnrolled, capitalize } from '../utils';
 import { useUserById, endpoint } from '../hooks';
 
 const statusItems = [
@@ -33,11 +33,15 @@ const statusItems = [
 ];
 
 const styles = {
+  display: 'flex',
+  alignItems: 'center',
   width: '250px',
   margin: '15px',
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
-    textTransform: 'capitalize',
+  },
+  '& .MuiCardContent-root': {
+    width: '100%',
   },
   a: {
     color: '#000',
@@ -46,7 +50,8 @@ const styles = {
 
 const Course = ({ courseData, currentUserId, removeCourse }) => {
   const currentUser = useUserById(currentUserId);
-  const { id, name, type, frequency, rating, teacherId, students } = courseData;
+  const { id, name, subject, type, frequency, rating, teacherId, students } =
+    courseData;
   const { pathname } = useLocation();
   const enrolledStudents = students.filter(
     (student) => student.id === currentUserId
@@ -100,10 +105,11 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
     <Card sx={styles}>
       <CardContent>
         <Link to={`/course/${id}`} style={{ textDecoration: 'none' }}>
-          <Typography variant='h4'>{name}</Typography>
-          <Typography variant='h5'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
-          <Typography>{type}</Typography>
-          <Typography>{frequency}</Typography>
+          <Typography variant='h5'>{name}</Typography>
+          <Typography variant='h6'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
+          <Typography>Clase de {subject}</Typography>
+          <Typography>{capitalize(type)}</Typography>
+          <Typography>{capitalize(frequency)}</Typography>
         </Link>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Rating

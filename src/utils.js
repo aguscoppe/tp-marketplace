@@ -1,43 +1,11 @@
-import { users } from './data';
+import { useEffect, useState } from 'react';
+import { useUsers } from './hooks';
 
-/*
-const getCourse = (id) => {
-  return courses.filter((course) => course.id === id);
-};
-
-const getUser = (id) => {
-  return users.filter((user) => user.id === id);
-};
-
-const getPublishedCourses = () => {
-  return courses.filter((course) => course.published);
-};
-
-const filterCourses = ({ name, type, frequency, rating }) => {
-  const courses = getPublishedCourses();
-  let filtered = courses;
-  if (name !== '') {
-    filtered = courses.filter(
-      (course) => course.name.toLowerCase() === name.toLowerCase()
-    );
+const capitalize = (str) => {
+  if (str !== undefined) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
-  if (type !== '') {
-    filtered = filtered.filter(
-      (course) => course.type.toLowerCase() === type.toLowerCase()
-    );
-  }
-  if (frequency !== '') {
-    filtered = filtered.filter(
-      (course) => course.frequency.toLowerCase() === frequency.toLowerCase()
-    );
-  }
-  if (rating !== '') {
-    filtered = filtered.filter((course) => course.rating === rating);
-  }
-  return filtered;
 };
-
-*/
 
 const isUserEnrolled = (userId, courseData) => {
   const filtered = courseData.students.filter(
@@ -46,10 +14,21 @@ const isUserEnrolled = (userId, courseData) => {
   return filtered.length > 0;
 };
 
-const getFullName = (id) => {
-  const filtered = users.filter((user) => user.id === id);
-  const [user] = filtered;
-  return `${user.name} ${user.surname}`;
+const useFullName = () => {
+  const userData = useUsers();
+  const [users, setUsers] = useState({});
+  useEffect(() => {
+    if (userData !== undefined) {
+      setUsers(userData);
+    }
+  }, [userData]);
+  function getFullName(id) {
+    if (users.length) {
+      const [user] = users.filter((user) => user.id === id);
+      return `${user.name} ${user.surname}`;
+    }
+  }
+  return getFullName;
 };
 
-export { getFullName, isUserEnrolled };
+export { capitalize, useFullName, isUserEnrolled };

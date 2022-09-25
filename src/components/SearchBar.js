@@ -50,10 +50,19 @@ const style = {
   input: {
     fontFamily: 'Montserrat',
   },
+  '@media (max-width: 800px)': {
+    flexDirection: 'column',
+    '& .MuiTextField-root': {
+      width: '95%',
+    },
+    '& .MuiButton-root': {
+      width: '95%',
+    },
+  },
 };
 
 const SearchBar = ({ formContent, handleChange, handleClick }) => {
-  const { name, type, frequency, rating } = formContent;
+  const { name, subject, type, frequency, rating } = formContent;
   return (
     <Grid
       item
@@ -66,9 +75,17 @@ const SearchBar = ({ formContent, handleChange, handleClick }) => {
       <TextField
         autoComplete='off'
         variant='outlined'
-        label='Materia'
+        label='Nombre'
         value={name}
         name='name'
+        onChange={handleChange}
+      />
+      <TextField
+        autoComplete='off'
+        variant='outlined'
+        label='Materia'
+        value={subject}
+        name='subject'
         onChange={handleChange}
       />
       <TextField
