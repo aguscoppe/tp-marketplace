@@ -141,20 +141,39 @@ const CourseDetail = ({ currentUserId }) => {
             Comentarios
           </Typography>
           {userEnrolled && (
-            <>
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              sx={{
+                '@media (max-width: 800px)': {
+                  flexDirection: 'column',
+                },
+              }}
+            >
               <TextField
                 value={newComment}
                 onChange={handleChange}
-                sx={{ width: '85%' }}
+                sx={{
+                  width: '82%',
+                  '@media (max-width: 800px)': {
+                    width: '100%',
+                  },
+                }}
               />
               <Button
                 variant='contained'
                 disabled={newComment === ''}
                 onClick={handleSubmitComment}
+                sx={{
+                  width: '16%',
+                  '@media (max-width: 800px)': {
+                    width: '100%',
+                  },
+                }}
               >
                 Comentar
               </Button>
-            </>
+            </Box>
           )}
           {filteredComments.length > 0 ? (
             filteredComments.map((comment) => (

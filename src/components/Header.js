@@ -8,7 +8,10 @@ const style = {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '90vh',
+  height: '92vh',
+  '@media (max-width: 700px)': {
+    height: '40vh',
+  },
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
     fontWeight: '500',
@@ -23,6 +26,16 @@ const style = {
   img: {
     maxWidth: '100%',
     maxHeight: '100%',
+  },
+  h1: {
+    '@media (max-width: 700px)': {
+      fontSize: '3rem',
+    },
+  },
+  h4: {
+    '@media (max-width: 700px)': {
+      fontSize: '1.2rem',
+    },
   },
 };
 

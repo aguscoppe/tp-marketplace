@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { endpoint, useTeacherByCourseId } from '../hooks';
+import { endpoint, useTeacherByCourseId, useUserById } from '../hooks';
 import uuid from 'react-uuid';
 import { COURSE_NOTIFICATION } from '../constants';
 
@@ -38,19 +38,20 @@ const style = {
 
 const Enroll = ({ currentUserId }) => {
   const { id } = useParams();
+  const user = useUserById(currentUserId);
   const initialState = {
     courseId: id,
     sourceId: currentUserId,
     type: COURSE_NOTIFICATION,
     phone: '',
-    mail: '',
+    email: '',
     timeRangeFrom: '',
     timeRangeTo: '',
     message: '',
   };
   const teacher = useTeacherByCourseId(id);
   const [newEnrollment, setNewEnrollment] = useState(initialState);
-  const { phone, mail, timeRangeFrom, timeRangeTo, message } = newEnrollment;
+  const { phone, email, timeRangeFrom, timeRangeTo, message } = newEnrollment;
 
   useEffect(() => {
     if (teacher !== undefined) {
@@ -61,6 +62,14 @@ const Enroll = ({ currentUserId }) => {
     }
   }, [teacher]);
 
+  useEffect(() => {
+    setNewEnrollment((prev) => ({
+      ...prev,
+      phone: user.phone,
+      email: user.email,
+    }));
+  }, [user]);
+
   const handleChange = (e) => {
     setNewEnrollment((prev) => ({
       ...prev,
@@ -69,15 +78,16 @@ const Enroll = ({ currentUserId }) => {
   };
 
   const handleClick = () => {
-    setNewEnrollment((prev) => ({
-      ...prev,
+    const enrollment = {
+      ...newEnrollment,
       id: uuid(),
-    }));
+    };
     fetch(`${endpoint}/notifications`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(newEnrollment),
+      body: JSON.stringify(enrollment),
     });
+    setNewEnrollment(initialState);
   };
 
   return (
@@ -102,7 +112,7 @@ const Enroll = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Email'
-          value={mail}
+          value={email}
           name='mail'
           onChange={handleChange}
         />
@@ -126,7 +136,6 @@ const Enroll = ({ currentUserId }) => {
             className='timeRange'
           />
         </Box>
-
         <TextField
           autoComplete='off'
           variant='outlined'
@@ -141,6 +150,13 @@ const Enroll = ({ currentUserId }) => {
           variant='contained'
           sx={{ height: '50px', margin: '10px' }}
           onClick={handleClick}
+          disabled={
+            phone === '' ||
+            email === '' ||
+            timeRangeFrom === '' ||
+            timeRangeTo === '' ||
+            message === ''
+          }
         >
           Inscribirse
         </Button>

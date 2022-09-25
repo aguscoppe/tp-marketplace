@@ -60,7 +60,7 @@ const useComments = (courseId) => {
       .then((data) => {
         setComments(data);
       });
-  }, []);
+  }, [courseId]);
   return comments;
 };
 
@@ -86,7 +86,7 @@ const useCourseStudents = (id) => {
       ).students;
       setCourses(filtered);
     }
-  }, [publishedCourses]);
+  }, [id, publishedCourses]);
   return courses;
 };
 
@@ -140,7 +140,7 @@ const useCourseDataByStudentId = (id) => {
     if (filteredCourses !== undefined) {
       fetchData();
     }
-  }, [filteredCourses]);
+  }, [id, filteredCourses]);
 
   return courseList;
 };

@@ -62,7 +62,6 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
 
   const handleStatusChange = (e) => {
     if (
-      courseStatus !== COURSE_STATUS_CANCELLED &&
       courseStatus !== COURSE_STATUS_PENDING &&
       e.target.value !== COURSE_STATUS_PENDING &&
       e.target.value !== ''
