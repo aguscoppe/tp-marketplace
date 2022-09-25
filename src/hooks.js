@@ -79,7 +79,6 @@ const useNotifications = (id) => {
 const useCourseStudents = (id) => {
   const publishedCourses = usePublishedCourses();
   const [courses, setCourses] = useState([]);
-
   useEffect(() => {
     if (publishedCourses?.length) {
       const filtered = publishedCourses.filter(
@@ -88,7 +87,6 @@ const useCourseStudents = (id) => {
       setCourses(filtered);
     }
   }, [publishedCourses]);
-
   return courses;
 };
 

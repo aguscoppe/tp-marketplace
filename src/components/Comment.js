@@ -1,4 +1,5 @@
 import { Box, Avatar, Typography } from '@mui/material';
+import { useFullName } from '../utils';
 
 function generateColor() {
   const colors = [
@@ -19,13 +20,15 @@ function generateColor() {
 const color = generateColor();
 
 function stringAvatar(name) {
-  return {
-    sx: {
-      bgcolor: color,
-      marginRight: '12px',
-    },
-    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-  };
+  if (name !== undefined) {
+    return {
+      sx: {
+        bgcolor: color,
+        marginRight: '12px',
+      },
+      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+  }
 }
 
 const style = {
@@ -37,8 +40,9 @@ const style = {
   marginTop: '12px',
 };
 
-const Comment = ({ message, userName }) => {
-  const props = stringAvatar(userName);
+const Comment = ({ message, userId }) => {
+  const getFullName = useFullName(userId);
+  const props = stringAvatar(getFullName(userId));
 
   return (
     <Box sx={style}>

@@ -53,6 +53,7 @@ const style = {
 const NewCourse = ({ currentUserId }) => {
   const initialState = {
     name: '',
+    subject: '',
     type: '',
     teacherId: currentUserId,
     students: [],
@@ -66,10 +67,10 @@ const NewCourse = ({ currentUserId }) => {
   const { id } = useParams();
   const course = useCourseById(id);
   const navigate = useNavigate();
-  const [courseData, setCourseData] = useState([]);
   const [newCourse, setNewCourse] = useState(initialState);
   const {
     name,
+    subject,
     type,
     duration,
     frequency,
@@ -80,11 +81,10 @@ const NewCourse = ({ currentUserId }) => {
   } = newCourse;
 
   useEffect(() => {
-    if (course !== undefined) {
-      setCourseData(course);
+    if (id !== undefined && course !== undefined) {
       setNewCourse(course);
     }
-  }, [course]);
+  }, [id, course]);
 
   const handleCheckbox = () => {
     if (students.length > 0) {
@@ -139,9 +139,17 @@ const NewCourse = ({ currentUserId }) => {
         <TextField
           autoComplete='off'
           variant='outlined'
-          label='Materia'
+          label='Nombre'
           value={name}
           name='name'
+          onChange={handleChange}
+        />
+        <TextField
+          autoComplete='off'
+          variant='outlined'
+          label='Materia'
+          value={subject}
+          name='subject'
           onChange={handleChange}
         />
         <TextField
@@ -250,8 +258,16 @@ const NewCourse = ({ currentUserId }) => {
         ) : (
           <Button
             variant='contained'
-            sx={{ height: '50px', margin: '10px' }}
+            disabled={
+              name === '' ||
+              subject === '' ||
+              type === '' ||
+              frequency === '' ||
+              price === 0 ||
+              description === ''
+            }
             onClick={handleClick}
+            sx={{ height: '50px', margin: '10px' }}
           >
             Crear
           </Button>
