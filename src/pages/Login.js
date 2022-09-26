@@ -10,17 +10,19 @@ import {
   OutlinedInput,
   InputLabel,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material/';
 import { Link, Navigate } from 'react-router-dom';
 import Navbar from '../components/NavBar';
 import { useUsers } from '../hooks';
+import { UserContext } from '../contexts/UserContext';
 
-const Login = ({ currentUserId, signIn }) => {
+const Login = ({ signIn }) => {
+  const currentUser = useContext(UserContext);
   const userList = useUsers();
   const [users, setUsers] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(
-    !currentUserId || currentUserId === {} ? false : true
+    currentUser === undefined ? false : true
   );
   const [values, setValues] = useState({
     email: '',
@@ -202,7 +204,7 @@ const Login = ({ currentUserId, signIn }) => {
                     },
                   }}
                 >
-                  Olvide mi contraseña
+                  Olvidé mi contraseña
                 </Typography>
               </Link>
             </Box>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { COURSE_STATUS_ACCEPTED, COURSE_STATUS_FINISHED } from './constants';
 import { useUsers } from './hooks';
 
 const getRating = (ratingList) => {
@@ -26,6 +27,19 @@ const isUserEnrolled = (userId, courseData) => {
   return filtered.length > 0;
 };
 
+const canUserComment = (userId, courseData) => {
+  const filtered = courseData?.students?.filter(
+    (student) => student?.id === userId
+  );
+  if (filtered?.length > 0) {
+    return (
+      filtered[0].status === COURSE_STATUS_ACCEPTED ||
+      filtered[0].status === COURSE_STATUS_FINISHED
+    );
+  }
+  return false;
+};
+
 const useFullName = () => {
   const userData = useUsers();
   const [users, setUsers] = useState({});
@@ -43,4 +57,4 @@ const useFullName = () => {
   return getFullName;
 };
 
-export { capitalize, useFullName, isUserEnrolled, getRating };
+export { capitalize, useFullName, isUserEnrolled, canUserComment, getRating };

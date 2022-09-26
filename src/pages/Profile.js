@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import NavBar from '../components/NavBar';
 import Home from './Home';
 import {
@@ -13,7 +14,7 @@ import {
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
 import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { endpoint, useUserById } from '../hooks';
+import { endpoint } from '../hooks';
 
 const style = {
   height: '100%',
@@ -55,8 +56,8 @@ const teacherFields = {
   experience: '',
 };
 
-const Profile = ({ currentUserId, signOut }) => {
-  const currentUser = useUserById(currentUserId);
+const Profile = ({ signOut }) => {
+  const currentUser = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentProfile, setCurrentProfile] = useState({
     name: '',
@@ -81,7 +82,7 @@ const Profile = ({ currentUserId, signOut }) => {
       ...currentProfile,
       education: [...currentProfile.education, newEducation],
     };
-    fetch(`${endpoint}/users/${currentUserId}`, {
+    fetch(`${endpoint}/users/${currentUser?.id}`, {
       method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(updatedProfile),
@@ -123,7 +124,7 @@ const Profile = ({ currentUserId, signOut }) => {
         ...currentProfile,
         education: currentProfile.education.filter((el, i) => i !== index),
       };
-      fetch(`${endpoint}/users/${currentUserId}`, {
+      fetch(`${endpoint}/users/${currentUser?.id}`, {
         method: 'PUT',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(newData),
@@ -143,7 +144,7 @@ const Profile = ({ currentUserId, signOut }) => {
   if (isLoggedIn) {
     return (
       <>
-        <NavBar currentUserId={currentUserId} />
+        <NavBar />
         <Grid
           container
           sx={style}
@@ -212,7 +213,7 @@ const Profile = ({ currentUserId, signOut }) => {
                 autoComplete='off'
                 variant='outlined'
                 label='Fecha de nacimiento'
-                value={currentProfile.birthDate}
+                value={currentProfile?.birthDate}
                 name='birthDate'
                 onChange={handleChange}
                 type='date'

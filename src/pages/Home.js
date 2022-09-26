@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import Course from '../components/Course';
 import { Box, Grid } from '@mui/material';
-import { endpoint, useUserById, usePublishedCourses } from '../hooks';
+import { endpoint, usePublishedCourses } from '../hooks';
 
 const createQuery = (paramsObj) => {
   let params = new URLSearchParams(paramsObj);
@@ -20,8 +20,7 @@ const createQuery = (paramsObj) => {
   return params.toString();
 };
 
-const Home = ({ currentUserId }) => {
-  const currentUser = useUserById(currentUserId);
+const Home = () => {
   const publishedCourses = usePublishedCourses();
   const [formContent, setFormContent] = useState({
     name: '',
@@ -61,7 +60,7 @@ const Home = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Header />
       <SearchBar
         formContent={formContent}
