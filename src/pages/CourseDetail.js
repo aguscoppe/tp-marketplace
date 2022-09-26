@@ -11,7 +11,7 @@ import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
 import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
-import { useFullName, isUserEnrolled } from '../utils';
+import { isUserEnrolled, getRating } from '../utils';
 import {
   endpoint,
   useUserById,
@@ -41,7 +41,6 @@ const CourseDetail = ({ currentUserId }) => {
   const course = useCourseById(id);
   const comments = useComments(id);
   const teacher = useTeacherByCourseId(id);
-  const getFullName = useFullName();
   const [courseData, setCourseData] = useState({});
   const [userEnrolled, setUserEnrolled] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -54,7 +53,7 @@ const CourseDetail = ({ currentUserId }) => {
       setCourseData(course);
       const result = isUserEnrolled(currentUserId, course);
       setUserEnrolled(result);
-      setRatingValue(course.rating);
+      setRatingValue(getRating(course.rating));
     }
   }, [course, currentUserId]);
 
@@ -69,6 +68,24 @@ const CourseDetail = ({ currentUserId }) => {
       setTeacherData(teacher);
     }
   }, [teacher]);
+
+  const handleChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleRatingChange = (newValue) => {
+    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newData = {
+      ...courseData,
+      rating: [...newRating, { id: currentUserId, score: newValue }],
+    };
+    fetch(`${endpoint}/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newData),
+    });
+    setRatingValue(newValue);
+  };
 
   const handleSubmitComment = () => {
     const comment = {
@@ -87,10 +104,6 @@ const CourseDetail = ({ currentUserId }) => {
     setNewComment('');
   };
 
-  const handleChange = (e) => {
-    setNewComment(e.target.value);
-  };
-
   return (
     <>
       <NavBar currentUserId={currentUserId} />
@@ -101,7 +114,7 @@ const CourseDetail = ({ currentUserId }) => {
           <Rating
             value={ratingValue}
             onChange={(event, newValue) => {
-              setRatingValue(newValue);
+              handleRatingChange(newValue);
             }}
             readOnly={!userEnrolled}
           />

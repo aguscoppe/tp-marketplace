@@ -20,7 +20,16 @@
       "frequency": "semanal",
       "price": 3200,
       "description": "Clases semanales de lengua para nivel secundario",
-      "rating": 4,
+      "rating": [
+        {
+          "id": 3,
+          "score": 5
+        },
+        {
+          "id": 10,
+          "score": 5
+        }
+      ],
       "published": true
     },
     {
@@ -43,7 +52,12 @@
       "frequency": "semanal",
       "price": 3200,
       "description": "Esta es una materia de matemática",
-      "rating": 4,
+      "rating": [
+        {
+          "id": 10,
+          "score": 4
+        }
+      ],
       "published": true,
       "subject": "Matemática"
     },
@@ -63,7 +77,12 @@
       "frequency": "mensual",
       "price": 1800,
       "description": "Clases mensuales de geografía",
-      "rating": 4,
+      "rating": [
+        {
+          "id": 10,
+          "score": 3
+        }
+      ],
       "published": true
     },
     {
@@ -77,7 +96,7 @@
       "price": "5000",
       "description": "Clase de Inglés para nivel B2",
       "published": false,
-      "rating": 0,
+      "rating": [],
       "id": 4
     },
     {
@@ -91,7 +110,7 @@
       "price": "4500",
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1810 y 1816",
       "published": true,
-      "rating": 0,
+      "rating": [],
       "id": 5
     },
     {
@@ -105,7 +124,7 @@
       "price": "5600",
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1816 y 1853",
       "published": true,
-      "rating": 0,
+      "rating": [],
       "id": 6
     },
     {
@@ -119,7 +138,7 @@
       "price": "6000",
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1853 y 1880",
       "published": true,
-      "rating": 0,
+      "rating": [],
       "id": 7
     }
   ],
