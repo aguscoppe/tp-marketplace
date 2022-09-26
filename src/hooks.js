@@ -15,6 +15,18 @@ const useCourses = () => {
   return courses;
 };
 
+const useUsers = () => {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    fetch(`${endpoint}/users`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUsers(data);
+      });
+  }, []);
+  return users;
+};
+
 const usePublishedCourses = () => {
   const [publishedCourses, setPublishedCourses] = useState([]);
   useEffect(() => {
@@ -48,7 +60,7 @@ const useComments = (courseId) => {
       .then((data) => {
         setComments(data);
       });
-  }, []);
+  }, [courseId]);
   return comments;
 };
 
@@ -67,7 +79,6 @@ const useNotifications = (id) => {
 const useCourseStudents = (id) => {
   const publishedCourses = usePublishedCourses();
   const [courses, setCourses] = useState([]);
-
   useEffect(() => {
     if (publishedCourses?.length) {
       const filtered = publishedCourses.filter(
@@ -75,8 +86,7 @@ const useCourseStudents = (id) => {
       ).students;
       setCourses(filtered);
     }
-  }, [publishedCourses]);
-
+  }, [id, publishedCourses]);
   return courses;
 };
 
@@ -130,7 +140,7 @@ const useCourseDataByStudentId = (id) => {
     if (filteredCourses !== undefined) {
       fetchData();
     }
-  }, [filteredCourses]);
+  }, [id, filteredCourses]);
 
   return courseList;
 };
@@ -172,6 +182,7 @@ const useTeacherByCourseId = (id) => {
 export {
   endpoint,
   useCourses,
+  useUsers,
   usePublishedCourses,
   useComments,
   useNotifications,

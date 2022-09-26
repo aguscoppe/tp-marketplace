@@ -21,7 +21,7 @@ import {
   STUDENT_ROLE,
   TEACHER_ROLE,
 } from '../constants';
-import { isUserEnrolled } from '../utils';
+import { isUserEnrolled, capitalize, getRating } from '../utils';
 import { useUserById, endpoint } from '../hooks';
 
 const statusItems = [
@@ -33,11 +33,15 @@ const statusItems = [
 ];
 
 const styles = {
+  display: 'flex',
+  alignItems: 'center',
   width: '250px',
   margin: '15px',
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
-    textTransform: 'capitalize',
+  },
+  '& .MuiCardContent-root': {
+    width: '100%',
   },
   a: {
     color: '#000',
@@ -46,18 +50,18 @@ const styles = {
 
 const Course = ({ courseData, currentUserId, removeCourse }) => {
   const currentUser = useUserById(currentUserId);
-  const { id, name, type, frequency, rating, teacherId, students } = courseData;
+  const { id, name, subject, type, frequency, rating, teacherId, students } =
+    courseData;
   const { pathname } = useLocation();
   const enrolledStudents = students.filter(
     (student) => student.id === currentUserId
   );
   const teacherData = useUserById(teacherId);
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
-  const [courseRating, setCourseRating] = useState(rating);
+  const [courseRating, setCourseRating] = useState(getRating(rating));
 
   const handleStatusChange = (e) => {
     if (
-      courseStatus !== COURSE_STATUS_CANCELLED &&
       courseStatus !== COURSE_STATUS_PENDING &&
       e.target.value !== COURSE_STATUS_PENDING &&
       e.target.value !== ''
@@ -96,20 +100,35 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
     }
   };
 
+  const handleRatingChange = (newValue) => {
+    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newData = {
+      ...courseData,
+      rating: [...newRating, { id: currentUserId, score: newValue }],
+    };
+    fetch(`${endpoint}/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newData),
+    });
+    setCourseRating(newValue);
+  };
+
   return (
     <Card sx={styles}>
       <CardContent>
         <Link to={`/course/${id}`} style={{ textDecoration: 'none' }}>
-          <Typography variant='h4'>{name}</Typography>
-          <Typography variant='h5'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
-          <Typography>{type}</Typography>
-          <Typography>{frequency}</Typography>
+          <Typography variant='h5'>{name}</Typography>
+          <Typography variant='h6'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
+          <Typography>Clase de {subject}</Typography>
+          <Typography>{capitalize(type)}</Typography>
+          <Typography>{capitalize(frequency)}</Typography>
         </Link>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Rating
             value={courseRating}
             onChange={(event, newValue) => {
-              setCourseRating(newValue);
+              handleRatingChange(newValue);
             }}
             readOnly={!isUserEnrolled(currentUserId, courseData)}
           />

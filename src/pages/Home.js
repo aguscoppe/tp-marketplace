@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import Course from '../components/Course';
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { endpoint, useUserById, usePublishedCourses } from '../hooks';
 
 const createQuery = (paramsObj) => {
@@ -68,13 +68,15 @@ const Home = ({ currentUserId }) => {
         handleChange={handleChange}
         handleClick={handleClick}
       />
-      {filteredCourses ? (
-        <Grid container diaplay='flex' justifyContent='center'>
-          {filteredCourses.map((course) => (
-            <Course key={course.name} courseData={course} />
-          ))}
-        </Grid>
-      ) : null}
+      <Box id='courses' sx={{ margin: '0 15vw' }}>
+        {filteredCourses ? (
+          <Grid container diaplay='flex' justifyContent='center'>
+            {filteredCourses.map((course) => (
+              <Course key={course.name} courseData={course} />
+            ))}
+          </Grid>
+        ) : null}
+      </Box>
     </>
   );
 };

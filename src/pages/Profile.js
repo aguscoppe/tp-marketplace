@@ -8,6 +8,7 @@ import {
   IconButton,
   TextField,
   InputAdornment,
+  capitalize,
 } from '@mui/material';
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
 import EducationInputDialog from '../components/EducationInputDialog';
@@ -44,6 +45,16 @@ const style = {
   },
 };
 
+const studentFields = {
+  birthDate: '2000-01-01',
+  education: [],
+};
+
+const teacherFields = {
+  degree: '',
+  experience: '',
+};
+
 const Profile = ({ currentUserId, signOut }) => {
   const currentUser = useUserById(currentUserId);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -52,14 +63,16 @@ const Profile = ({ currentUserId, signOut }) => {
     surname: '',
     email: '',
     phone: '',
-    experience: '',
-    education: [],
   });
   const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     if (currentUser !== undefined) {
-      setCurrentProfile(() => currentUser);
+      if (currentUser.role === TEACHER_ROLE) {
+        setCurrentProfile(() => ({ ...teacherFields, ...currentUser }));
+      } else {
+        setCurrentProfile(() => ({ ...studentFields, ...currentUser }));
+      }
     }
   }, [currentUser]);
 
@@ -102,10 +115,21 @@ const Profile = ({ currentUserId, signOut }) => {
   };
 
   const handleRemove = (index) => {
-    setCurrentProfile((prev) => ({
-      ...prev,
-      education: prev.education.filter((el, i) => i !== index),
-    }));
+    const answer = window.confirm(
+      '¿Estás seguro/a de que quieres realizar esta acción?'
+    );
+    if (answer) {
+      const newData = {
+        ...currentProfile,
+        education: currentProfile.education.filter((el, i) => i !== index),
+      };
+      fetch(`${endpoint}/users/${currentUserId}`, {
+        method: 'PUT',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(newData),
+      });
+      setCurrentProfile(newData);
+    }
   };
 
   const openDialog = () => {
@@ -131,7 +155,7 @@ const Profile = ({ currentUserId, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Nombre'
-            value={currentProfile.name !== undefined ? currentProfile.name : ''}
+            value={currentProfile.name}
             name='name'
             onChange={handleChange}
           />
@@ -139,7 +163,7 @@ const Profile = ({ currentUserId, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Apellido'
-            value={currentProfile.surname ? currentProfile.surname : ''}
+            value={currentProfile.surname}
             name='surname'
             onChange={handleChange}
           />
@@ -147,7 +171,7 @@ const Profile = ({ currentUserId, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Email'
-            value={currentProfile.email ? currentProfile.email : ''}
+            value={currentProfile.email}
             name='email'
             onChange={handleChange}
           />
@@ -155,24 +179,44 @@ const Profile = ({ currentUserId, signOut }) => {
             autoComplete='off'
             variant='outlined'
             label='Teléfono'
-            value={currentProfile.phone ? currentProfile.phone : ''}
+            value={currentProfile.phone}
             name='phone'
             onChange={handleChange}
+            type='number'
           />
           {currentUser?.role === TEACHER_ROLE && (
-            <TextField
-              autoComplete='off'
-              variant='outlined'
-              label='Experiencia'
-              value={currentProfile.experience}
-              name='experience'
-              onChange={handleChange}
-              multiline
-              rows={4}
-            />
+            <>
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Título'
+                value={currentProfile.degree}
+                name='degree'
+                onChange={handleChange}
+              />
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Experiencia'
+                value={currentProfile.experience}
+                name='experience'
+                onChange={handleChange}
+                multiline
+                rows={4}
+              />
+            </>
           )}
           {currentUser?.role === STUDENT_ROLE && (
             <>
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Fecha de nacimiento'
+                value={currentProfile.birthDate}
+                name='birthDate'
+                onChange={handleChange}
+                type='date'
+              />
               {currentProfile?.education?.map((element, index) => (
                 <TextField
                   key={index}
@@ -182,7 +226,9 @@ const Profile = ({ currentUserId, signOut }) => {
                   value={
                     element === undefined
                       ? ''
-                      : `${element.name} (${element.level} - ${element.status})`
+                      : `${element.name}\n • ${capitalize(
+                          element.level
+                        )}\n • ${capitalize(element.status)}`
                   }
                   multiline
                   InputProps={{
@@ -208,6 +254,14 @@ const Profile = ({ currentUserId, signOut }) => {
             <Button
               variant='contained'
               sx={{ height: '50px', margin: '10px' }}
+              disabled={
+                currentProfile.name === '' ||
+                currentProfile.surname === '' ||
+                currentProfile.email === '' ||
+                currentProfile.phone === '' ||
+                currentProfile.degree === '' ||
+                currentProfile.experience === ''
+              }
               onClick={handleClick}
             >
               Guardar

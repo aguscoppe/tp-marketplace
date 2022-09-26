@@ -16,7 +16,7 @@ import {
 import NavBar from '../components/NavBar';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { getFullName } from '../utils';
+import { useFullName } from '../utils';
 import {
   COURSE_STATUS_ACCEPTED,
   COURSE_STATUS_CANCELLED,
@@ -37,6 +37,7 @@ const styles = {
 const StudentTable = ({ currentUserId }) => {
   const { id } = useParams();
   const courseData = useCourseById(id);
+  const getFullName = useFullName();
   const [students, setStudents] = useState([]);
   const [editing, setEditing] = useState({ studentId: null, isEditing: false });
   const [newStatus, setNewStatus] = useState('');

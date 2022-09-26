@@ -10,10 +10,17 @@ import {
 import { Link, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
-import { STUDENT_ROLE } from '../constants';
-import { getFullName, isUserEnrolled } from '../utils';
-import { useComments, useCourseById, useTeacherByCourseId } from '../hooks';
-import { useUserById } from '../hooks';
+import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
+import { isUserEnrolled, getRating } from '../utils';
+import {
+  endpoint,
+  useUserById,
+  useComments,
+  useCourseById,
+  useTeacherByCourseId,
+} from '../hooks';
+import uuid from 'react-uuid';
+import { capitalize } from '../utils';
 
 const styles = {
   marginTop: '60px',
@@ -38,13 +45,15 @@ const CourseDetail = ({ currentUserId }) => {
   const [userEnrolled, setUserEnrolled] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
   const [teacherData, setTeacherData] = useState([]);
-  const [ratingValue, setRatingValue] = useState(courseData?.rating);
+  const [newComment, setNewComment] = useState('');
+  const [ratingValue, setRatingValue] = useState(0);
 
   useEffect(() => {
     if (course !== undefined && Object.keys(course).length > 0) {
       setCourseData(course);
       const result = isUserEnrolled(currentUserId, course);
       setUserEnrolled(result);
+      setRatingValue(getRating(course.rating));
     }
   }, [course, currentUserId]);
 
@@ -60,26 +69,61 @@ const CourseDetail = ({ currentUserId }) => {
     }
   }, [teacher]);
 
+  const handleChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleRatingChange = (newValue) => {
+    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newData = {
+      ...courseData,
+      rating: [...newRating, { id: currentUserId, score: newValue }],
+    };
+    fetch(`${endpoint}/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newData),
+    });
+    setRatingValue(newValue);
+  };
+
   const handleSubmitComment = () => {
-    console.log('agregar handleChange, value, etc a TextField');
+    const comment = {
+      id: uuid(),
+      courseId: id,
+      sourceId: currentUserId,
+      destinationId: courseData.teacherId,
+      type: COMMENT_NOTIFICATION,
+      message: newComment,
+    };
+    fetch(`${endpoint}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(comment),
+    });
+    setNewComment('');
   };
 
   return (
     <>
       <NavBar currentUserId={currentUserId} />
       <Grid container justifyContent='space-around' sx={styles}>
-        <Grid item xs={6}>
+        <Grid item xs={11} md={6}>
           <Typography variant='h3'>{courseData?.name}</Typography>
           <Typography variant='h5'>{courseData?.description}</Typography>
           <Rating
             value={ratingValue}
             onChange={(event, newValue) => {
-              setRatingValue(newValue);
+              handleRatingChange(newValue);
             }}
             readOnly={!userEnrolled}
           />
           <Typography variant='h6'>${courseData?.price}</Typography>
-          <Typography variant='h6'>{courseData?.frequency}</Typography>
+          <Typography variant='h6'>Clase de {courseData?.subject}</Typography>
+          <Typography variant='h6'>{capitalize(courseData?.type)}</Typography>
+          <Typography variant='h6'>
+            {capitalize(courseData?.frequency)}
+          </Typography>
           <Typography variant='h6'>{courseData?.duration} minutos</Typography>
           {currentUser?.role === STUDENT_ROLE && !userEnrolled ? (
             <Link to={`/enroll/${id}`}>
@@ -89,7 +133,8 @@ const CourseDetail = ({ currentUserId }) => {
         </Grid>
         <Grid
           item
-          xs={4}
+          xs={11}
+          md={4}
           sx={{
             backgroundColor: '#eee',
             padding: '16px',
@@ -109,19 +154,46 @@ const CourseDetail = ({ currentUserId }) => {
             Comentarios
           </Typography>
           {userEnrolled && (
-            <>
-              <TextField sx={{ width: '85%' }} />
-              <Button variant='contained' onClick={handleSubmitComment}>
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              sx={{
+                '@media (max-width: 800px)': {
+                  flexDirection: 'column',
+                },
+              }}
+            >
+              <TextField
+                value={newComment}
+                onChange={handleChange}
+                sx={{
+                  width: '82%',
+                  '@media (max-width: 800px)': {
+                    width: '100%',
+                  },
+                }}
+              />
+              <Button
+                variant='contained'
+                disabled={newComment === ''}
+                onClick={handleSubmitComment}
+                sx={{
+                  width: '16%',
+                  '@media (max-width: 800px)': {
+                    width: '100%',
+                  },
+                }}
+              >
                 Comentar
               </Button>
-            </>
+            </Box>
           )}
           {filteredComments.length > 0 ? (
             filteredComments.map((comment) => (
               <Comment
                 key={comment.message}
                 message={comment.message}
-                userName={getFullName(comment.studentId)}
+                userId={comment.studentId}
               />
             ))
           ) : (

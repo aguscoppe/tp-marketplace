@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   AppBar,
   Badge,
@@ -7,65 +7,75 @@ import {
   Menu,
   Toolbar,
   Typography,
-} from "@mui/material";
-import Notification from "./Notification";
-import { NavLink } from "react-router-dom";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import HomeIcon from "@mui/icons-material/Home";
-import InfoIcon from "@mui/icons-material/Info";
-import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import PersonIcon from "@mui/icons-material/Person";
-import { useNotifications } from "../hooks";
+} from '@mui/material';
+import Notification from './Notification';
+import { NavLink } from 'react-router-dom';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import SchoolIcon from '@mui/icons-material/School';
+import PersonIcon from '@mui/icons-material/Person';
+import { useNotifications } from '../hooks';
 
 const style = {
-  height: "8vh",
-  backgroundColor: "#333",
-  color: "#fff",
-  "@media (max-width: 480px)": {
-    alignItems: "center",
+  height: '8vh',
+  backgroundColor: '#333',
+  color: '#fff',
+  '@media (max-width: 480px)': {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  '@media (max-height: 700px)': {
+    height: 'auto',
   },
   a: {
-    textDecoration: "none",
-    margin: "8px",
-    "&:not(.active):hover": {
-      color: "#888",
+    textDecoration: 'none',
+    margin: '8px',
+    '&:not(.active):hover': {
+      color: '#888',
     },
     img: {
-      width: "50px",
+      width: '50px',
     },
   },
-  "& .MuiButton-root": {
-    fontFamily: "Montserrat",
+  '& .MuiButton-root': {
+    fontFamily: 'Montserrat',
   },
-  "& .MuiTypography-root": {
-    fontFamily: "Montserrat",
-    fontSize: "12px",
-    marginTop: "2px",
+  '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
+    fontSize: '12px',
+    marginTop: '2px',
   },
-  "& .active p": {
-    color: "#90caf9",
+  '& .active p': {
+    color: '#90caf9',
   },
-  "& .active svg": {
-    color: "#90caf9",
+  '& .active svg': {
+    color: '#90caf9',
   },
-  "& .MuiIconButton-root": {
-    color: "#eee",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    "& svg": {
-      width: "20px",
-      height: "20px",
+  '& .MuiIconButton-root': {
+    color: '#eee',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    '& svg': {
+      width: '20px',
+      height: '20px',
     },
-    "&:hover": {
-      backgroundColor: "transparent",
+    '&:hover': {
+      backgroundColor: 'transparent',
     },
+  },
+};
+
+const hideText = {
+  '@media (max-width: 480px)': {
+    display: 'none',
   },
 };
 
 const NavLinkIcon = ({ urlPath, children }) => (
   <NavLink
-    className={(navData) => (navData.isActive ? "active" : "")}
+    className={(navData) => (navData.isActive ? 'active' : '')}
     to={urlPath ? urlPath : undefined}
   >
     <IconButton>{children}</IconButton>
@@ -74,13 +84,17 @@ const NavLinkIcon = ({ urlPath, children }) => (
 
 const commonNavLinks = (
   <>
-    <NavLinkIcon urlPath="/">
+    <NavLinkIcon urlPath='/'>
       <HomeIcon />
-      <Typography variant="body2">Home</Typography>
+      <Typography variant='body2' sx={hideText}>
+        Home
+      </Typography>
     </NavLinkIcon>
-    <NavLinkIcon urlPath="/about">
+    <NavLinkIcon urlPath='/about'>
       <InfoIcon />
-      <Typography variant="body2">Información</Typography>
+      <Typography variant='body2' sx={hideText}>
+        Información
+      </Typography>
     </NavLinkIcon>
   </>
 );
@@ -88,13 +102,17 @@ const commonNavLinks = (
 const userNavbar = (
   <>
     {commonNavLinks}
-    <NavLinkIcon urlPath="/courses">
-      <BookmarksIcon />
-      <Typography variant="body2">Mis Clases</Typography>
+    <NavLinkIcon urlPath='/courses'>
+      <SchoolIcon />
+      <Typography variant='body2' sx={hideText}>
+        Mis Clases
+      </Typography>
     </NavLinkIcon>
-    <NavLinkIcon urlPath="/profile">
+    <NavLinkIcon urlPath='/profile'>
       <PersonIcon />
-      <Typography variant="body2">Mi Perfil</Typography>
+      <Typography variant='body2' sx={hideText}>
+        Mi Perfil
+      </Typography>
     </NavLinkIcon>
   </>
 );
@@ -102,9 +120,11 @@ const userNavbar = (
 const publicNavbar = (
   <>
     {commonNavLinks}
-    <NavLinkIcon urlPath="/login">
+    <NavLinkIcon urlPath='/login'>
       <PersonIcon />
-      <Typography variant="body2">Ingresar</Typography>
+      <Typography variant='body2' sx={hideText}>
+        Ingresar
+      </Typography>
     </NavLinkIcon>
   </>
 );
@@ -129,46 +149,64 @@ const NavBar = ({ currentUserId }) => {
     setAnchorEl(null);
   };
 
+  const removeNotification = (id) => {
+    setNotificationList((notification) => notification.id !== id);
+  };
+
   return (
-    <AppBar position="static" color="transparent" sx={style}>
-      <Toolbar sx={{ display: "flex", justifyContent: "flex-end" }}>
+    <AppBar position='static' color='transparent' sx={style}>
+      <Toolbar
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}
+      >
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            '@media (max-width: 480px)': {
+              width: '100%',
+              justifyContent: 'space-evenly',
+            },
           }}
         >
           {currentUserId ? (
             <>
               {userNavbar}
               <IconButton onClick={handleClick}>
-                <Badge badgeContent={notificationList.length} color="primary">
+                <Badge badgeContent={notificationList.length} color='primary'>
                   <NotificationsIcon />
                 </Badge>
-                <Typography variant="body2">Notificationes</Typography>
+                <Typography variant='body2' sx={hideText}>
+                  Notificationes
+                </Typography>
               </IconButton>
               <Menu
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-                PaperProps={{ style: { maxHeight: "400px" } }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                PaperProps={{ style: { maxHeight: '400px' } }}
               >
                 {notificationList.length > 0 ? (
                   notificationList.map((notification) => (
                     <Notification
                       key={notification.message}
                       data={notification}
+                      removeNotification={() => {
+                        removeNotification(notification.id);
+                      }}
                     />
                   ))
                 ) : (
                   <Typography
-                    variant="body2"
+                    variant='body2'
                     sx={{
-                      textAlign: "center",
-                      padding: "6px 12px",
-                      fontFamily: "Montserrat",
+                      textAlign: 'center',
+                      padding: '6px 12px',
+                      fontFamily: 'Montserrat',
                     }}
                   >
                     No tienes notificaciones

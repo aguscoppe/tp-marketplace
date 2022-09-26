@@ -29,7 +29,7 @@ const style = {
   },
 };
 
-const Notification = ({ data }) => {
+const Notification = ({ data, removeNotification }) => {
   const {
     id,
     type,
@@ -52,6 +52,7 @@ const Notification = ({ data }) => {
       method: 'DELETE',
       headers: { 'Content-type': 'application/json' },
     });
+    removeNotification();
   };
 
   const sendComment = (comment) => {

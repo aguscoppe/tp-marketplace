@@ -2,7 +2,8 @@
   "courses": [
     {
       "id": 1,
-      "name": "Lengua",
+      "name": "Lengua I",
+      "subject": "Lengua",
       "type": "grupal",
       "teacherId": 2,
       "students": [
@@ -18,18 +19,32 @@
       "duration": 90,
       "frequency": "semanal",
       "price": 3200,
-      "description": "Esta es una materia de lengua",
-      "rating": 4,
+      "description": "Clases semanales de lengua para nivel secundario",
+      "rating": [
+        {
+          "id": 3,
+          "score": 5
+        },
+        {
+          "id": 10,
+          "score": 5
+        }
+      ],
       "published": true
     },
     {
       "id": 2,
-      "name": "Matemática",
+      "name": "Matemática I",
+      "subjct": "Matemática",
       "type": "grupal",
       "teacherId": 2,
       "students": [
         {
           "id": 3,
+          "status": "aceptada"
+        },
+        {
+          "id": 10,
           "status": "aceptada"
         }
       ],
@@ -37,21 +52,94 @@
       "frequency": "semanal",
       "price": 3200,
       "description": "Esta es una materia de matemática",
-      "rating": 4,
-      "published": true
+      "rating": [
+        {
+          "id": 10,
+          "score": 4
+        }
+      ],
+      "published": true,
+      "subject": "Matemática"
     },
     {
       "id": 3,
-      "name": "Geografía",
+      "name": "Geografía I",
+      "subject": "Geografía",
       "type": "individual",
       "teacherId": 1,
-      "students": [],
+      "students": [
+        {
+          "id": 10,
+          "status": "finalizada"
+        }
+      ],
       "duration": 90,
       "frequency": "mensual",
       "price": 1800,
-      "description": "Esta es una materia de geografía",
-      "rating": 4,
+      "description": "Clases mensuales de geografía",
+      "rating": [
+        {
+          "id": 10,
+          "score": 3
+        }
+      ],
       "published": true
+    },
+    {
+      "name": "Inglés III",
+      "subject": "Inglés",
+      "type": "individual",
+      "teacherId": 2,
+      "students": [],
+      "duration": 60,
+      "frequency": "única",
+      "price": "5000",
+      "description": "Clase de Inglés para nivel B2",
+      "published": false,
+      "rating": [],
+      "id": 4
+    },
+    {
+      "name": "Historia I",
+      "subject": "Historia",
+      "type": "grupal",
+      "teacherId": 1,
+      "students": [],
+      "duration": 60,
+      "frequency": "mensual",
+      "price": "4500",
+      "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1810 y 1816",
+      "published": true,
+      "rating": [],
+      "id": 5
+    },
+    {
+      "name": "Historia II",
+      "subject": "Historia",
+      "type": "grupal",
+      "teacherId": 1,
+      "students": [],
+      "duration": "120",
+      "frequency": "mensual",
+      "price": "5600",
+      "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1816 y 1853",
+      "published": true,
+      "rating": [],
+      "id": 6
+    },
+    {
+      "name": "Historia III",
+      "subject": "Historia",
+      "type": "grupal",
+      "teacherId": 1,
+      "students": [],
+      "duration": "90",
+      "frequency": "mensual",
+      "price": "6000",
+      "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1853 y 1880",
+      "published": true,
+      "rating": [],
+      "id": 7
     }
   ],
   "users": [
@@ -63,15 +151,18 @@
       "password": "123",
       "phone": "1155553333",
       "role": "profesor",
-      "experience": "Profesor en la UBA desde 2016 con experiencia en varios rubros."
+      "degree": "Docente de Nivel Inicial",
+      "experience": "Me desempeño en este rol desde el 2004 y he trabajado en tres colegios primarios de la Ciudad de Buenos Aires."
     },
     {
       "name": "Sandra",
       "surname": "Sánchez",
       "email": "sandra@mail.com",
+      "password": "123",
       "phone": "1155553333",
       "role": "profesor",
-      "experience": "Profesora en la UBA hace más de diez años con experiencia en varios rubros.",
+      "degree": "Docente de Nivel Secundario",
+      "experience": "Profesora recibida en la UBA desde hace más de diez años, con experiencia en diversos rubros.",
       "education": [],
       "id": 2
     },
@@ -111,9 +202,39 @@
         }
       ],
       "role": "alumno"
+    },
+    {
+      "birthDate": "1997-06-02",
+      "education": [
+        {
+          "name": "Traductorado",
+          "level": "universitario",
+          "status": "finalizado"
+        }
+      ],
+      "name": "Agustina",
+      "surname": "Coppe",
+      "email": "agus@mail.com",
+      "password": "123",
+      "phone": "555555",
+      "role": "alumno",
+      "id": 11
     }
   ],
-  "notifications": [],
+  "notifications": [
+    {
+      "courseId": "2",
+      "sourceId": 11,
+      "type": "inscripcion",
+      "phone": "555555",
+      "timeRangeFrom": "9",
+      "timeRangeTo": "16",
+      "message": "Hola, me quiero anotar en esta clase",
+      "destinationId": 2,
+      "email": "agus@mail.com",
+      "id": "27653e-40d2-3f71-0e56-da21c5eb1530"
+    }
+  ],
   "comments": [
     {
       "id": 1,
