@@ -21,7 +21,7 @@ import {
   STUDENT_ROLE,
   TEACHER_ROLE,
 } from '../constants';
-import { isUserEnrolled, capitalize } from '../utils';
+import { isUserEnrolled, capitalize, getRating } from '../utils';
 import { useUserById, endpoint } from '../hooks';
 
 const statusItems = [
@@ -58,11 +58,10 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
   );
   const teacherData = useUserById(teacherId);
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
-  const [courseRating, setCourseRating] = useState(rating);
+  const [courseRating, setCourseRating] = useState(getRating(rating));
 
   const handleStatusChange = (e) => {
     if (
-      courseStatus !== COURSE_STATUS_CANCELLED &&
       courseStatus !== COURSE_STATUS_PENDING &&
       e.target.value !== COURSE_STATUS_PENDING &&
       e.target.value !== ''
@@ -101,6 +100,20 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
     }
   };
 
+  const handleRatingChange = (newValue) => {
+    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newData = {
+      ...courseData,
+      rating: [...newRating, { id: currentUserId, score: newValue }],
+    };
+    fetch(`${endpoint}/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newData),
+    });
+    setCourseRating(newValue);
+  };
+
   return (
     <Card sx={styles}>
       <CardContent>
@@ -115,7 +128,7 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
           <Rating
             value={courseRating}
             onChange={(event, newValue) => {
-              setCourseRating(newValue);
+              handleRatingChange(newValue);
             }}
             readOnly={!isUserEnrolled(currentUserId, courseData)}
           />

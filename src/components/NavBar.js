@@ -159,7 +159,6 @@ const NavBar = ({ currentUserId }) => {
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
-          width: '100vw',
         }}
       >
         <Box

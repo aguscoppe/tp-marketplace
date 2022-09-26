@@ -1,4 +1,4 @@
-import { Box, Avatar, Typography } from '@mui/material';
+import { Box, Avatar, Grid, Typography } from '@mui/material';
 import { useFullName } from '../utils';
 
 function generateColor() {
@@ -47,7 +47,12 @@ const Comment = ({ message, userId }) => {
   return (
     <Box sx={style}>
       <Avatar {...props} />
-      <Typography variant='body1'>{message}</Typography>
+      <Grid>
+        <Typography variant='body2' sx={{ fontWeight: '700' }}>
+          {getFullName(userId)}
+        </Typography>
+        <Typography variant='body1'>{message}</Typography>
+      </Grid>
     </Box>
   );
 };
