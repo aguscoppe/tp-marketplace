@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import NavBar from '../components/NavBar';
 import {
   Box,
@@ -50,12 +51,13 @@ const style = {
   },
 };
 
-const NewCourse = ({ currentUserId }) => {
+const NewCourse = () => {
+  const currentUser = useContext(UserContext);
   const initialState = {
     name: '',
     subject: '',
     type: '',
-    teacherId: currentUserId,
+    teacherId: currentUser?.id,
     students: [],
     duration: 60,
     frequency: '',
@@ -128,7 +130,7 @@ const NewCourse = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Grid
         container
         sx={style}

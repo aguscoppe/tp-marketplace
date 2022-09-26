@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import {
   Box,
   Card,
@@ -48,13 +49,13 @@ const styles = {
   },
 };
 
-const Course = ({ courseData, currentUserId, removeCourse }) => {
-  const currentUser = useUserById(currentUserId);
+const Course = ({ courseData, removeCourse }) => {
+  const currentUser = useContext(UserContext);
   const { id, name, subject, type, frequency, rating, teacherId, students } =
     courseData;
   const { pathname } = useLocation();
   const enrolledStudents = students.filter(
-    (student) => student.id === currentUserId
+    (student) => student.id === currentUser?.id
   );
   const teacherData = useUserById(teacherId);
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
@@ -67,13 +68,13 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
       e.target.value !== ''
     ) {
       const newStudentData = students.filter(
-        (student) => student.id !== currentUserId
+        (student) => student.id !== currentUser?.id
       );
       const newData = {
         ...courseData,
         students: [
           ...newStudentData,
-          { id: currentUserId, status: e.target.value },
+          { id: currentUser?.id, status: e.target.value },
         ],
       };
       fetch(`${endpoint}/courses/${id}`, {
@@ -101,10 +102,12 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
   };
 
   const handleRatingChange = (newValue) => {
-    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newRating = courseData.rating.filter(
+      (el) => el.id !== currentUser?.id
+    );
     const newData = {
       ...courseData,
-      rating: [...newRating, { id: currentUserId, score: newValue }],
+      rating: [...newRating, { id: currentUser?.id, score: newValue }],
     };
     fetch(`${endpoint}/courses/${id}`, {
       method: 'PUT',
@@ -130,7 +133,7 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
             onChange={(event, newValue) => {
               handleRatingChange(newValue);
             }}
-            readOnly={!isUserEnrolled(currentUserId, courseData)}
+            readOnly={!isUserEnrolled(currentUser?.id, courseData)}
           />
           <Box>
             {currentUser?.role === TEACHER_ROLE ? (

@@ -1,31 +1,48 @@
-import { Box, Typography, TextField, Button } from "@mui/material";
-import { Link } from "react-router-dom";
-import Navbar from "../components/NavBar";
+import { Box, Typography, TextField, Button } from '@mui/material';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import Navbar from '../components/NavBar';
+import { useUsers } from '../hooks';
 
-const ResetPassword = ({ currentUserId }) => {
+const ResetPassword = () => {
+  const userList = useUsers();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+  };
+
   const handleRecovery = () => {
-    console.log("Recuperaste tu contraseña!");
+    const filtered = userList.filter((user) => user.email === email);
+    if (filtered.length > 0) {
+      setEmail('');
+      alert('Recuperaste tu contraseña!');
+      navigate('/login');
+    } else {
+      alert('No existe un usuario asociado al email ingresado');
+    }
   };
 
   return (
     <>
-      <Navbar currentUserId={currentUserId} />
+      <Navbar />
       <Box
         sx={{
-          width: "100vw",
-          height: "92vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          width: '100vw',
+          height: '92vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           background:
             'url("https://sephorconsulting.es/kitdigital/wp-content/uploads/2022/01/mujer-ordenador.png"), #1976d2',
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          backgroundPositionX: "right",
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPositionX: 'right',
           a: {
-            color: "#fff",
-            "&:hover": {
-              color: "#90caf9",
+            color: '#fff',
+            '&:hover': {
+              color: '#90caf9',
             },
           },
         }}
@@ -33,42 +50,42 @@ const ResetPassword = ({ currentUserId }) => {
         <Box
           sx={{
             boxShadow: 20,
-            width: "400px",
-            height: "470px",
-            backgroundColor: "#595959",
-            color: "#FFF",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: "20px",
-            "@media (max-width: 480px)": {
-              width: "100vw",
-              height: "100%",
-              borderRadius: "0px",
+            width: '400px',
+            height: '470px',
+            backgroundColor: '#595959',
+            color: '#FFF',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '20px',
+            '@media (max-width: 480px)': {
+              width: '100vw',
+              height: '100%',
+              borderRadius: '0px',
             },
           }}
         >
           <Box
             sx={{
-              width: "300px",
-              textAlign: "center",
+              width: '300px',
+              textAlign: 'center',
             }}
           >
             <Typography
-              variant="h4"
+              variant='h4'
               sx={{
-                fontWeight: "bold",
-                fontFamily: "Montserrat",
+                fontWeight: 'bold',
+                fontFamily: 'Montserrat',
               }}
             >
               ¿Olvidaste tu contraseña?
             </Typography>
             <Typography
               sx={{
-                marginTop: "20px",
-                fontFamily: "Montserrat",
-                textAlign: "justify",
+                marginTop: '20px',
+                fontFamily: 'Montserrat',
+                textAlign: 'justify',
                 letterSpacing: 0,
               }}
             >
@@ -77,28 +94,30 @@ const ResetPassword = ({ currentUserId }) => {
             </Typography>
           </Box>
           <TextField
-            variant="outlined"
-            label="Correo electronico"
-            name="email"
+            variant='outlined'
+            label='Correo electronico'
+            name='email'
+            value={email}
+            onChange={handleChange}
             sx={{
-              marginTop: "50px",
-              minWidth: "150px",
-              backgroundColor: "#fff",
-              borderRadius: "8px",
-              fontFamily: "Montserrat",
-              width: "300px",
+              marginTop: '50px',
+              minWidth: '150px',
+              backgroundColor: '#fff',
+              borderRadius: '8px',
+              fontFamily: 'Montserrat',
+              width: '300px',
             }}
           />
           <Button
-            variant="contained"
+            variant='contained'
             sx={{
-              height: "50px",
-              marginTop: "20px",
-              marginBottom: "20px",
-              minWidth: "150px",
-              fontFamily: "Montserrat",
-              borderRadius: "8px",
-              width: "300px",
+              height: '50px',
+              marginTop: '20px',
+              marginBottom: '20px',
+              minWidth: '150px',
+              fontFamily: 'Montserrat',
+              borderRadius: '8px',
+              width: '300px',
             }}
             onClick={handleRecovery}
           >
@@ -106,14 +125,14 @@ const ResetPassword = ({ currentUserId }) => {
           </Button>
           <Typography
             sx={{
-              color: "#90caf9",
-              fontSize: "14px",
+              color: '#90caf9',
+              fontSize: '14px',
             }}
           >
             <Link
-              to="/login"
+              to='/login'
               style={{
-                textDecoration: "none",
+                textDecoration: 'none',
               }}
             >
               Volver al Login

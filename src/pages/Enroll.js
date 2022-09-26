@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import NavBar from '../components/NavBar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { endpoint, useTeacherByCourseId, useUserById } from '../hooks';
+import { endpoint, useTeacherByCourseId } from '../hooks';
 import uuid from 'react-uuid';
 import { COURSE_NOTIFICATION } from '../constants';
+import { UserContext } from '../contexts/UserContext';
 
 const style = {
   height: '100%',
@@ -36,12 +37,12 @@ const style = {
   },
 };
 
-const Enroll = ({ currentUserId }) => {
+const Enroll = () => {
+  const currentUser = useContext(UserContext);
   const { id } = useParams();
-  const user = useUserById(currentUserId);
   const initialState = {
     courseId: id,
-    sourceId: currentUserId,
+    sourceId: currentUser?.id,
     type: COURSE_NOTIFICATION,
     phone: '',
     email: '',
@@ -65,10 +66,10 @@ const Enroll = ({ currentUserId }) => {
   useEffect(() => {
     setNewEnrollment((prev) => ({
       ...prev,
-      phone: user.phone,
-      email: user.email,
+      phone: currentUser.phone,
+      email: currentUser.email,
     }));
-  }, [user]);
+  }, [currentUser]);
 
   const handleChange = (e) => {
     setNewEnrollment((prev) => ({
@@ -92,7 +93,7 @@ const Enroll = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Grid
         container
         sx={style}

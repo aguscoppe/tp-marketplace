@@ -40,7 +40,7 @@ const Register = () => {
 
   const handleRegister = () => {
     if (users.some((el) => el.email === newUser.email)) {
-      alert('email ya registrado');
+      alert('Ya existe una cuenta asociada al email ingresado');
     } else {
       fetch(`${endpoint}/users`, {
         method: 'POST',

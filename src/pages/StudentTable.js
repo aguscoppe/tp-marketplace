@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import { useParams } from 'react-router-dom';
 import {
   IconButton,
@@ -34,7 +35,8 @@ const styles = {
   },
 };
 
-const StudentTable = ({ currentUserId }) => {
+const StudentTable = () => {
+  const currentUser = useContext(UserContext);
   const { id } = useParams();
   const courseData = useCourseById(id);
   const getFullName = useFullName();
@@ -83,7 +85,7 @@ const StudentTable = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <TableContainer component={Paper} sx={styles}>
         <Table>
           <TableHead>

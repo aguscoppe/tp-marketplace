@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,13 +14,13 @@ import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
 import { isUserEnrolled, getRating } from '../utils';
 import {
   endpoint,
-  useUserById,
   useComments,
   useCourseById,
   useTeacherByCourseId,
 } from '../hooks';
 import uuid from 'react-uuid';
-import { capitalize } from '../utils';
+import { capitalize, canUserComment } from '../utils';
+import { UserContext } from '../contexts/UserContext';
 
 const styles = {
   marginTop: '60px',
@@ -35,8 +35,8 @@ const styles = {
   },
 };
 
-const CourseDetail = ({ currentUserId }) => {
-  const currentUser = useUserById(currentUserId);
+const CourseDetail = () => {
+  const currentUser = useContext(UserContext);
   const { id } = useParams();
   const course = useCourseById(id);
   const comments = useComments(id);
@@ -51,17 +51,17 @@ const CourseDetail = ({ currentUserId }) => {
   useEffect(() => {
     if (course !== undefined && Object.keys(course).length > 0) {
       setCourseData(course);
-      const result = isUserEnrolled(currentUserId, course);
+      const result = isUserEnrolled(currentUser?.id, course);
       setUserEnrolled(result);
       setRatingValue(getRating(course.rating));
     }
-  }, [course, currentUserId]);
+  }, [course, currentUser?.id]);
 
   useEffect(() => {
     if (comments !== undefined) {
       setFilteredComments(comments.filter((comment) => comment.courseId == id));
     }
-  }, [comments]);
+  }, [comments, id]);
 
   useEffect(() => {
     if (teacher !== undefined) {
@@ -74,10 +74,12 @@ const CourseDetail = ({ currentUserId }) => {
   };
 
   const handleRatingChange = (newValue) => {
-    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newRating = courseData.rating.filter(
+      (el) => el.id !== currentUser?.id
+    );
     const newData = {
       ...courseData,
-      rating: [...newRating, { id: currentUserId, score: newValue }],
+      rating: [...newRating, { id: currentUser?.id, score: newValue }],
     };
     fetch(`${endpoint}/courses/${id}`, {
       method: 'PUT',
@@ -91,7 +93,7 @@ const CourseDetail = ({ currentUserId }) => {
     const comment = {
       id: uuid(),
       courseId: id,
-      sourceId: currentUserId,
+      sourceId: currentUser?.id,
       destinationId: courseData.teacherId,
       type: COMMENT_NOTIFICATION,
       message: newComment,
@@ -106,7 +108,7 @@ const CourseDetail = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Grid container justifyContent='space-around' sx={styles}>
         <Grid item xs={11} md={6}>
           <Typography variant='h3'>{courseData?.name}</Typography>
@@ -153,7 +155,7 @@ const CourseDetail = ({ currentUserId }) => {
           <Typography variant='h4' sx={{ marginTop: '60px 0' }}>
             Comentarios
           </Typography>
-          {userEnrolled && (
+          {canUserComment(currentUser?.id, courseData) && (
             <Box
               display='flex'
               justifyContent='space-between'

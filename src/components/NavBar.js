@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import {
   AppBar,
   Badge,
@@ -16,9 +16,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import SchoolIcon from '@mui/icons-material/School';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNotifications } from '../hooks';
+import { UserContext } from '../contexts/UserContext';
 
 const style = {
-  height: '8vh',
   backgroundColor: '#333',
   color: '#fff',
   '@media (max-width: 480px)': {
@@ -43,7 +43,7 @@ const style = {
   },
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
-    fontSize: '12px',
+    fontSize: '10px',
     marginTop: '2px',
   },
   '& .active p': {
@@ -129,8 +129,9 @@ const publicNavbar = (
   </>
 );
 
-const NavBar = ({ currentUserId }) => {
-  const notifications = useNotifications(currentUserId);
+const NavBar = () => {
+  const currentUser = useContext(UserContext);
+  const notifications = useNotifications(currentUser?.id);
   const [notificationList, setNotificationList] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -172,7 +173,7 @@ const NavBar = ({ currentUserId }) => {
             },
           }}
         >
-          {currentUserId ? (
+          {currentUser?.id ? (
             <>
               {userNavbar}
               <IconButton onClick={handleClick}>

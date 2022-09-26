@@ -40,11 +40,11 @@
       "teacherId": 2,
       "students": [
         {
-          "id": 3,
+          "id": 10,
           "status": "aceptada"
         },
         {
-          "id": 10,
+          "id": 3,
           "status": "aceptada"
         }
       ],
@@ -70,7 +70,7 @@
       "students": [
         {
           "id": 10,
-          "status": "finalizada"
+          "status": "cancelada"
         }
       ],
       "duration": 90,
@@ -183,12 +183,7 @@
       "role": "alumno"
     },
     {
-      "id": 10,
-      "name": "Juan",
-      "surname": "Pérez",
-      "email": "juan@mail.com",
-      "password": "123",
-      "phone": "1155553333",
+      "birthDate": "2000-01-20",
       "education": [
         {
           "name": "Colegio N°5",
@@ -201,6 +196,12 @@
           "status": "finalizado"
         }
       ],
+      "id": 10,
+      "name": "Juan",
+      "surname": "Pérez",
+      "email": "juan@mail.com",
+      "password": "123",
+      "phone": "1155553333",
       "role": "alumno"
     },
     {
