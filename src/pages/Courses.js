@@ -1,26 +1,26 @@
-import { useEffect, useState, useContext } from 'react';
-import { Box, Button, Grid, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-import NavBar from '../components/NavBar';
-import Course from '../components/Course';
-import { TEACHER_ROLE } from '../constants';
-import { useCourseDataByStudentId, useCoursesByTeacherId } from '../hooks';
-import { UserContext } from '../contexts/UserContext';
+import { useEffect, useState, useContext } from "react";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+import NavBar from "../components/NavBar";
+import Course from "../components/Course";
+import { TEACHER_ROLE } from "../constants";
+import { useCourseDataByStudentId, useCoursesByTeacherId } from "../hooks";
+import { UserContext } from "../contexts/UserContext";
 
 const style = {
-  marginTop: '50px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  margin: "10px",
   a: {
-    textDecoration: 'none',
+    textDecoration: "none",
   },
-  '& .MuiButton-root': {
-    marginTop: '20px',
-    fontFamily: 'Montserrat',
+  "& .MuiButton-root": {
+    marginTop: "20px",
+    fontFamily: "Montserrat",
   },
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
+  "& .MuiTypography-root": {
+    fontFamily: "Montserrat",
   },
 };
 
@@ -50,7 +50,12 @@ const Courses = () => {
     <>
       <NavBar />
       <Box sx={style}>
-        <Grid container diaplay='flex' justifyContent='center'>
+        <Grid
+          container
+          diaplay="flex"
+          justifyContent="center"
+          sx={{ padding: "20px" }}
+        >
           {courseList?.length > 0 ? (
             courseList.map((course) => (
               <Course
@@ -60,18 +65,18 @@ const Courses = () => {
               />
             ))
           ) : (
-            <Typography variant='h6' color='#888'>
+            <Typography variant="h6" color="#888">
               No estás inscripto en ninguna clase.
             </Typography>
           )}
         </Grid>
         {currentUser?.role === TEACHER_ROLE ? (
-          <Link to='new'>
-            <Button variant='contained'>Crear Clase</Button>
+          <Link to="new">
+            <Button variant="contained">Crear Clase</Button>
           </Link>
         ) : (
-          <Link to='/'>
-            <Button variant='contained'>Buscar Clases</Button>
+          <Link to="/">
+            <Button variant="contained">Buscar Clases</Button>
           </Link>
         )}
       </Box>
