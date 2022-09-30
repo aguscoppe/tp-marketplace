@@ -9,7 +9,7 @@
       "students": [
         {
           "id": 3,
-          "status": "solicitada"
+          "status": "finalizada"
         },
         {
           "id": 10,
@@ -22,15 +22,16 @@
       "description": "Clases semanales de lengua para nivel secundario",
       "rating": [
         {
-          "id": 3,
-          "score": 5
-        },
-        {
           "id": 10,
           "score": null
+        },
+        {
+          "id": 3,
+          "score": 5
         }
       ],
-      "published": true
+      "published": true,
+      "imgSrc": "https://mybigplunge.com/wp-content/uploads/2021/08/SAP-India-Microsoft-team-up-to-train-62000-women-in-emerging-tech.jpg"
     },
     {
       "id": 2,
@@ -40,16 +41,16 @@
       "teacherId": 2,
       "students": [
         {
-          "id": 3,
-          "status": "aceptada"
-        },
-        {
           "id": 10,
           "status": "finalizada"
         },
         {
           "id": 11,
           "status": "cancelada"
+        },
+        {
+          "id": 3,
+          "status": "aceptada"
         }
       ],
       "duration": 90,
@@ -63,7 +64,8 @@
         }
       ],
       "published": true,
-      "subject": "Matemática"
+      "subject": "Matemática",
+      "imgSrc": "https://img.freepik.com/free-vector/happy-students-learning-math-college-school-isolated-flat-illustration_74855-10799.jpg?w=2000"
     },
     {
       "id": 3,
@@ -87,7 +89,8 @@
           "score": 3
         }
       ],
-      "published": true
+      "published": true,
+      "imgSrc": "https://img.freepik.com/free-vector/geography-teacher-class_74855-5512.jpg?w=2000"
     },
     {
       "name": "Inglés III",
@@ -101,7 +104,8 @@
       "description": "Clase de Inglés para nivel B2",
       "published": false,
       "rating": [],
-      "id": 4
+      "id": 4,
+      "imgSrc": "https://img.freepik.com/premium-vector/online-uk-english-language-courses-isometric-3d-illustration_88272-2014.jpg?w=2000"
     },
     {
       "name": "Historia I",
@@ -115,7 +119,8 @@
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1810 y 1816",
       "published": true,
       "rating": [],
-      "id": 5
+      "id": 5,
+      "imgSrc": "https://static.vecteezy.com/system/resources/thumbnails/001/925/945/small_2x/education-book-concept-free-vector.jpg"
     },
     {
       "name": "Historia II",
@@ -129,7 +134,8 @@
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1816 y 1853",
       "published": true,
       "rating": [],
-      "id": 6
+      "id": 6,
+      "imgSrc": "https://img.freepik.com/free-vector/female-student-listening-webinar-online_74855-6461.jpg?w=2000"
     },
     {
       "name": "Historia III",
@@ -143,7 +149,8 @@
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1853 y 1880",
       "published": true,
       "rating": [],
-      "id": 7
+      "id": 7,
+      "imgSrc": "https://img.freepik.com/premium-vector/history-concept-history-school-subject-idea-science-education-knowledge-past-ancient_277904-6102.jpg?w=2000"
     }
   ],
   "users": [
@@ -187,7 +194,7 @@
       "role": "alumno"
     },
     {
-      "birthDate": "1985-03-28",
+      "birthDate": "2003-04-12",
       "education": [
         {
           "name": "Colegio N°5",

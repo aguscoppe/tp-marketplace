@@ -68,7 +68,7 @@ const Home = () => {
           handleChange={handleChange}
           handleClick={handleClick}
         />
-        <Box id='courses'>
+        <Box id='courses' sx={{ marginBottom: '64px' }}>
           {filteredCourses ? (
             <Grid container diaplay='flex' justifyContent='space-evenly'>
               {filteredCourses.map((course) => (

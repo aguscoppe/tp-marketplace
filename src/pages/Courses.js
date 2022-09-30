@@ -3,7 +3,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Course from '../components/Course';
-import { TEACHER_ROLE } from '../constants';
+import { COURSE_STATUS_PENDING, TEACHER_ROLE } from '../constants';
 import { useCourseDataByStudentId, useCoursesByTeacherId } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
 
@@ -22,7 +22,7 @@ const style = {
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
   },
-  '@media (max-width: 500px)': {
+  '@media (max-width: 700px)': {
     '& .MuiButton-root': {
       fontSize: '12px',
     },
@@ -62,13 +62,15 @@ const Courses = () => {
           sx={{ padding: '20px' }}
         >
           {courseList?.length > 0 ? (
-            courseList.map((course) => (
-              <Course
-                key={course.name}
-                courseData={course}
-                removeCourse={removeCourse}
-              />
-            ))
+            courseList.map((course) =>
+              course.status !== COURSE_STATUS_PENDING ? (
+                <Course
+                  key={course.name}
+                  courseData={course}
+                  removeCourse={removeCourse}
+                />
+              ) : null
+            )
           ) : (
             <Typography variant='h6' color='#888' align='center'>
               {currentUser?.role === TEACHER_ROLE

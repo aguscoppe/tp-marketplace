@@ -30,6 +30,7 @@ const ratingItems = [
 ];
 
 const style = {
+  marginBottom: '32px',
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
   },
@@ -59,7 +60,7 @@ const style = {
       width: '95%',
     },
   },
-  '@media (max-width: 500px)': {
+  '@media (max-width: 700px)': {
     '& .MuiInputLabel-root': {
       fontSize: '14px',
     },
@@ -71,6 +72,9 @@ const style = {
     },
     '& input.MuiOutlinedInput-input': {
       padding: '14px',
+    },
+    '& .MuiButton-root': {
+      fontSize: '10px',
     },
   },
 };

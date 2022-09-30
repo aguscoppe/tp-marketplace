@@ -44,7 +44,7 @@ const style = {
   a: {
     textDecoration: 'none',
   },
-  '@media (max-width: 500px)': {
+  '@media (max-width: 700px)': {
     '& .MuiInputLabel-root': {
       fontSize: '14px',
     },
@@ -187,7 +187,7 @@ const Profile = ({ signOut }) => {
             sx={{
               fontWeight: 900,
               fontFamily: 'Montserrat',
-              '@media (max-width: 500px)': {
+              '@media (max-width: 700px)': {
                 fontSize: '24px',
               },
             }}
@@ -205,7 +205,7 @@ const Profile = ({ signOut }) => {
               autoComplete='off'
               variant='outlined'
               label='Nombre'
-              value={currentProfile.name}
+              value={currentProfile.name || ''}
               name='name'
               onChange={handleChange}
             />
@@ -213,7 +213,7 @@ const Profile = ({ signOut }) => {
               autoComplete='off'
               variant='outlined'
               label='Apellido'
-              value={currentProfile.surname}
+              value={currentProfile.surname || ''}
               name='surname'
               onChange={handleChange}
             />
@@ -221,7 +221,7 @@ const Profile = ({ signOut }) => {
               autoComplete='off'
               variant='outlined'
               label='Email'
-              value={currentProfile.email}
+              value={currentProfile.email || ''}
               name='email'
               onChange={handleChange}
             />
@@ -229,7 +229,7 @@ const Profile = ({ signOut }) => {
               autoComplete='off'
               variant='outlined'
               label='Teléfono'
-              value={currentProfile.phone}
+              value={currentProfile.phone || ''}
               name='phone'
               onChange={handleChange}
               type='number'
@@ -240,7 +240,7 @@ const Profile = ({ signOut }) => {
                   autoComplete='off'
                   variant='outlined'
                   label='Título'
-                  value={currentProfile.degree}
+                  value={currentProfile.degree || ''}
                   name='degree'
                   onChange={handleChange}
                 />
@@ -248,7 +248,7 @@ const Profile = ({ signOut }) => {
                   autoComplete='off'
                   variant='outlined'
                   label='Experiencia'
-                  value={currentProfile.experience}
+                  value={currentProfile.experience || ''}
                   name='experience'
                   onChange={handleChange}
                   multiline
@@ -262,7 +262,7 @@ const Profile = ({ signOut }) => {
                   autoComplete='off'
                   variant='outlined'
                   label='Fecha de nacimiento'
-                  value={currentProfile?.birthDate}
+                  value={currentProfile?.birthDate || ''}
                   name='birthDate'
                   onChange={handleChange}
                   type='date'
@@ -281,6 +281,7 @@ const Profile = ({ signOut }) => {
                           )}\n • ${capitalize(element.status)}`
                     }
                     multiline
+                    rows={4}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position='start'>

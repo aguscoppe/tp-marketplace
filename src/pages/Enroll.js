@@ -35,6 +35,23 @@ const style = {
   input: {
     fontFamily: 'Montserrat',
   },
+  '@media (max-width: 700px)': {
+    '& .MuiInputLabel-root': {
+      fontSize: '14px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiOutlinedInput-input': {
+      fontSize: '14px',
+    },
+    '& input.MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+    '& .MuiButton-root': {
+      fontSize: '10px',
+    },
+  },
 };
 
 const Enroll = () => {
@@ -105,7 +122,7 @@ const Enroll = () => {
           autoComplete='off'
           variant='outlined'
           label='Número de teléfono'
-          value={phone}
+          value={phone || 0}
           name='phone'
           onChange={handleChange}
         />
@@ -113,7 +130,7 @@ const Enroll = () => {
           autoComplete='off'
           variant='outlined'
           label='Email'
-          value={email}
+          value={email || ''}
           name='mail'
           onChange={handleChange}
         />
@@ -121,7 +138,7 @@ const Enroll = () => {
         <Typography>Horario de disponibilidad</Typography>
         <Box display='flex' alignItems='center'>
           <TextField
-            value={timeRangeFrom}
+            value={timeRangeFrom || ''}
             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             label='Desde'
             name='timeRangeFrom'
@@ -129,7 +146,7 @@ const Enroll = () => {
             className='timeRange'
           />
           <TextField
-            value={timeRangeTo}
+            value={timeRangeTo || ''}
             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             label='Hasta'
             name='timeRangeTo'
@@ -141,10 +158,10 @@ const Enroll = () => {
           autoComplete='off'
           variant='outlined'
           label='Mensaje'
-          value={message}
+          value={message || ''}
           name='message'
           onChange={handleChange}
-          multiline
+          multiline={true}
           rows={4}
         />
         <Button

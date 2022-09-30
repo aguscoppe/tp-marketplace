@@ -24,16 +24,9 @@ const style = {
     maxWidth: '100%',
     maxHeight: '100%',
   },
+
   '@media (max-width: 700px)': {
     height: '100%',
-    h1: {
-      fontSize: '3rem',
-    },
-    h4: {
-      fontSize: '1.2rem',
-    },
-  },
-  '@media (max-width: 500px)': {
     textAlign: 'center',
     h1: {
       fontSize: '2.2rem',

@@ -7,6 +7,7 @@ const styles = {
   height: '500px',
   backgroundColor: '#fff',
   borderRadius: '30px',
+  padding: '32px',
   h5: {
     textAlign: 'center',
   },
@@ -14,7 +15,18 @@ const styles = {
     fontFamily: 'Montserrat',
     margin: '12px',
   },
-  '@media (max-width: 480px)': {
+  '@media (max-width: 700px)': {
+    h5: {
+      fontSize: '18px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '14px',
+    },
+  },
+  '@media (max-width: 1000px)': {
+    height: 'auto',
+  },
+  '@media (max-width: 500px)': {
     width: '100vw',
     height: 'auto',
     padding: '12px',
@@ -30,7 +42,13 @@ const styles = {
 const About = () => {
   return (
     <>
-      <Box sx={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexFlow: 'column',
+          height: '100vh',
+        }}
+      >
         <NavBar />
         <Box
           sx={{

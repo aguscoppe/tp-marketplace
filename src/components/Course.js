@@ -53,7 +53,7 @@ const styles = {
   a: {
     color: '#000',
   },
-  '@media (max-width: 500px)': {
+  '@media (max-width: 700px)': {
     h5: {
       fontSize: '18px',
     },
@@ -75,8 +75,17 @@ const styles = {
 
 const Course = ({ courseData, removeCourse }) => {
   const currentUser = useContext(UserContext);
-  const { id, name, subject, type, frequency, rating, teacherId, students } =
-    courseData;
+  const {
+    id,
+    name,
+    subject,
+    type,
+    frequency,
+    rating,
+    teacherId,
+    students,
+    imgSrc,
+  } = courseData;
   const { pathname } = useLocation();
   const enrolledStudents = students.filter(
     (student) => student.id === currentUser?.id
@@ -154,13 +163,13 @@ const Course = ({ courseData, removeCourse }) => {
               maxWidth: { xs: 350, md: 300 },
               objectFit: 'cover',
             }}
-            alt='The house from the offer.'
-            src='https://previews.123rf.com/images/robuart/robuart1711/robuart171101578/90314803-clase-de-lengua-en-estandarte-de-primaria-el-ni%C3%B1o-estudia-el-alfabeto-en-la-lecci%C3%B3n-el-profesor-se-p.jpg'
+            alt={name}
+            src={imgSrc}
           />
           <Box
             sx={{
               padding: '16px',
-              '@media (max-width: 500px)': {
+              '@media (max-width: 700px)': {
                 paddingBottom: '0',
               },
             }}
@@ -185,7 +194,11 @@ const Course = ({ courseData, removeCourse }) => {
             onChange={(event, newValue) => {
               handleRatingChange(newValue);
             }}
-            readOnly={!isUserEnrolled(currentUser?.id, courseData)}
+            readOnly={
+              !isUserEnrolled(currentUser?.id, courseData) ||
+              courseStatus === COURSE_STATUS_PENDING ||
+              courseStatus === COURSE_STATUS_CANCELLED
+            }
           />
           <Box>
             {currentUser?.role === TEACHER_ROLE ? (
@@ -217,11 +230,12 @@ const Course = ({ courseData, removeCourse }) => {
               select
               label='Estado'
               name='status'
+              onChange={handleStatusChange}
+              disabled={courseStatus === COURSE_STATUS_CANCELLED}
               sx={{
                 marginTop: '10px',
                 width: '90%',
               }}
-              onChange={handleStatusChange}
             >
               {statusItems.map((item, index) => (
                 <MenuItem key={item.label} value={item.value}>
