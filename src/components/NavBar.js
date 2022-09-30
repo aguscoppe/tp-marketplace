@@ -151,7 +151,9 @@ const NavBar = () => {
   };
 
   const removeNotification = (id) => {
-    setNotificationList((notification) => notification.id !== id);
+    setNotificationList((prev) =>
+      prev.filter((notification) => notification.id !== id)
+    );
   };
 
   return (

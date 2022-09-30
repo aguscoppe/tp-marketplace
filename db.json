@@ -18,7 +18,7 @@
       ],
       "duration": 90,
       "frequency": "semanal",
-      "price": 3200,
+      "price": "4500",
       "description": "Clases semanales de lengua para nivel secundario",
       "rating": [
         {
@@ -97,12 +97,17 @@
       "subject": "Inglés",
       "type": "individual",
       "teacherId": 2,
-      "students": [],
+      "students": [
+        {
+          "id": 10,
+          "status": "aceptada"
+        }
+      ],
       "duration": 60,
       "frequency": "única",
       "price": "5000",
       "description": "Clase de Inglés para nivel B2",
-      "published": false,
+      "published": true,
       "rating": [],
       "id": 4,
       "imgSrc": "https://img.freepik.com/premium-vector/online-uk-english-language-courses-isometric-3d-illustration_88272-2014.jpg?w=2000"
@@ -263,6 +268,12 @@
       "courseId": 1,
       "studentId": 3,
       "message": "Recomiendo mucho esta clase"
+    },
+    {
+      "id": "7a8570-c0-3f43-e587-241bf2283452",
+      "courseId": "2",
+      "studentId": 10,
+      "message": "Excelente clase!!"
     }
   ]
 }

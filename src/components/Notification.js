@@ -97,20 +97,18 @@ const Notification = ({ data, removeNotification }) => {
   };
 
   const handleAccept = (type) => {
-    if (type === COMMENT_NOTIFICATION) {
-      const newComment = {
-        id: uuid(),
-        courseId: courseId,
-        studentId: sourceId,
-        message: message,
-      };
-      fetch(`${endpoint}/comments`, {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify(newComment),
-      });
-      deleteNotification();
-    }
+    const newComment = {
+      id: uuid(),
+      courseId: courseId,
+      studentId: sourceId,
+      message: message,
+    };
+    fetch(`${endpoint}/comments`, {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newComment),
+    });
+    deleteNotification();
   };
 
   const handleBlock = () => {
