@@ -30,6 +30,7 @@ const ratingItems = [
 ];
 
 const style = {
+  marginBottom: '32px',
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
   },
@@ -57,6 +58,23 @@ const style = {
     },
     '& .MuiButton-root': {
       width: '95%',
+    },
+  },
+  '@media (max-width: 700px)': {
+    '& .MuiInputLabel-root': {
+      fontSize: '14px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiOutlinedInput-input': {
+      fontSize: '14px',
+    },
+    '& input.MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+    '& .MuiButton-root': {
+      fontSize: '10px',
     },
   },
 };

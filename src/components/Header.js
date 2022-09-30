@@ -9,9 +9,6 @@ const style = {
   alignItems: 'center',
   justifyContent: 'center',
   height: '92vh',
-  '@media (max-width: 700px)': {
-    height: '40vh',
-  },
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
     fontWeight: '500',
@@ -27,14 +24,21 @@ const style = {
     maxWidth: '100%',
     maxHeight: '100%',
   },
-  h1: {
-    '@media (max-width: 700px)': {
-      fontSize: '3rem',
+
+  '@media (max-width: 700px)': {
+    height: '100%',
+    textAlign: 'center',
+    h1: {
+      fontSize: '2.2rem',
+      marginTop: '32px',
     },
-  },
-  h4: {
-    '@media (max-width: 700px)': {
-      fontSize: '1.2rem',
+    h4: {
+      fontSize: '1rem',
+      margin: '12px 0',
+    },
+    '& .MuiButton-root': {
+      margin: '6px 12px 40px 0',
+      fontSize: '10px',
     },
   },
 };
