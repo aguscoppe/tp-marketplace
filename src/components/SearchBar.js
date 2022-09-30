@@ -59,6 +59,20 @@ const style = {
       width: '95%',
     },
   },
+  '@media (max-width: 500px)': {
+    '& .MuiInputLabel-root': {
+      fontSize: '14px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiOutlinedInput-input': {
+      fontSize: '14px',
+    },
+    '& input.MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+  },
 };
 
 const SearchBar = ({ formContent, handleChange, handleClick }) => {

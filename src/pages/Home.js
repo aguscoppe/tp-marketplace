@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
-import NavBar from "../components/NavBar";
-import Header from "../components/Header";
-import SearchBar from "../components/SearchBar";
-import Course from "../components/Course";
-import { Box, Grid, Typography } from "@mui/material";
-import { endpoint, usePublishedCourses } from "../hooks";
+import { useEffect, useState } from 'react';
+import NavBar from '../components/NavBar';
+import Header from '../components/Header';
+import SearchBar from '../components/SearchBar';
+import Course from '../components/Course';
+import { Box, Grid } from '@mui/material';
+import { endpoint, usePublishedCourses } from '../hooks';
 
 const createQuery = (paramsObj) => {
   let params = new URLSearchParams(paramsObj);
   let keysForDel = [];
   params.forEach((value, key) => {
-    if (value === "") {
+    if (value === '') {
       keysForDel.push(key);
     }
   });
@@ -23,10 +23,10 @@ const createQuery = (paramsObj) => {
 const Home = () => {
   const publishedCourses = usePublishedCourses();
   const [formContent, setFormContent] = useState({
-    name: "",
-    type: "",
-    frequency: "",
-    rating: "",
+    name: '',
+    type: '',
+    frequency: '',
+    rating: '',
   });
   const [beginSearch, setBeginSearch] = useState(false);
   const [filteredCourses, setFilteredCourses] = useState(publishedCourses);
@@ -62,21 +62,15 @@ const Home = () => {
     <>
       <NavBar />
       <Header />
-      <Box sx={{ margin: "0 10vw" }}>
+      <Box sx={{ margin: '0 10vw' }}>
         <SearchBar
           formContent={formContent}
           handleChange={handleChange}
           handleClick={handleClick}
         />
-        <Typography
-          variant="h4"
-          sx={{ fontFamily: "Montserrat", fontWeight: "bold", padding: "10px" }}
-        >
-          Recomendadas
-        </Typography>
-        <Box id="courses" sx={{}}>
+        <Box id='courses'>
           {filteredCourses ? (
-            <Grid container diaplay="flex" justifyContent="space-evenly">
+            <Grid container diaplay='flex' justifyContent='space-evenly'>
               {filteredCourses.map((course) => (
                 <Course key={course.name} courseData={course} />
               ))}
