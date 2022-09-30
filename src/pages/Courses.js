@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Course from '../components/Course';
-import { TEACHER_ROLE } from '../constants';
-import {
-  useCourseDataByStudentId,
-  useCoursesByTeacherId,
-  useUserById,
-} from '../hooks';
+import { COURSE_STATUS_PENDING, TEACHER_ROLE } from '../constants';
+import { useCourseDataByStudentId, useCoursesByTeacherId } from '../hooks';
+import { UserContext } from '../contexts/UserContext';
 
 const style = {
-  marginTop: '50px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  margin: '10px',
   a: {
     textDecoration: 'none',
   },
@@ -25,22 +22,22 @@ const style = {
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
   },
+  '@media (max-width: 700px)': {
+    '& .MuiButton-root': {
+      fontSize: '12px',
+    },
+  },
 };
 
-const Courses = ({ currentUserId }) => {
-  const user = useUserById(currentUserId);
-  const [currentUser, setCurrentUser] = useState({});
+const Courses = () => {
+  const currentUser = useContext(UserContext);
   const [courseList, setCourseList] = useState([]);
-  const coursesByTeacherId = useCoursesByTeacherId(currentUserId);
-  const coursesByStudentId = useCourseDataByStudentId(currentUserId);
+  const coursesByTeacherId = useCoursesByTeacherId(currentUser?.id);
+  const coursesByStudentId = useCourseDataByStudentId(currentUser?.id);
 
   const removeCourse = (id) => {
     setCourseList((prev) => prev.filter((course) => course.id !== id));
   };
-
-  useEffect(() => {
-    setCurrentUser(user);
-  }, [user]);
 
   useEffect(() => {
     if (coursesByStudentId?.length > 0) {
@@ -56,21 +53,29 @@ const Courses = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Box sx={style}>
-        <Grid container diaplay='flex' justifyContent='center'>
+        <Grid
+          container
+          diaplay='flex'
+          justifyContent='center'
+          sx={{ padding: '20px' }}
+        >
           {courseList?.length > 0 ? (
-            courseList.map((course) => (
-              <Course
-                key={course.name}
-                courseData={course}
-                currentUserId={currentUserId}
-                removeCourse={removeCourse}
-              />
-            ))
+            courseList.map((course) =>
+              course.status !== COURSE_STATUS_PENDING ? (
+                <Course
+                  key={course.name}
+                  courseData={course}
+                  removeCourse={removeCourse}
+                />
+              ) : null
+            )
           ) : (
-            <Typography variant='h6' color='#888'>
-              No estás inscripto en ninguna clase.
+            <Typography variant='h6' color='#888' align='center'>
+              {currentUser?.role === TEACHER_ROLE
+                ? 'No has creado ninguna clase.'
+                : 'No estás inscripto en ninguna clase.'}
             </Typography>
           )}
         </Grid>

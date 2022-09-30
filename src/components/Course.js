@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import {
   Box,
   Card,
@@ -35,26 +36,59 @@ const statusItems = [
 const styles = {
   display: 'flex',
   alignItems: 'center',
-  width: '250px',
+  width: '300px',
   margin: '15px',
   '& .MuiTypography-root': {
+    fontFamily: 'Montserrat',
+  },
+  '& .MuiSelect-select': {
     fontFamily: 'Montserrat',
   },
   '& .MuiCardContent-root': {
     width: '100%',
   },
+  '& .MuiPaper-root .MuiMenu-list .MuiMenuItem-root': {
+    fontFamily: 'Montserrat',
+  },
   a: {
     color: '#000',
   },
+  '@media (max-width: 700px)': {
+    h5: {
+      fontSize: '18px',
+    },
+    h6: {
+      fontSize: '15px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiSelect-select': {
+      fontSize: '12px',
+      padding: '10px',
+    },
+    '& .MuiIconButton-root': {
+      padding: '0 6px 0 6px',
+    },
+  },
 };
 
-const Course = ({ courseData, currentUserId, removeCourse }) => {
-  const currentUser = useUserById(currentUserId);
-  const { id, name, subject, type, frequency, rating, teacherId, students } =
-    courseData;
+const Course = ({ courseData, removeCourse }) => {
+  const currentUser = useContext(UserContext);
+  const {
+    id,
+    name,
+    subject,
+    type,
+    frequency,
+    rating,
+    teacherId,
+    students,
+    imgSrc,
+  } = courseData;
   const { pathname } = useLocation();
   const enrolledStudents = students.filter(
-    (student) => student.id === currentUserId
+    (student) => student.id === currentUser?.id
   );
   const teacherData = useUserById(teacherId);
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
@@ -67,13 +101,13 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
       e.target.value !== ''
     ) {
       const newStudentData = students.filter(
-        (student) => student.id !== currentUserId
+        (student) => student.id !== currentUser?.id
       );
       const newData = {
         ...courseData,
         students: [
           ...newStudentData,
-          { id: currentUserId, status: e.target.value },
+          { id: currentUser?.id, status: e.target.value },
         ],
       };
       fetch(`${endpoint}/courses/${id}`, {
@@ -101,10 +135,12 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
   };
 
   const handleRatingChange = (newValue) => {
-    const newRating = courseData.rating.filter((el) => el.id !== currentUserId);
+    const newRating = courseData.rating.filter(
+      (el) => el.id !== currentUser?.id
+    );
     const newData = {
       ...courseData,
-      rating: [...newRating, { id: currentUserId, score: newValue }],
+      rating: [...newRating, { id: currentUser?.id, score: newValue }],
     };
     fetch(`${endpoint}/courses/${id}`, {
       method: 'PUT',
@@ -116,21 +152,53 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
 
   return (
     <Card sx={styles}>
-      <CardContent>
+      <CardContent sx={{ padding: 0 }}>
         <Link to={`/course/${id}`} style={{ textDecoration: 'none' }}>
-          <Typography variant='h5'>{name}</Typography>
-          <Typography variant='h6'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
-          <Typography>Clase de {subject}</Typography>
-          <Typography>{capitalize(type)}</Typography>
-          <Typography>{capitalize(frequency)}</Typography>
+          <Box
+            component='img'
+            sx={{
+              height: '100%',
+              width: '100%',
+              maxHeight: { xs: 233, md: 167 },
+              maxWidth: { xs: 350, md: 300 },
+              objectFit: 'cover',
+            }}
+            alt={name}
+            src={imgSrc}
+          />
+          <Box
+            sx={{
+              padding: '16px',
+              '@media (max-width: 700px)': {
+                paddingBottom: '0',
+              },
+            }}
+          >
+            <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
+              {name}
+            </Typography>
+            <Typography variant='h6'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
+            <Typography>Clase de {subject}</Typography>
+            <Typography>{capitalize(type)}</Typography>
+            <Typography>{capitalize(frequency)}</Typography>
+          </Box>
         </Link>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
+        <Box
+          display='flex'
+          alignItems='center'
+          justifyContent='space-between'
+          sx={{ padding: '0px 16px 0px 16px' }}
+        >
           <Rating
             value={courseRating}
             onChange={(event, newValue) => {
               handleRatingChange(newValue);
             }}
-            readOnly={!isUserEnrolled(currentUserId, courseData)}
+            readOnly={
+              !isUserEnrolled(currentUser?.id, courseData) ||
+              courseStatus === COURSE_STATUS_PENDING ||
+              courseStatus === COURSE_STATUS_CANCELLED
+            }
           />
           <Box>
             {currentUser?.role === TEACHER_ROLE ? (
@@ -156,20 +224,26 @@ const Course = ({ courseData, currentUserId, removeCourse }) => {
           </Box>
         </Box>
         {currentUser?.role === STUDENT_ROLE && pathname.includes('courses') && (
-          <TextField
-            value={courseStatus || ''}
-            select
-            label='Estado'
-            name='status'
-            sx={{ marginTop: '10px', width: '100%' }}
-            onChange={handleStatusChange}
-          >
-            {statusItems.map((item, index) => (
-              <MenuItem key={item.label} value={item.value}>
-                {item.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Box display='flex' justifyContent='center'>
+            <TextField
+              value={courseStatus || ''}
+              select
+              label='Estado'
+              name='status'
+              onChange={handleStatusChange}
+              disabled={courseStatus === COURSE_STATUS_CANCELLED}
+              sx={{
+                marginTop: '10px',
+                width: '90%',
+              }}
+            >
+              {statusItems.map((item, index) => (
+                <MenuItem key={item.label} value={item.value}>
+                  {item.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
         )}
       </CardContent>
     </Card>

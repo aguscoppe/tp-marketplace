@@ -14,6 +14,7 @@ import ResetPassword from './pages/ResetPassword';
 import './style.css';
 import { STUDENT_ROLE } from './constants';
 import { useUserById } from './hooks';
+import { UserContext } from './contexts/UserContext';
 
 const App = () => {
   const [currentUserId, setCurrentUserId] = useState({});
@@ -25,7 +26,9 @@ const App = () => {
 
   const signIn = () => {
     const localUser = localStorage.getItem('current-user');
-    setCurrentUserId(JSON.parse(localUser));
+    if (localUser !== undefined) {
+      setCurrentUserId(JSON.parse(localUser));
+    }
   };
 
   useEffect(() => {
@@ -33,63 +36,41 @@ const App = () => {
   }, []);
 
   return (
-    <Routes>
-      {currentUserId && currentUserId !== undefined && currentUserId !== {} ? (
-        <>
-          <Route path='/courses'>
-            <Route index element={<Courses currentUserId={currentUserId} />} />
-            <Route
-              path='new'
-              element={<NewCourse currentUserId={currentUserId} />}
-            />
-            <Route
-              path='edit/:id'
-              element={<NewCourse currentUserId={currentUserId} />}
-            />
+    <UserContext.Provider value={user}>
+      <Routes>
+        {currentUserId &&
+        currentUserId !== undefined &&
+        currentUserId !== {} ? (
+          <>
+            <Route path='/courses'>
+              <Route index element={<Courses />} />
+              <Route path='new' element={<NewCourse />} />
+              <Route path='edit/:id' element={<NewCourse />} />
+            </Route>
+            <Route path='/students'>
+              <Route path=':id' element={<StudentTable />} />
+            </Route>
+            <Route path='/profile'>
+              <Route index element={<Profile signOut={signOut} />} />
+            </Route>
+          </>
+        ) : null}
+        {user?.role === STUDENT_ROLE ? (
+          <Route path='/enroll'>
+            <Route path=':id' element={<Enroll />} />
           </Route>
-          <Route path='/students'>
-            <Route
-              path=':id'
-              element={<StudentTable currentUserId={currentUserId} />}
-            />
-          </Route>
-          <Route path='/profile'>
-            <Route
-              index
-              element={
-                <Profile currentUserId={currentUserId} signOut={signOut} />
-              }
-            />
-          </Route>
-        </>
-      ) : null}
-      {user?.role === STUDENT_ROLE ? (
-        <Route path='/enroll'>
-          <Route
-            path=':id'
-            element={<Enroll currentUserId={currentUserId} />}
-          />
+        ) : null}
+        <Route exact path='/' element={<Home />} />
+        <Route path='/course'>
+          <Route path=':id' element={<CourseDetail />} />
         </Route>
-      ) : null}
-      <Route exact path='/' element={<Home currentUserId={currentUserId} />} />
-      <Route path='/course'>
-        <Route
-          path=':id'
-          element={<CourseDetail currentUserId={currentUserId} />}
-        />
-      </Route>
-      <Route path='/about' element={<About currentUserId={currentUserId} />} />
-      <Route
-        path='/login'
-        element={<Login currentUserId={currentUserId} signIn={signIn} />}
-      />
-      <Route
-        path='reset-password'
-        element={<ResetPassword currentUserId={currentUserId} />}
-      />
-      <Route path='/register' element={<Register />} />
-      <Route path='*' element={<Navigate to='/' replace />} />
-    </Routes>
+        <Route path='/about' element={<About />} />
+        <Route path='/login' element={<Login signIn={signIn} />} />
+        <Route path='reset-password' element={<ResetPassword />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='*' element={<Navigate to='/' replace />} />
+      </Routes>
+    </UserContext.Provider>
   );
 };
 

@@ -9,7 +9,7 @@
       "students": [
         {
           "id": 3,
-          "status": "solicitada"
+          "status": "finalizada"
         },
         {
           "id": 10,
@@ -18,19 +18,20 @@
       ],
       "duration": 90,
       "frequency": "semanal",
-      "price": 3200,
+      "price": "4500",
       "description": "Clases semanales de lengua para nivel secundario",
       "rating": [
         {
-          "id": 3,
-          "score": 5
+          "id": 10,
+          "score": null
         },
         {
-          "id": 10,
+          "id": 3,
           "score": 5
         }
       ],
-      "published": true
+      "published": true,
+      "imgSrc": "https://mybigplunge.com/wp-content/uploads/2021/08/SAP-India-Microsoft-team-up-to-train-62000-women-in-emerging-tech.jpg"
     },
     {
       "id": 2,
@@ -40,11 +41,15 @@
       "teacherId": 2,
       "students": [
         {
-          "id": 3,
-          "status": "aceptada"
+          "id": 10,
+          "status": "finalizada"
         },
         {
-          "id": 10,
+          "id": 11,
+          "status": "cancelada"
+        },
+        {
+          "id": 3,
           "status": "aceptada"
         }
       ],
@@ -59,7 +64,8 @@
         }
       ],
       "published": true,
-      "subject": "Matemática"
+      "subject": "Matemática",
+      "imgSrc": "https://img.freepik.com/free-vector/happy-students-learning-math-college-school-isolated-flat-illustration_74855-10799.jpg?w=2000"
     },
     {
       "id": 3,
@@ -70,7 +76,7 @@
       "students": [
         {
           "id": 10,
-          "status": "finalizada"
+          "status": "cancelada"
         }
       ],
       "duration": 90,
@@ -83,21 +89,28 @@
           "score": 3
         }
       ],
-      "published": true
+      "published": true,
+      "imgSrc": "https://img.freepik.com/free-vector/geography-teacher-class_74855-5512.jpg?w=2000"
     },
     {
       "name": "Inglés III",
       "subject": "Inglés",
       "type": "individual",
       "teacherId": 2,
-      "students": [],
+      "students": [
+        {
+          "id": 10,
+          "status": "aceptada"
+        }
+      ],
       "duration": 60,
       "frequency": "única",
       "price": "5000",
       "description": "Clase de Inglés para nivel B2",
-      "published": false,
+      "published": true,
       "rating": [],
-      "id": 4
+      "id": 4,
+      "imgSrc": "https://img.freepik.com/premium-vector/online-uk-english-language-courses-isometric-3d-illustration_88272-2014.jpg?w=2000"
     },
     {
       "name": "Historia I",
@@ -111,7 +124,8 @@
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1810 y 1816",
       "published": true,
       "rating": [],
-      "id": 5
+      "id": 5,
+      "imgSrc": "https://static.vecteezy.com/system/resources/thumbnails/001/925/945/small_2x/education-book-concept-free-vector.jpg"
     },
     {
       "name": "Historia II",
@@ -125,7 +139,8 @@
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1816 y 1853",
       "published": true,
       "rating": [],
-      "id": 6
+      "id": 6,
+      "imgSrc": "https://img.freepik.com/free-vector/female-student-listening-webinar-online_74855-6461.jpg?w=2000"
     },
     {
       "name": "Historia III",
@@ -139,7 +154,8 @@
       "description": "Historia argentina donde el enfoque principal son los eventos transcurridos entre 1853 y 1880",
       "published": true,
       "rating": [],
-      "id": 7
+      "id": 7,
+      "imgSrc": "https://img.freepik.com/premium-vector/history-concept-history-school-subject-idea-science-education-knowledge-past-ancient_277904-6102.jpg?w=2000"
     }
   ],
   "users": [
@@ -155,14 +171,14 @@
       "experience": "Me desempeño en este rol desde el 2004 y he trabajado en tres colegios primarios de la Ciudad de Buenos Aires."
     },
     {
+      "degree": "Docente de Nivel Secundario",
+      "experience": "Profesora recibida en la UBA desde hace más de diez años, con experiencia en diversos rubros.",
       "name": "Sandra",
       "surname": "Sánchez",
       "email": "sandra@mail.com",
       "password": "123",
       "phone": "1155553333",
       "role": "profesor",
-      "degree": "Docente de Nivel Secundario",
-      "experience": "Profesora recibida en la UBA desde hace más de diez años, con experiencia en diversos rubros.",
       "education": [],
       "id": 2
     },
@@ -183,12 +199,7 @@
       "role": "alumno"
     },
     {
-      "id": 10,
-      "name": "Juan",
-      "surname": "Pérez",
-      "email": "juan@mail.com",
-      "password": "123",
-      "phone": "1155553333",
+      "birthDate": "2003-04-12",
       "education": [
         {
           "name": "Colegio N°5",
@@ -201,6 +212,12 @@
           "status": "finalizado"
         }
       ],
+      "id": 10,
+      "name": "Juan",
+      "surname": "Pérez",
+      "email": "juan@mail.com",
+      "password": "123",
+      "phone": "1155553333",
       "role": "alumno"
     },
     {
@@ -219,22 +236,26 @@
       "phone": "555555",
       "role": "alumno",
       "id": 11
-    }
-  ],
-  "notifications": [
+    },
     {
-      "courseId": "2",
-      "sourceId": 11,
-      "type": "inscripcion",
-      "phone": "555555",
-      "timeRangeFrom": "9",
-      "timeRangeTo": "16",
-      "message": "Hola, me quiero anotar en esta clase",
-      "destinationId": 2,
-      "email": "agus@mail.com",
-      "id": "27653e-40d2-3f71-0e56-da21c5eb1530"
+      "birthDate": "1996-06-18",
+      "education": [
+        {
+          "name": "Bachiller Comercial",
+          "level": "secundario",
+          "status": "finalizado"
+        }
+      ],
+      "name": "Juana",
+      "surname": "Lopez",
+      "email": "juana@mail.com",
+      "password": "123",
+      "phone": "555555555",
+      "role": "alumno",
+      "id": 12
     }
   ],
+  "notifications": [],
   "comments": [
     {
       "id": 1,
@@ -247,6 +268,12 @@
       "courseId": 1,
       "studentId": 3,
       "message": "Recomiendo mucho esta clase"
+    },
+    {
+      "id": "7a8570-c0-3f43-e587-241bf2283452",
+      "courseId": "2",
+      "studentId": 10,
+      "message": "Excelente clase!!"
     }
   ]
 }

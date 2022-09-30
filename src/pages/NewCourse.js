@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import NavBar from '../components/NavBar';
 import {
   Box,
@@ -48,14 +49,32 @@ const style = {
   input: {
     fontFamily: 'Montserrat',
   },
+  '@media (max-width: 700px)': {
+    '& .MuiInputLabel-root': {
+      fontSize: '14px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiOutlinedInput-input': {
+      fontSize: '14px',
+    },
+    '& input.MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+    '& .MuiButton-root': {
+      fontSize: '10px',
+    },
+  },
 };
 
-const NewCourse = ({ currentUserId }) => {
+const NewCourse = () => {
+  const currentUser = useContext(UserContext);
   const initialState = {
     name: '',
     subject: '',
     type: '',
-    teacherId: currentUserId,
+    teacherId: currentUser?.id,
     students: [],
     duration: 60,
     frequency: '',
@@ -63,6 +82,7 @@ const NewCourse = ({ currentUserId }) => {
     description: '',
     published: false,
     rating: 0,
+    imgSrc: '',
   };
   const { id } = useParams();
   const course = useCourseById(id);
@@ -78,6 +98,7 @@ const NewCourse = ({ currentUserId }) => {
     description,
     published,
     students,
+    imgSrc,
   } = newCourse;
 
   useEffect(() => {
@@ -128,7 +149,7 @@ const NewCourse = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Grid
         container
         sx={style}
@@ -140,7 +161,7 @@ const NewCourse = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Nombre'
-          value={name}
+          value={name || ''}
           name='name'
           onChange={handleChange}
         />
@@ -148,12 +169,12 @@ const NewCourse = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Materia'
-          value={subject}
+          value={subject || ''}
           name='subject'
           onChange={handleChange}
         />
         <TextField
-          value={type}
+          value={type || ''}
           select
           label='Tipo de clase'
           name='type'
@@ -166,7 +187,7 @@ const NewCourse = ({ currentUserId }) => {
           ))}
         </TextField>
         <TextField
-          value={frequency}
+          value={frequency || ''}
           select
           label='Frecuencia'
           name='frequency'
@@ -182,7 +203,7 @@ const NewCourse = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Duración (en minutos)'
-          value={duration}
+          value={duration || 90}
           name='duration'
           onChange={handleChange}
           type='number'
@@ -198,7 +219,7 @@ const NewCourse = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Costo'
-          value={price}
+          value={price || 0}
           name='price'
           onChange={handleChange}
           type='number'
@@ -213,8 +234,17 @@ const NewCourse = ({ currentUserId }) => {
         <TextField
           autoComplete='off'
           variant='outlined'
+          label='Imagen'
+          value={imgSrc || ''}
+          name='imgSrc'
+          onChange={handleChange}
+          type='text'
+        />
+        <TextField
+          autoComplete='off'
+          variant='outlined'
           label='Descripción'
-          value={description}
+          value={description || ''}
           name='description'
           onChange={handleChange}
           multiline
@@ -225,7 +255,7 @@ const NewCourse = ({ currentUserId }) => {
             control={
               <Checkbox
                 onChange={handleCheckbox}
-                checked={published}
+                checked={published || false}
                 name='published'
               />
             }

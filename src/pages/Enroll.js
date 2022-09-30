@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import NavBar from '../components/NavBar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { endpoint, useTeacherByCourseId, useUserById } from '../hooks';
+import { endpoint, useTeacherByCourseId } from '../hooks';
 import uuid from 'react-uuid';
 import { COURSE_NOTIFICATION } from '../constants';
+import { UserContext } from '../contexts/UserContext';
 
 const style = {
   height: '100%',
@@ -34,14 +35,31 @@ const style = {
   input: {
     fontFamily: 'Montserrat',
   },
+  '@media (max-width: 700px)': {
+    '& .MuiInputLabel-root': {
+      fontSize: '14px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiOutlinedInput-input': {
+      fontSize: '14px',
+    },
+    '& input.MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+    '& .MuiButton-root': {
+      fontSize: '10px',
+    },
+  },
 };
 
-const Enroll = ({ currentUserId }) => {
+const Enroll = () => {
+  const currentUser = useContext(UserContext);
   const { id } = useParams();
-  const user = useUserById(currentUserId);
   const initialState = {
     courseId: id,
-    sourceId: currentUserId,
+    sourceId: currentUser?.id,
     type: COURSE_NOTIFICATION,
     phone: '',
     email: '',
@@ -65,10 +83,10 @@ const Enroll = ({ currentUserId }) => {
   useEffect(() => {
     setNewEnrollment((prev) => ({
       ...prev,
-      phone: user.phone,
-      email: user.email,
+      phone: currentUser.phone,
+      email: currentUser.email,
     }));
-  }, [user]);
+  }, [currentUser]);
 
   const handleChange = (e) => {
     setNewEnrollment((prev) => ({
@@ -92,7 +110,7 @@ const Enroll = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Grid
         container
         sx={style}
@@ -104,7 +122,7 @@ const Enroll = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Número de teléfono'
-          value={phone}
+          value={phone || 0}
           name='phone'
           onChange={handleChange}
         />
@@ -112,7 +130,7 @@ const Enroll = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Email'
-          value={email}
+          value={email || ''}
           name='mail'
           onChange={handleChange}
         />
@@ -120,7 +138,7 @@ const Enroll = ({ currentUserId }) => {
         <Typography>Horario de disponibilidad</Typography>
         <Box display='flex' alignItems='center'>
           <TextField
-            value={timeRangeFrom}
+            value={timeRangeFrom || ''}
             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             label='Desde'
             name='timeRangeFrom'
@@ -128,7 +146,7 @@ const Enroll = ({ currentUserId }) => {
             className='timeRange'
           />
           <TextField
-            value={timeRangeTo}
+            value={timeRangeTo || ''}
             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
             label='Hasta'
             name='timeRangeTo'
@@ -140,10 +158,10 @@ const Enroll = ({ currentUserId }) => {
           autoComplete='off'
           variant='outlined'
           label='Mensaje'
-          value={message}
+          value={message || ''}
           name='message'
           onChange={handleChange}
-          multiline
+          multiline={true}
           rows={4}
         />
         <Button

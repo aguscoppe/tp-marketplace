@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import Course from '../components/Course';
 import { Box, Grid } from '@mui/material';
-import { endpoint, useUserById, usePublishedCourses } from '../hooks';
+import { endpoint, usePublishedCourses } from '../hooks';
 
 const createQuery = (paramsObj) => {
   let params = new URLSearchParams(paramsObj);
@@ -20,8 +20,7 @@ const createQuery = (paramsObj) => {
   return params.toString();
 };
 
-const Home = ({ currentUserId }) => {
-  const currentUser = useUserById(currentUserId);
+const Home = () => {
   const publishedCourses = usePublishedCourses();
   const [formContent, setFormContent] = useState({
     name: '',
@@ -61,21 +60,23 @@ const Home = ({ currentUserId }) => {
 
   return (
     <>
-      <NavBar currentUserId={currentUserId} />
+      <NavBar />
       <Header />
-      <SearchBar
-        formContent={formContent}
-        handleChange={handleChange}
-        handleClick={handleClick}
-      />
-      <Box id='courses' sx={{ margin: '0 15vw' }}>
-        {filteredCourses ? (
-          <Grid container diaplay='flex' justifyContent='center'>
-            {filteredCourses.map((course) => (
-              <Course key={course.name} courseData={course} />
-            ))}
-          </Grid>
-        ) : null}
+      <Box sx={{ margin: '0 10vw' }}>
+        <SearchBar
+          formContent={formContent}
+          handleChange={handleChange}
+          handleClick={handleClick}
+        />
+        <Box id='courses' sx={{ marginBottom: '64px' }}>
+          {filteredCourses ? (
+            <Grid container diaplay='flex' justifyContent='space-evenly'>
+              {filteredCourses.map((course) => (
+                <Course key={course.name} courseData={course} />
+              ))}
+            </Grid>
+          ) : null}
+        </Box>
       </Box>
     </>
   );

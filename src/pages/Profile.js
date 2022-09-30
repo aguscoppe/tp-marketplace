@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
 import NavBar from '../components/NavBar';
 import Home from './Home';
 import {
@@ -9,14 +10,14 @@ import {
   TextField,
   InputAdornment,
   capitalize,
+  Typography,
 } from '@mui/material';
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
 import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { endpoint, useUserById } from '../hooks';
+import { endpoint } from '../hooks';
 
 const style = {
-  height: '100%',
   '& .MuiTypography-root': {
     fontFamily: 'Montserrat',
   },
@@ -43,6 +44,29 @@ const style = {
   a: {
     textDecoration: 'none',
   },
+  '@media (max-width: 700px)': {
+    '& .MuiInputLabel-root': {
+      fontSize: '14px',
+    },
+    '& .MuiTypography-body1': {
+      fontSize: '12px',
+    },
+    '& .MuiOutlinedInput-input': {
+      fontSize: '14px',
+    },
+    '& input.MuiOutlinedInput-input': {
+      padding: '14px',
+    },
+    '& input.MuiOutlinedInput-textarea': {
+      padding: '8px',
+    },
+    '& .MuiButton-root': {
+      fontSize: '12px',
+    },
+    '& .buttonContainer': {
+      flexDirection: 'row',
+    },
+  },
 };
 
 const studentFields = {
@@ -55,8 +79,8 @@ const teacherFields = {
   experience: '',
 };
 
-const Profile = ({ currentUserId, signOut }) => {
-  const currentUser = useUserById(currentUserId);
+const Profile = ({ signOut }) => {
+  const currentUser = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentProfile, setCurrentProfile] = useState({
     name: '',
@@ -81,7 +105,7 @@ const Profile = ({ currentUserId, signOut }) => {
       ...currentProfile,
       education: [...currentProfile.education, newEducation],
     };
-    fetch(`${endpoint}/users/${currentUserId}`, {
+    fetch(`${endpoint}/users/${currentUser?.id}`, {
       method: 'PUT',
       headers: { 'Content-type': 'application/json' },
       body: JSON.stringify(updatedProfile),
@@ -123,7 +147,7 @@ const Profile = ({ currentUserId, signOut }) => {
         ...currentProfile,
         education: currentProfile.education.filter((el, i) => i !== index),
       };
-      fetch(`${endpoint}/users/${currentUserId}`, {
+      fetch(`${endpoint}/users/${currentUser?.id}`, {
         method: 'PUT',
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(newData),
@@ -142,141 +166,173 @@ const Profile = ({ currentUserId, signOut }) => {
 
   if (isLoggedIn) {
     return (
-      <>
-        <NavBar currentUserId={currentUserId} />
-        <Grid
-          container
-          sx={style}
-          flexDirection='column'
-          alignItems='center'
-          justifyContent='center'
+      <Box sx={{ display: 'flex', flexFlow: 'column' }}>
+        <NavBar />
+        <Box
+          sx={{
+            display: 'flex',
+            flexFlow: 'column',
+            marginTop: '20px',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            '@media (max-width: 480px)': {
+              width: '100vw',
+            },
+          }}
         >
-          <TextField
-            autoComplete='off'
-            variant='outlined'
-            label='Nombre'
-            value={currentProfile.name}
-            name='name'
-            onChange={handleChange}
-          />
-          <TextField
-            autoComplete='off'
-            variant='outlined'
-            label='Apellido'
-            value={currentProfile.surname}
-            name='surname'
-            onChange={handleChange}
-          />
-          <TextField
-            autoComplete='off'
-            variant='outlined'
-            label='Email'
-            value={currentProfile.email}
-            name='email'
-            onChange={handleChange}
-          />
-          <TextField
-            autoComplete='off'
-            variant='outlined'
-            label='Teléfono'
-            value={currentProfile.phone}
-            name='phone'
-            onChange={handleChange}
-            type='number'
-          />
-          {currentUser?.role === TEACHER_ROLE && (
-            <>
-              <TextField
-                autoComplete='off'
-                variant='outlined'
-                label='Título'
-                value={currentProfile.degree}
-                name='degree'
-                onChange={handleChange}
-              />
-              <TextField
-                autoComplete='off'
-                variant='outlined'
-                label='Experiencia'
-                value={currentProfile.experience}
-                name='experience'
-                onChange={handleChange}
-                multiline
-                rows={4}
-              />
-            </>
-          )}
-          {currentUser?.role === STUDENT_ROLE && (
-            <>
-              <TextField
-                autoComplete='off'
-                variant='outlined'
-                label='Fecha de nacimiento'
-                value={currentProfile.birthDate}
-                name='birthDate'
-                onChange={handleChange}
-                type='date'
-              />
-              {currentProfile?.education?.map((element, index) => (
+          <Typography
+            variant='h4'
+            sx={{
+              fontWeight: 900,
+              fontFamily: 'Montserrat',
+              '@media (max-width: 700px)': {
+                fontSize: '24px',
+              },
+            }}
+          >
+            Mi Perfil
+          </Typography>
+          <Grid
+            container
+            sx={style}
+            flexDirection='column'
+            alignItems='center'
+            justifyContent='center'
+          >
+            <TextField
+              autoComplete='off'
+              variant='outlined'
+              label='Nombre'
+              value={currentProfile.name || ''}
+              name='name'
+              onChange={handleChange}
+            />
+            <TextField
+              autoComplete='off'
+              variant='outlined'
+              label='Apellido'
+              value={currentProfile.surname || ''}
+              name='surname'
+              onChange={handleChange}
+            />
+            <TextField
+              autoComplete='off'
+              variant='outlined'
+              label='Email'
+              value={currentProfile.email || ''}
+              name='email'
+              onChange={handleChange}
+            />
+            <TextField
+              autoComplete='off'
+              variant='outlined'
+              label='Teléfono'
+              value={currentProfile.phone || ''}
+              name='phone'
+              onChange={handleChange}
+              type='number'
+            />
+            {currentUser?.role === TEACHER_ROLE && (
+              <>
                 <TextField
-                  key={index}
                   autoComplete='off'
                   variant='outlined'
-                  label='Estudios Cursados'
-                  value={
-                    element === undefined
-                      ? ''
-                      : `${element.name}\n • ${capitalize(
-                          element.level
-                        )}\n • ${capitalize(element.status)}`
-                  }
-                  multiline
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='start'>
-                        <IconButton onClick={() => handleRemove(index)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
+                  label='Título'
+                  value={currentProfile.degree || ''}
+                  name='degree'
+                  onChange={handleChange}
                 />
-              ))}
-              <EducationInputDialog
-                open={showDialog}
-                closeDialog={closeDialog}
-                addEducation={addEducation}
-              />
-              <Button onClick={openDialog}>+ Agrear Estudio Cursado</Button>
-            </>
-          )}
-          <Box display='flex' flexDirection='column'>
-            <Button
-              variant='contained'
-              sx={{ height: '50px', margin: '10px' }}
-              disabled={
-                currentProfile.name === '' ||
-                currentProfile.surname === '' ||
-                currentProfile.email === '' ||
-                currentProfile.phone === '' ||
-                currentProfile.degree === '' ||
-                currentProfile.experience === ''
-              }
-              onClick={handleClick}
+                <TextField
+                  autoComplete='off'
+                  variant='outlined'
+                  label='Experiencia'
+                  value={currentProfile.experience || ''}
+                  name='experience'
+                  onChange={handleChange}
+                  multiline
+                  rows={4}
+                />
+              </>
+            )}
+            {currentUser?.role === STUDENT_ROLE && (
+              <>
+                <TextField
+                  autoComplete='off'
+                  variant='outlined'
+                  label='Fecha de nacimiento'
+                  value={currentProfile?.birthDate || ''}
+                  name='birthDate'
+                  onChange={handleChange}
+                  type='date'
+                />
+                {currentProfile?.education?.map((element, index) => (
+                  <TextField
+                    key={index}
+                    autoComplete='off'
+                    variant='outlined'
+                    label='Estudios Cursados'
+                    value={
+                      element === undefined
+                        ? ''
+                        : `${element.name}\n • ${capitalize(
+                            element.level
+                          )}\n • ${capitalize(element.status)}`
+                    }
+                    multiline
+                    rows={4}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='start'>
+                          <IconButton onClick={() => handleRemove(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                ))}
+                <EducationInputDialog
+                  open={showDialog}
+                  closeDialog={closeDialog}
+                  addEducation={addEducation}
+                />
+                <Button onClick={openDialog}>+ Agrear Estudio Cursado</Button>
+              </>
+            )}
+            <Box
+              className='buttonContainer'
+              display='flex'
+              flexDirection='column'
             >
-              Guardar
-            </Button>
-            <Button
-              variant='contained'
-              sx={{ height: '50px', margin: '10px' }}
-              onClick={handleLogout}
-              color='error'
-            >
-              Cerrar Sesión
-            </Button>
-          </Box>
-        </Grid>
-      </>
+              <Button
+                variant='contained'
+                sx={{ height: '50px', margin: '10px' }}
+                disabled={
+                  currentProfile.name === '' ||
+                  currentProfile.surname === '' ||
+                  currentProfile.email === '' ||
+                  currentProfile.phone === '' ||
+                  currentProfile.degree === '' ||
+                  currentProfile.experience === ''
+                }
+                onClick={handleClick}
+              >
+                Guardar
+              </Button>
+              <Button
+                variant='contained'
+                sx={{ height: '50px', margin: '10px' }}
+                onClick={handleLogout}
+                color='error'
+              >
+                Cerrar Sesión
+              </Button>
+            </Box>
+          </Grid>
+        </Box>
+      </Box>
     );
   } else {
     return <Home />;
