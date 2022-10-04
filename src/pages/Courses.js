@@ -17,15 +17,6 @@ const style = {
   },
   '& .MuiButton-root': {
     marginTop: '20px',
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
-  '@media (max-width: 700px)': {
-    '& .MuiButton-root': {
-      fontSize: '12px',
-    },
   },
 };
 

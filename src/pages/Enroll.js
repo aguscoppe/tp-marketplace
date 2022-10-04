@@ -9,18 +9,6 @@ import { UserContext } from '../contexts/UserContext';
 
 const style = {
   height: '100%',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiInputBase-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiFormLabel-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiTextField-root': {
     width: '300px',
     margin: '10px',
@@ -32,24 +20,9 @@ const style = {
   '& .MuiTextField-root:first-of-type:not(.timeRange)': {
     marginTop: '50px',
   },
-  input: {
-    fontFamily: 'Montserrat',
-  },
   '@media (max-width: 700px)': {
-    '& .MuiInputLabel-root': {
-      fontSize: '14px',
-    },
-    '& .MuiTypography-body1': {
-      fontSize: '12px',
-    },
-    '& .MuiOutlinedInput-input': {
-      fontSize: '14px',
-    },
     '& input.MuiOutlinedInput-input': {
       padding: '14px',
-    },
-    '& .MuiButton-root': {
-      fontSize: '10px',
     },
   },
 };

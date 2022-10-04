@@ -62,7 +62,6 @@ const Register = () => {
     width: '300px',
     margin: '10px',
     backgroundColor: '#fff',
-    fontFamily: 'Montserrat',
     borderRadius: '8px',
   };
   return (
@@ -128,7 +127,6 @@ const Register = () => {
                 sx={{
                   fontWeight: 900,
                   marginBottom: '20px',
-                  fontFamily: 'Montserrat',
                 }}
               >
                 Registrarse
@@ -199,7 +197,6 @@ const Register = () => {
                   margin: '10px',
                   marginTop: '20px',
                   minWidth: '200px',
-                  fontFamily: 'Montserrat',
                   ':disabled': {
                     backgroundColor: '#999',
                     color: '#555',

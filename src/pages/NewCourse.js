@@ -22,18 +22,8 @@ import { endpoint, useCourseById } from '../hooks';
 
 const style = {
   height: '100%',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiButton-root': {
     width: '300px',
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiInputBase-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiFormLabel-root': {
-    fontFamily: 'Montserrat',
   },
   '& .MuiTextField-root': {
     width: '300px',
@@ -46,24 +36,9 @@ const style = {
   a: {
     textDecoration: 'none',
   },
-  input: {
-    fontFamily: 'Montserrat',
-  },
   '@media (max-width: 700px)': {
-    '& .MuiInputLabel-root': {
-      fontSize: '14px',
-    },
-    '& .MuiTypography-body1': {
-      fontSize: '12px',
-    },
-    '& .MuiOutlinedInput-input': {
-      fontSize: '14px',
-    },
     '& input.MuiOutlinedInput-input': {
       padding: '14px',
-    },
-    '& .MuiButton-root': {
-      fontSize: '10px',
     },
   },
 };
@@ -262,7 +237,7 @@ const NewCourse = () => {
             label='Publicar'
           />
         </FormGroup>
-        <FormHelperText sx={{ width: '300px', fontFamily: 'Montserrat' }}>
+        <FormHelperText sx={{ width: '300px' }}>
           Los alumnos solo podrán inscribirse a una clase si está publicada
         </FormHelperText>
         {published && students.length > 0 ? (

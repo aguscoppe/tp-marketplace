@@ -17,12 +17,6 @@ const style = {
   '&:not(:last-of-type)': {
     borderBottom: '1px solid #ccc',
   },
-  '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .email': {
     textDecoration: 'underline',
     color: 'blue',
