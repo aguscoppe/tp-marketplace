@@ -38,17 +38,8 @@ const styles = {
   alignItems: 'center',
   width: '300px',
   margin: '15px',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiSelect-select': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiCardContent-root': {
     width: '100%',
-  },
-  '& .MuiPaper-root .MuiMenu-list .MuiMenuItem-root': {
-    fontFamily: 'Montserrat',
   },
   a: {
     color: '#000',
@@ -59,9 +50,6 @@ const styles = {
     },
     h6: {
       fontSize: '15px',
-    },
-    '& .MuiTypography-body1': {
-      fontSize: '12px',
     },
     '& .MuiSelect-select': {
       fontSize: '12px',

@@ -31,25 +31,10 @@ const ratingItems = [
 
 const style = {
   marginBottom: '32px',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiInputBase-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiFormLabel-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiTextField-root': {
     width: '200px',
     margin: '10px',
     backgroundColor: '#fff',
-  },
-  input: {
-    fontFamily: 'Montserrat',
   },
   '@media (max-width: 800px)': {
     flexDirection: 'column',
@@ -61,15 +46,6 @@ const style = {
     },
   },
   '@media (max-width: 700px)': {
-    '& .MuiInputLabel-root': {
-      fontSize: '14px',
-    },
-    '& .MuiTypography-body1': {
-      fontSize: '12px',
-    },
-    '& .MuiOutlinedInput-input': {
-      fontSize: '14px',
-    },
     '& input.MuiOutlinedInput-input': {
       padding: '14px',
     },
@@ -114,11 +90,7 @@ const SearchBar = ({ formContent, handleChange, handleClick }) => {
         onChange={handleChange}
       >
         {typeItems.map((item) => (
-          <MenuItem
-            key={item.label}
-            value={item.value}
-            sx={{ fontFamily: 'Montserrat' }}
-          >
+          <MenuItem key={item.label} value={item.value}>
             {item.label}
           </MenuItem>
         ))}
@@ -131,11 +103,7 @@ const SearchBar = ({ formContent, handleChange, handleClick }) => {
         onChange={handleChange}
       >
         {frequencyItems.map((item) => (
-          <MenuItem
-            key={item.label}
-            value={item.value}
-            sx={{ fontFamily: 'Montserrat' }}
-          >
+          <MenuItem key={item.label} value={item.value}>
             {item.label}
           </MenuItem>
         ))}
@@ -148,11 +116,7 @@ const SearchBar = ({ formContent, handleChange, handleClick }) => {
         onChange={handleChange}
       >
         {ratingItems.map((item) => (
-          <MenuItem
-            key={item.label}
-            value={item.value}
-            sx={{ fontFamily: 'Montserrat' }}
-          >
+          <MenuItem key={item.label} value={item.value}>
             {item.label}
           </MenuItem>
         ))}

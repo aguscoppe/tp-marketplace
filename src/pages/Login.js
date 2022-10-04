@@ -118,7 +118,6 @@ const Login = ({ signIn }) => {
               sx={{
                 fontWeight: 900,
                 color: '#FFFFFF',
-                fontFamily: 'Montserrat',
               }}
             >
               Ingresar
@@ -147,12 +146,6 @@ const Login = ({ signIn }) => {
                   margin: '10px',
                   backgroundColor: '#fff',
                   borderRadius: '8px',
-                  label: {
-                    fontFamily: 'Montserrat',
-                  },
-                  input: {
-                    fontFamily: 'Montserrat',
-                  },
                 }}
               />
               <FormControl
@@ -161,12 +154,6 @@ const Login = ({ signIn }) => {
                   margin: '10px',
                   backgroundColor: '#fff',
                   borderRadius: '8px',
-                  label: {
-                    fontFamily: 'Montserrat',
-                  },
-                  input: {
-                    fontFamily: 'Montserrat',
-                  },
                 }}
                 variant='outlined'
               >
@@ -214,7 +201,6 @@ const Login = ({ signIn }) => {
                   <Typography
                     sx={{
                       color: '#FFFFFF',
-                      fontFamily: 'Montserrat',
                       fontSize: '14px',
                       '&:hover': {
                         color: '#90caf9',
@@ -232,7 +218,6 @@ const Login = ({ signIn }) => {
                   marginTop: '20px',
                   marginBottom: '20px',
                   minWidth: '200px',
-                  fontFamily: 'Montserrat',
                   ':disabled': {
                     backgroundColor: '#999',
                     color: '#555',
@@ -246,7 +231,6 @@ const Login = ({ signIn }) => {
               <Typography
                 sx={{
                   color: '#FFFFFF',
-                  fontFamily: 'Montserrat',
                   marginTop: '50px',
                 }}
               >

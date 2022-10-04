@@ -12,19 +12,15 @@ const styles = {
     textAlign: 'center',
   },
   '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
     margin: '12px',
+  },
+  '@media (max-width: 1000px)': {
+    height: 'auto',
   },
   '@media (max-width: 700px)': {
     h5: {
       fontSize: '18px',
     },
-    '& .MuiTypography-body1': {
-      fontSize: '14px',
-    },
-  },
-  '@media (max-width: 1000px)': {
-    height: 'auto',
   },
   '@media (max-width: 500px)': {
     width: '100vw',
@@ -32,9 +28,6 @@ const styles = {
     padding: '12px',
     h5: {
       fontSize: '14px',
-    },
-    '& .MuiTypography-body1': {
-      fontSize: '12px',
     },
   },
 };

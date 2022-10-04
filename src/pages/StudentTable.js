@@ -1,5 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   IconButton,
@@ -30,13 +29,9 @@ const styles = {
   margin: '60px auto',
   width: '500px',
   backgroundColor: '#f6f6f6',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
 };
 
 const StudentTable = () => {
-  const currentUser = useContext(UserContext);
   const { id } = useParams();
   const courseData = useCourseById(id);
   const getFullName = useFullName();
@@ -124,7 +119,6 @@ const StudentTable = () => {
                     fullWidth
                     disabled={!isEditing || studentId !== student.id}
                     sx={{
-                      fontFamily: 'Montserrat',
                       textTransform: 'capitalize',
                       backgroundColor:
                         !isEditing || studentId !== student.id ? '' : '#fff',
@@ -133,7 +127,6 @@ const StudentTable = () => {
                     <MenuItem
                       value={COURSE_STATUS_PENDING}
                       sx={{
-                        fontFamily: 'Montserrat',
                         textTransform: 'capitalize',
                       }}
                     >
@@ -142,7 +135,6 @@ const StudentTable = () => {
                     <MenuItem
                       value={COURSE_STATUS_ACCEPTED}
                       sx={{
-                        fontFamily: 'Montserrat',
                         textTransform: 'capitalize',
                       }}
                     >
@@ -151,7 +143,6 @@ const StudentTable = () => {
                     <MenuItem
                       value={COURSE_STATUS_CANCELLED}
                       sx={{
-                        fontFamily: 'Montserrat',
                         textTransform: 'capitalize',
                       }}
                     >
@@ -160,7 +151,6 @@ const StudentTable = () => {
                     <MenuItem
                       value={COURSE_STATUS_FINISHED}
                       sx={{
-                        fontFamily: 'Montserrat',
                         textTransform: 'capitalize',
                       }}
                     >
