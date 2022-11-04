@@ -38,11 +38,7 @@ const style = {
       width: '50px',
     },
   },
-  '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
     fontSize: '10px',
     marginTop: '2px',
   },
@@ -209,7 +205,6 @@ const NavBar = () => {
                     sx={{
                       textAlign: 'center',
                       padding: '6px 12px',
-                      fontFamily: 'Montserrat',
                     }}
                   >
                     No tienes notificaciones

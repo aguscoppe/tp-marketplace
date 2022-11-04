@@ -10,11 +10,9 @@ const style = {
   justifyContent: 'center',
   height: '92vh',
   '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
     fontWeight: '500',
   },
   '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
     margin: '16px 16px 0 0',
   },
   a: {
@@ -24,7 +22,6 @@ const style = {
     maxWidth: '100%',
     maxHeight: '100%',
   },
-
   '@media (max-width: 700px)': {
     height: '100%',
     textAlign: 'center',

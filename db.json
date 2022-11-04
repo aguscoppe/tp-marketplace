@@ -22,12 +22,12 @@
       "description": "Clases semanales de lengua para nivel secundario",
       "rating": [
         {
-          "id": 10,
-          "score": null
-        },
-        {
           "id": 3,
           "score": 5
+        },
+        {
+          "id": 10,
+          "score": 3
         }
       ],
       "published": true,
@@ -41,21 +41,21 @@
       "teacherId": 2,
       "students": [
         {
-          "id": 10,
-          "status": "finalizada"
-        },
-        {
           "id": 11,
           "status": "cancelada"
         },
         {
           "id": 3,
           "status": "aceptada"
+        },
+        {
+          "id": 10,
+          "status": "aceptada"
         }
       ],
       "duration": 90,
       "frequency": "semanal",
-      "price": 3200,
+      "price": "5000",
       "description": "Esta es una materia de matemática",
       "rating": [
         {
@@ -156,6 +156,21 @@
       "rating": [],
       "id": 7,
       "imgSrc": "https://img.freepik.com/premium-vector/history-concept-history-school-subject-idea-science-education-knowledge-past-ancient_277904-6102.jpg?w=2000"
+    },
+    {
+      "name": "Marketing I",
+      "subject": "Marking",
+      "type": "individual",
+      "teacherId": 2,
+      "students": [],
+      "duration": 60,
+      "frequency": "única",
+      "price": "20000",
+      "description": "Descripción",
+      "published": false,
+      "rating": 0,
+      "imgSrc": "https://img.freepik.com/vector-gratis/equipo-marketing-digital-portatiles-bombilla-metricas-equipo-marketing-concepto-liderazgo-responsabilidades-equipo-marketing-sobre-fondo-blanco_335657-2022.jpg?w=2000",
+      "id": 8
     }
   ],
   "users": [
@@ -253,6 +268,32 @@
       "phone": "555555555",
       "role": "alumno",
       "id": 12
+    },
+    {
+      "name": "juan",
+      "surname": "perez",
+      "email": "juanp@mail.com",
+      "password": "123",
+      "phone": "5555555",
+      "role": "profesor",
+      "id": 13
+    },
+    {
+      "birthDate": "1997-02-11",
+      "education": [
+        {
+          "name": "Programación",
+          "level": "universitario",
+          "status": "finalizado"
+        }
+      ],
+      "name": "agustina",
+      "surname": "coppe",
+      "email": "agusc@mail.com",
+      "password": "123",
+      "phone": "555555",
+      "role": "alumno",
+      "id": 14
     }
   ],
   "notifications": [],
@@ -274,6 +315,18 @@
       "courseId": "2",
       "studentId": 10,
       "message": "Excelente clase!!"
+    },
+    {
+      "id": "37c1a8a-b12d-b68e-bbf-f6ace4adb524",
+      "courseId": "1",
+      "studentId": 10,
+      "message": "Qué buena clase"
+    },
+    {
+      "id": "72daa50-33f1-da-d2b2-1ebe8d3018",
+      "courseId": "2",
+      "studentId": 10,
+      "message": "Muy bueno!!"
     }
   ]
 }

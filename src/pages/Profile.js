@@ -18,18 +18,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { endpoint } from '../hooks';
 
 const style = {
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiInputBase-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiFormLabel-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiTextField-root': {
     width: '300px',
     margin: '10px',
@@ -38,30 +26,15 @@ const style = {
   '& .MuiTextField-root:first-of-type': {
     marginTop: '50px',
   },
-  input: {
-    fontFamily: 'Montserrat',
-  },
   a: {
     textDecoration: 'none',
   },
   '@media (max-width: 700px)': {
-    '& .MuiInputLabel-root': {
-      fontSize: '14px',
-    },
-    '& .MuiTypography-body1': {
-      fontSize: '12px',
-    },
-    '& .MuiOutlinedInput-input': {
-      fontSize: '14px',
-    },
     '& input.MuiOutlinedInput-input': {
       padding: '14px',
     },
     '& input.MuiOutlinedInput-textarea': {
       padding: '8px',
-    },
-    '& .MuiButton-root': {
-      fontSize: '12px',
     },
     '& .buttonContainer': {
       flexDirection: 'row',
@@ -186,7 +159,6 @@ const Profile = ({ signOut }) => {
             variant='h4'
             sx={{
               fontWeight: 900,
-              fontFamily: 'Montserrat',
               '@media (max-width: 700px)': {
                 fontSize: '24px',
               },

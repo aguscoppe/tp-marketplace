@@ -15,6 +15,8 @@ import './style.css';
 import { STUDENT_ROLE } from './constants';
 import { useUserById } from './hooks';
 import { UserContext } from './contexts/UserContext';
+import { ThemeProvider } from '@emotion/react';
+import { theme } from './theme';
 
 const App = () => {
   const [currentUserId, setCurrentUserId] = useState({});
@@ -36,41 +38,43 @@ const App = () => {
   }, []);
 
   return (
-    <UserContext.Provider value={user}>
-      <Routes>
-        {currentUserId &&
-        currentUserId !== undefined &&
-        currentUserId !== {} ? (
-          <>
-            <Route path='/courses'>
-              <Route index element={<Courses />} />
-              <Route path='new' element={<NewCourse />} />
-              <Route path='edit/:id' element={<NewCourse />} />
+    <ThemeProvider theme={theme}>
+      <UserContext.Provider value={user}>
+        <Routes>
+          {currentUserId &&
+          currentUserId !== undefined &&
+          currentUserId !== {} ? (
+            <>
+              <Route path='/courses'>
+                <Route index element={<Courses />} />
+                <Route path='new' element={<NewCourse />} />
+                <Route path='edit/:id' element={<NewCourse />} />
+              </Route>
+              <Route path='/students'>
+                <Route path=':id' element={<StudentTable />} />
+              </Route>
+              <Route path='/profile'>
+                <Route index element={<Profile signOut={signOut} />} />
+              </Route>
+            </>
+          ) : null}
+          {user?.role === STUDENT_ROLE ? (
+            <Route path='/enroll'>
+              <Route path=':id' element={<Enroll />} />
             </Route>
-            <Route path='/students'>
-              <Route path=':id' element={<StudentTable />} />
-            </Route>
-            <Route path='/profile'>
-              <Route index element={<Profile signOut={signOut} />} />
-            </Route>
-          </>
-        ) : null}
-        {user?.role === STUDENT_ROLE ? (
-          <Route path='/enroll'>
-            <Route path=':id' element={<Enroll />} />
+          ) : null}
+          <Route exact path='/' element={<Home />} />
+          <Route path='/course'>
+            <Route path=':id' element={<CourseDetail />} />
           </Route>
-        ) : null}
-        <Route exact path='/' element={<Home />} />
-        <Route path='/course'>
-          <Route path=':id' element={<CourseDetail />} />
-        </Route>
-        <Route path='/about' element={<About />} />
-        <Route path='/login' element={<Login signIn={signIn} />} />
-        <Route path='reset-password' element={<ResetPassword />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='*' element={<Navigate to='/' replace />} />
-      </Routes>
-    </UserContext.Provider>
+          <Route path='/about' element={<About />} />
+          <Route path='/login' element={<Login signIn={signIn} />} />
+          <Route path='reset-password' element={<ResetPassword />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='*' element={<Navigate to='/' replace />} />
+        </Routes>
+      </UserContext.Provider>
+    </ThemeProvider>
   );
 };
 

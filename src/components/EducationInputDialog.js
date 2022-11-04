@@ -36,31 +36,17 @@ const educationStatusItems = [
 
 const style = {
   padding: '50px',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
   '& .MuiButton-root': {
     width: '300px',
     margin: '10px',
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiInputBase-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiFormLabel-root': {
-    fontFamily: 'Montserrat',
   },
   '& .MuiTextField-root': {
     width: '300px',
     margin: '10px',
     backgroundColor: '#fff',
   },
-
   '& .MuiTextField-root:first-of-type': {
     marginTop: '30px',
-  },
-  input: {
-    fontFamily: 'Montserrat',
   },
   a: {
     textDecoration: 'none',

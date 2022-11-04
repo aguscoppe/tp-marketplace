@@ -24,12 +24,6 @@ import { UserContext } from '../contexts/UserContext';
 
 const styles = {
   marginTop: '60px',
-  '& .MuiTypography-root': {
-    fontFamily: 'Montserrat',
-  },
-  '& .MuiButton-root': {
-    fontFamily: 'Montserrat',
-  },
   a: {
     textDecoration: 'none',
   },
