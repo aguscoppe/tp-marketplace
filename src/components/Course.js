@@ -23,7 +23,7 @@ import {
   TEACHER_ROLE,
 } from '../constants';
 import { isUserEnrolled, capitalize, getRating } from '../utils';
-import { useUserById, endpoint } from '../hooks';
+import { /* useUserById, */ useTeacherById, endpoint } from '../hooks';
 
 const statusItems = [
   { key: 1, value: '', label: 'Estado' },
@@ -70,15 +70,22 @@ const Course = ({ courseData, removeCourse }) => {
     type,
     frequency,
     rating,
-    teacherId,
+    teacher,
+    // teacherId
     students,
     imgSrc,
   } = courseData;
   const { pathname } = useLocation();
+  const enrolledStudents = [];
+  /*
   const enrolledStudents = students.filter(
     (student) => student.id === currentUser?.id
   );
+  */
+  const teacherData = {};
+  /*
   const teacherData = useUserById(teacherId);
+  */
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
   const [courseRating, setCourseRating] = useState(getRating(rating));
 
@@ -183,7 +190,7 @@ const Course = ({ courseData, removeCourse }) => {
               handleRatingChange(newValue);
             }}
             readOnly={
-              !isUserEnrolled(currentUser?.id, courseData) ||
+              /* !isUserEnrolled(currentUser?.id, courseData) || */
               courseStatus === COURSE_STATUS_PENDING ||
               courseStatus === COURSE_STATUS_CANCELLED
             }
