@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { isUserEnrolled } from './utils';
 
-const endpoint = 'http://localhost:3004';
+const endpoint = 'http://localhost:3000';
+// const endpoint = 'http://localhost:3004';
 
 const useCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -30,7 +31,8 @@ const useUsers = () => {
 const usePublishedCourses = () => {
   const [publishedCourses, setPublishedCourses] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/courses?published=true`)
+    /* fetch(`${endpoint}/courses?published=true`) */
+    fetch(`${endpoint}/courses`)
       .then((res) => res.json())
       .then((data) => {
         setPublishedCourses(data);
@@ -172,6 +174,20 @@ const useUserById = (id) => {
   return user;
 };
 
+const useTeacherById = (id) => {
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    fetch(`${endpoint}/teachers/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filteredData = data.filter((user) => user.id === id);
+        const [user] = filteredData;
+        setUser(user);
+      });
+  }, [id]);
+  return user;
+};
+
 const useTeacherByCourseId = (id) => {
   const course = useCourseById(id);
   const teacherId = course?.teacherId;
@@ -194,4 +210,5 @@ export {
   useCourseById,
   useUserById,
   useTeacherByCourseId,
+  useTeacherById,
 };
