@@ -57,7 +57,7 @@ const useCourseById = (id) => {
 const useComments = (courseId) => {
   const [comments, setComments] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/comments?courseId=${courseId}`)
+    fetch(`${endpoint}/courses/${courseId}/comments`)
       .then((res) => res.json())
       .then((data) => {
         setComments(data);
@@ -69,11 +69,13 @@ const useComments = (courseId) => {
 const useNotifications = (id) => {
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/notifications?destinationId=${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setNotifications(data);
-      });
+    if (id) {
+      fetch(`${endpoint}/users/${id}/notifications`)
+        .then((res) => res.json())
+        .then((data) => {
+          setNotifications(data);
+        });
+    }
   }, [id]);
   return notifications;
 };
