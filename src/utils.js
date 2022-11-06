@@ -21,6 +21,9 @@ const capitalize = (str) => {
 };
 
 const isUserEnrolled = (userId, courseData) => {
+  if (!userId || !courseData) {
+    return null;
+  }
   const filtered = courseData.students.filter(
     (student) => student?.id === userId
   );
