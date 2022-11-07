@@ -29,7 +29,8 @@ const App = () => {
   const signIn = () => {
     const localUser = localStorage.getItem('current-user');
     if (localUser !== undefined) {
-      setCurrentUserId(JSON.parse(localUser));
+      console.log(localUser);
+      // setCurrentUserId(JSON.parse(localUser));
     }
   };
 

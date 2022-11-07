@@ -2,7 +2,27 @@ import { useState, useEffect } from 'react';
 import { isUserEnrolled } from './utils';
 
 const endpoint = 'http://localhost:3000';
-// const endpoint = 'http://localhost:3004';
+
+const token = localStorage.getItem('current-user');
+
+const useLogin = () => {
+  const login = (username, password) => {
+    fetch(`${endpoint}/login`, {
+      method: 'POST',
+      body: JSON.stringify({ username: username, password: password }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.access_token) {
+          localStorage.setItem('current-user', data.access_token);
+        }
+      });
+  };
+  return { login };
+};
 
 const useCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -19,7 +39,11 @@ const useCourses = () => {
 const useUsers = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/users`)
+    fetch(`${endpoint}/users`, {
+      headers: {
+        Authorization: token,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -182,9 +206,7 @@ const useTeacherById = (id) => {
     fetch(`${endpoint}/teachers/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        const filteredData = data.filter((user) => user.id === id);
-        const [user] = filteredData;
-        setUser(user);
+        setUser(data);
       });
   }, [id]);
   return user;
@@ -193,7 +215,7 @@ const useTeacherById = (id) => {
 const useTeacherByCourseId = (id) => {
   const course = useCourseById(id);
   const teacherId = course?.teacherId;
-  const user = useUserById(teacherId);
+  const user = useTeacherById(teacherId);
   return user;
 };
 
@@ -213,4 +235,5 @@ export {
   useUserById,
   useTeacherByCourseId,
   useTeacherById,
+  useLogin,
 };

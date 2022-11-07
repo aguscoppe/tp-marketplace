@@ -68,14 +68,9 @@ const CourseDetail = () => {
   }, [course, currentUser?.id]);
 
   useEffect(() => {
-    // TODO: setFilteredComments properly
     if (comments !== undefined) {
-      console.log(comments);
-      setFilteredComments([]);
-      /*
-      setFilteredComments(
-        comments.filter((comment) => comment.courseId == id)
-      );*/
+      console.log();
+      setFilteredComments(comments);
     }
   }, [comments, id]);
 
