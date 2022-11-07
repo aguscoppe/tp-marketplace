@@ -10,17 +10,16 @@ import {
   OutlinedInput,
   InputLabel,
 } from '@mui/material';
-import { useEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material/';
 import { Link, Navigate } from 'react-router-dom';
 import Navbar from '../components/NavBar';
-import { useUsers } from '../hooks';
+import { useLogin } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
 
 const Login = ({ signIn }) => {
+  const { login } = useLogin();
   const currentUser = useContext(UserContext);
-  const userList = useUsers();
-  const [users, setUsers] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(
     currentUser === undefined ? false : true
   );
@@ -30,12 +29,6 @@ const Login = ({ signIn }) => {
     showPassword: false,
   });
   const { email, password } = values;
-
-  useEffect(() => {
-    if (userList !== undefined) {
-      setUsers(userList);
-    }
-  }, [userList]);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -53,16 +46,9 @@ const Login = ({ signIn }) => {
   };
 
   const handleLogin = () => {
-    let user = [];
-    if (
-      users.some(
-        (el) => el.email === values.email && el.password === values.password
-      )
-    ) {
-      user = users.filter((el) => el.email === values.email);
-    }
-    if (user.length > 0) {
-      localStorage.setItem('current-user', user[0].id);
+    login(email, password);
+    const currentUser = localStorage.getItem('current-user');
+    if (currentUser) {
       setIsLoggedIn(true);
       signIn();
     } else {
@@ -73,6 +59,7 @@ const Login = ({ signIn }) => {
   if (isLoggedIn) {
     return <Navigate to='/' />;
   }
+
   return (
     <>
       <Box sx={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>

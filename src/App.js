@@ -20,6 +20,7 @@ import { theme } from './theme';
 
 const App = () => {
   const [currentUserId, setCurrentUserId] = useState({});
+  // TODO: make sure backend provides user data to store in context
   const user = useUserById(currentUserId);
 
   const signOut = () => {
@@ -27,9 +28,9 @@ const App = () => {
   };
 
   const signIn = () => {
-    const localUser = localStorage.getItem('current-user');
+    const localUser = JSON.parse(localStorage.getItem('current-user'));
     if (localUser !== undefined) {
-      setCurrentUserId(JSON.parse(localUser));
+      setCurrentUserId(localUser.id);
     }
   };
 

@@ -103,7 +103,7 @@ const Profile = ({ signOut }) => {
   };
 
   const handleClick = () => {
-    localStorage.setItem('current-user', currentProfile.id);
+    // localStorage.setItem('current-user', currentProfile.id);
     fetch(`${endpoint}/users/${currentUser.id}`, {
       method: 'PUT',
       headers: { 'Content-type': 'application/json' },
