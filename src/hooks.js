@@ -3,7 +3,8 @@ import { isUserEnrolled } from './utils';
 
 const endpoint = 'http://localhost:3000';
 
-const token = localStorage.getItem('current-user');
+const localUser = JSON.parse(localStorage.getItem('current-user'));
+const { token } = localUser;
 
 const useLogin = () => {
   const login = (username, password) => {
@@ -16,9 +17,15 @@ const useLogin = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.access_token) {
-          localStorage.setItem('current-user', data.access_token);
-        }
+        const currentUser = {
+          // TODO: replace with user id response
+          id: 'c111ddc3-3e81-4453-9233-8e848614f7b0',
+          token: data.access_token,
+        };
+        localStorage.setItem('current-user', JSON.stringify(currentUser));
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
   return { login };
@@ -41,7 +48,7 @@ const useUsers = () => {
   useEffect(() => {
     fetch(`${endpoint}/users`, {
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
@@ -189,12 +196,17 @@ const useCourseName = (id) => {
 const useUserById = (id) => {
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/users?id=${id}`)
-      .then((res) => res.json())
+    fetch(`${endpoint}/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        // TODO: fix 'Unexpected end of JSON input' error
+        res.json();
+      })
       .then((data) => {
-        const filteredData = data.filter((user) => user.id === id);
-        const [user] = filteredData;
-        setUser(user);
+        setUser(data);
       });
   }, [id]);
   return user;

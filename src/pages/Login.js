@@ -10,7 +10,7 @@ import {
   OutlinedInput,
   InputLabel,
 } from '@mui/material';
-import { useEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material/';
 import { Link, Navigate } from 'react-router-dom';
 import Navbar from '../components/NavBar';
@@ -29,16 +29,6 @@ const Login = ({ signIn }) => {
     showPassword: false,
   });
   const { email, password } = values;
-  /* const userList = useUsers();
-  const [users, setUsers] = useState([]);
-  */
-  /*
-  useEffect(() => {
-    if (userList !== undefined) {
-      setUsers(userList);
-    }
-  }, [userList]);
-  */
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -57,30 +47,18 @@ const Login = ({ signIn }) => {
 
   const handleLogin = () => {
     login(email, password);
-    /*
-    let user = [];
-    if (
-      users.some(
-        (el) => el.email === values.email && el.password === values.password
-      )
-    ) {
-      user = users.filter((el) => el.email === values.email);
-    }
-    if (user.length > 0) {
-      localStorage.setItem('current-user', user[0].id);
+    const currentUser = localStorage.getItem('current-user');
+    if (currentUser) {
       setIsLoggedIn(true);
       signIn();
     } else {
       alert('Email o contraseña incorrectos');
     }
-    */
   };
 
-  /*
   if (isLoggedIn) {
     return <Navigate to='/' />;
   }
-  */
 
   return (
     <>
