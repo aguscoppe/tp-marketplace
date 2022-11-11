@@ -1,32 +1,35 @@
-import { useState, useEffect } from 'react';
-import { isUserEnrolled } from './utils';
+import { useState, useEffect } from "react";
+import { isUserEnrolled } from "./utils";
 
-const endpoint = 'http://localhost:3000';
+const endpoint = "http://localhost:3000";
 
-const localUser = JSON.parse(localStorage.getItem('current-user'));
-const { token } = localUser;
+const localUser = JSON.parse(localStorage.getItem("current-user"));
 
 const useLogin = () => {
-  const login = (username, password) => {
-    fetch(`${endpoint}/login`, {
-      method: 'POST',
-      body: JSON.stringify({ username: username, password: password }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const currentUser = {
-          // TODO: replace with user id response
-          id: 'c111ddc3-3e81-4453-9233-8e848614f7b0',
-          token: data.access_token,
-        };
-        localStorage.setItem('current-user', JSON.stringify(currentUser));
-      })
-      .catch((error) => {
-        console.log(error);
+  const login = async (username, password) => {
+    try {
+      const url = `${endpoint}/login`;
+      const response = await fetch(url, {
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify({ username: username, password: password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      const data = await response.json();
+      const currentUser = {
+        // TODO: replace with user id response
+        id: "ec2a54ad-d69c-4325-bc79-e8458359f042",
+        token: data.access_token,
+      };
+
+      localStorage.setItem("current-user", JSON.stringify(currentUser));
+      console.log(localStorage.getItem("current-user"));
+    } catch (e) {
+      console.log(e);
+    }
   };
   return { login };
 };
@@ -48,7 +51,7 @@ const useUsers = () => {
   useEffect(() => {
     fetch(`${endpoint}/users`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localUser?.token}`,
       },
     })
       .then((res) => res.json())
@@ -181,7 +184,7 @@ const useCourseDataByStudentId = (id) => {
 };
 
 const useCourseName = (id) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   useEffect(() => {
     fetch(`${endpoint}/courses?id=${id}`)
       .then((res) => res.json())
@@ -196,18 +199,28 @@ const useCourseName = (id) => {
 const useUserById = (id) => {
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        // TODO: fix 'Unexpected end of JSON input' error
-        res.json();
-      })
-      .then((data) => {
-        setUser(data);
-      });
+    const getUserData = async () => {
+      const url = `${endpoint}/users/${id}`;
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            Authorization: `Bearer ${localUser?.token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (data?.statusCode) {
+          setUser(undefined);
+        } else {
+          setUser(data);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getUserData();
   }, [id]);
   return user;
 };
