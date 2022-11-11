@@ -21,7 +21,7 @@ const Login = ({ signIn }) => {
   const { login } = useLogin();
   const currentUser = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(
-    currentUser === undefined ? false : true
+    currentUser?.length ? true : false
   );
   const [values, setValues] = useState({
     email: "",
@@ -49,8 +49,8 @@ const Login = ({ signIn }) => {
     await login(email, password);
     const currentUser = localStorage.getItem("current-user");
     if (currentUser) {
-      setIsLoggedIn(true);
       signIn();
+      setIsLoggedIn(true);
     } else {
       alert("Email o contraseña incorrectos");
     }

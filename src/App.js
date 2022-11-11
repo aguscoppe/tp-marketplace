@@ -19,9 +19,9 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "./theme";
 
 const App = () => {
-  const [currentUserId, setCurrentUserId] = useState({});
+  const [currentUserId, setCurrentUserId] = useState(null);
   // TODO: make sure backend provides user data to store in context
-  const user = useUserById("ec2a54ad-d69c-4325-bc79-e8458359f042");
+  const user = useUserById(currentUserId);
 
   const signOut = () => {
     setCurrentUserId({});
@@ -29,14 +29,15 @@ const App = () => {
 
   const signIn = () => {
     const localUser = JSON.parse(localStorage.getItem("current-user"));
-    if (localUser !== null) {
+    console.log("localUser", localUser);
+    if (localUser) {
       setCurrentUserId(localUser.id);
     }
   };
 
   useEffect(() => {
     signIn();
-  }, []);
+  }, [currentUserId]);
 
   return (
     <ThemeProvider theme={theme}>
