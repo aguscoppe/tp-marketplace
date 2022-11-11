@@ -3,8 +3,6 @@ import { isUserEnrolled } from "./utils";
 
 const endpoint = "http://localhost:3000";
 
-const localUser = JSON.parse(localStorage.getItem("current-user"));
-
 const useLogin = () => {
   const login = async (username, password) => {
     try {
@@ -19,14 +17,14 @@ const useLogin = () => {
       });
 
       const data = await response.json();
-      const currentUser = {
-        // TODO: replace with user id response
-        id: "ec2a54ad-d69c-4325-bc79-e8458359f042",
-        token: data.access_token,
-      };
 
-      localStorage.setItem("current-user", JSON.stringify(currentUser));
-      console.log(localStorage.getItem("current-user"));
+      localStorage.setItem(
+        "current-user",
+        JSON.stringify({
+          id: data.userId,
+          token: data.access_token,
+        })
+      );
     } catch (e) {
       console.log(e);
     }
@@ -47,6 +45,7 @@ const useCourses = () => {
 };
 
 const useUsers = () => {
+  const localUser = JSON.parse(localStorage.getItem("current-user"));
   const [users, setUsers] = useState([]);
   useEffect(() => {
     fetch(`${endpoint}/users`, {
@@ -197,30 +196,33 @@ const useCourseName = (id) => {
 };
 
 const useUserById = (id) => {
+  const localUser = JSON.parse(localStorage.getItem("current-user"));
   const [user, setUser] = useState([]);
   useEffect(() => {
-    const getUserData = async () => {
-      const url = `${endpoint}/users/${id}`;
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            Authorization: `Bearer ${localUser?.token}`,
-          },
-        });
+    if (id && localUser?.token) {
+      const getUserData = async () => {
+        const url = `${endpoint}/users/${id}`;
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            mode: "cors",
+            headers: {
+              Authorization: `Bearer ${localUser?.token}`,
+            },
+          });
 
-        const data = await response.json();
-        if (data?.statusCode) {
-          setUser(undefined);
-        } else {
-          setUser(data);
+          const data = await response.json();
+          if (data?.statusCode) {
+            setUser(undefined);
+          } else {
+            setUser(data);
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getUserData();
+      };
+      getUserData();
+    }
   }, [id]);
   return user;
 };
