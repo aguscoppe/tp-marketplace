@@ -23,7 +23,7 @@ import {
   TEACHER_ROLE,
 } from '../constants';
 import { isUserEnrolled, capitalize, getRating } from '../utils';
-import { /* useUserById, */ useTeacherById, endpoint } from '../hooks';
+import { endpoint } from '../hooks';
 
 const statusItems = [
   { key: 1, value: '', label: 'Estado' },
@@ -71,7 +71,6 @@ const Course = ({ courseData, removeCourse }) => {
     frequency,
     rating,
     teacher,
-    // teacherId
     students,
     imgSrc,
   } = courseData;
@@ -81,10 +80,6 @@ const Course = ({ courseData, removeCourse }) => {
   const enrolledStudents = students.filter(
     (student) => student.id === currentUser?.id
   );
-  */
-  const teacherData = {};
-  /*
-  const teacherData = useUserById(teacherId);
   */
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
   const [courseRating, setCourseRating] = useState(getRating(rating));
@@ -172,7 +167,7 @@ const Course = ({ courseData, removeCourse }) => {
             <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
               {name}
             </Typography>
-            <Typography variant='h6'>{`${teacherData.name} ${teacherData.surname}`}</Typography>
+            <Typography variant='h6'>{`${teacher.name} ${teacher.lastname}`}</Typography>
             <Typography>Clase de {subject}</Typography>
             <Typography>{capitalize(type)}</Typography>
             <Typography>{capitalize(frequency)}</Typography>
@@ -190,7 +185,8 @@ const Course = ({ courseData, removeCourse }) => {
               handleRatingChange(newValue);
             }}
             readOnly={
-              /* !isUserEnrolled(currentUser?.id, courseData) || */
+              /* TODO: usar inscriptos para activar rating
+              !isUserEnrolled(currentUser?.id, courseData) || */
               courseStatus === COURSE_STATUS_PENDING ||
               courseStatus === COURSE_STATUS_CANCELLED
             }

@@ -234,7 +234,7 @@ const NewCourse = () => {
                 name='published'
               />
             }
-            label='Publicar'
+            label='Público'
           />
         </FormGroup>
         <FormHelperText sx={{ width: '300px' }}>

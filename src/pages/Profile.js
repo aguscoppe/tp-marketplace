@@ -42,22 +42,12 @@ const style = {
   },
 };
 
-const studentFields = {
-  birthDate: '2000-01-01',
-  education: [],
-};
-
-const teacherFields = {
-  degree: '',
-  experience: '',
-};
-
 const Profile = ({ signOut }) => {
   const currentUser = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentProfile, setCurrentProfile] = useState({
-    name: '',
-    surname: '',
+    firstname: '',
+    lastname: '',
     email: '',
     phone: '',
   });
@@ -66,9 +56,25 @@ const Profile = ({ signOut }) => {
   useEffect(() => {
     if (currentUser !== undefined) {
       if (currentUser.role === TEACHER_ROLE) {
-        setCurrentProfile(() => ({ ...teacherFields, ...currentUser }));
+        const teacherObj = {
+          firstname: currentUser.firstname,
+          lastname: currentUser.lastname,
+          email: currentUser.email,
+          phone: currentUser.phone,
+          title: currentUser.title || '',
+          experience: currentUser.experience || '',
+        };
+        setCurrentProfile(teacherObj);
       } else {
-        setCurrentProfile(() => ({ ...studentFields, ...currentUser }));
+        const studentObj = {
+          firstname: currentUser.firstname,
+          lastname: currentUser.lastname,
+          email: currentUser.email,
+          phone: currentUser.phone,
+          birthdate: currentUser.birthdate || '2000-01-01',
+          educationalDegrees: currentUser.educationalDegrees || [],
+        };
+        setCurrentProfile(studentObj);
       }
     }
   }, [currentUser]);
@@ -76,7 +82,7 @@ const Profile = ({ signOut }) => {
   const addEducation = (newEducation) => {
     const updatedProfile = {
       ...currentProfile,
-      education: [...currentProfile.education, newEducation],
+      educationalDegrees: [...currentProfile.educationalDegrees, newEducation],
     };
     fetch(`${endpoint}/users/${currentUser?.id}`, {
       method: 'PUT',
@@ -85,7 +91,7 @@ const Profile = ({ signOut }) => {
     });
     setCurrentProfile((prev) => ({
       ...prev,
-      education: [...prev.education, newEducation],
+      educationalDegrees: [...prev.educationalDegrees, newEducation],
     }));
   };
 
@@ -103,12 +109,18 @@ const Profile = ({ signOut }) => {
   };
 
   const handleClick = () => {
-    // localStorage.setItem('current-user', currentProfile.id);
-    fetch(`${endpoint}/users/${currentUser.id}`, {
-      method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(currentProfile),
-    });
+    const localUser = JSON.parse(localStorage.getItem('current-user'));
+    if (currentUser.role === TEACHER_ROLE) {
+      fetch(`${endpoint}/teachers/${currentUser.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${localUser?.token}`,
+        },
+        body: JSON.stringify(currentProfile),
+      });
+    } else {
+    }
   };
 
   const handleRemove = (index) => {
@@ -118,7 +130,9 @@ const Profile = ({ signOut }) => {
     if (answer) {
       const newData = {
         ...currentProfile,
-        education: currentProfile.education.filter((el, i) => i !== index),
+        education: currentProfile.educationalDegrees.filter(
+          (el, i) => i !== index
+        ),
       };
       fetch(`${endpoint}/users/${currentUser?.id}`, {
         method: 'PUT',
@@ -177,16 +191,16 @@ const Profile = ({ signOut }) => {
               autoComplete='off'
               variant='outlined'
               label='Nombre'
-              value={currentProfile.name || ''}
-              name='name'
+              value={currentProfile.firstname || ''}
+              name='firstname'
               onChange={handleChange}
             />
             <TextField
               autoComplete='off'
               variant='outlined'
               label='Apellido'
-              value={currentProfile.surname || ''}
-              name='surname'
+              value={currentProfile.lastname || ''}
+              name='lastname'
               onChange={handleChange}
             />
             <TextField
@@ -212,8 +226,8 @@ const Profile = ({ signOut }) => {
                   autoComplete='off'
                   variant='outlined'
                   label='Título'
-                  value={currentProfile.degree || ''}
-                  name='degree'
+                  value={currentProfile.title || ''}
+                  name='title'
                   onChange={handleChange}
                 />
                 <TextField
@@ -234,12 +248,12 @@ const Profile = ({ signOut }) => {
                   autoComplete='off'
                   variant='outlined'
                   label='Fecha de nacimiento'
-                  value={currentProfile?.birthDate || ''}
-                  name='birthDate'
+                  value={currentProfile?.birthdate || ''}
+                  name='birthdate'
                   onChange={handleChange}
                   type='date'
                 />
-                {currentProfile?.education?.map((element, index) => (
+                {currentProfile?.educationalDegrees?.map((element, index) => (
                   <TextField
                     key={index}
                     autoComplete='off'
@@ -248,7 +262,7 @@ const Profile = ({ signOut }) => {
                     value={
                       element === undefined
                         ? ''
-                        : `${element.name}\n • ${capitalize(
+                        : `${element.description}\n • ${capitalize(
                             element.level
                           )}\n • ${capitalize(element.status)}`
                     }
@@ -282,11 +296,11 @@ const Profile = ({ signOut }) => {
                 variant='contained'
                 sx={{ height: '50px', margin: '10px' }}
                 disabled={
-                  currentProfile.name === '' ||
-                  currentProfile.surname === '' ||
+                  currentProfile.firstname === '' ||
+                  currentProfile.lastname === '' ||
                   currentProfile.email === '' ||
                   currentProfile.phone === '' ||
-                  currentProfile.degree === '' ||
+                  currentProfile.title === '' ||
                   currentProfile.experience === ''
                 }
                 onClick={handleClick}

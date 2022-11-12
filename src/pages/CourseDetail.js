@@ -50,7 +50,6 @@ const CourseDetail = () => {
   const { id } = useParams();
   const course = useCourseById(id);
   const comments = useComments(id);
-  const teacher = useTeacherByCourseId(id);
   const [courseData, setCourseData] = useState({});
   const [userEnrolled, setUserEnrolled] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -59,26 +58,26 @@ const CourseDetail = () => {
   const [ratingValue, setRatingValue] = useState(0);
 
   useEffect(() => {
-    if (course !== undefined && Object.keys(course).length > 0) {
+    if (Object.keys(course).length > 0) {
       setCourseData(course);
-      const result = isUserEnrolled(currentUser?.id, course);
-      setUserEnrolled(result);
+      //const result = isUserEnrolled(currentUser?.id, course);
+      // TODO: update it to actually check
+      setUserEnrolled(false);
       setRatingValue(getRating(course.rating));
     }
   }, [course, currentUser?.id]);
 
   useEffect(() => {
     if (comments !== undefined) {
-      console.log();
       setFilteredComments(comments);
     }
   }, [comments, id]);
 
   useEffect(() => {
-    if (teacher !== undefined) {
-      setTeacherData(teacher);
+    if (course?.teacher !== undefined) {
+      setTeacherData(course?.teacher);
     }
-  }, [teacher]);
+  }, [course?.teacher]);
 
   const handleChange = (e) => {
     setNewComment(e.target.value);
@@ -117,7 +116,7 @@ const CourseDetail = () => {
     setNewComment('');
   };
 
-  if (Object.keys(courseData).length > 0 && !courseData.published) {
+  if (course.length && !Object.keys(courseData).length) {
     return <Navigate to='/' />;
   }
 
@@ -178,7 +177,7 @@ const CourseDetail = () => {
           >
             <Typography variant='h5'>Sobre el Instructor</Typography>
             <Typography variant='h4'>
-              {teacherData?.name} {teacherData?.surname}
+              {teacherData?.name} {teacherData?.lastname}
             </Typography>
             <Typography variant='body1'>{teacherData?.experience}</Typography>
           </Grid>

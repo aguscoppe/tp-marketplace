@@ -1,30 +1,31 @@
-import { useState, useEffect } from "react";
-import { isUserEnrolled } from "./utils";
+import { useState, useEffect } from 'react';
+import { isUserEnrolled } from './utils';
 
-const endpoint = "http://localhost:3000";
+const endpoint = 'http://localhost:3000';
 
 const useLogin = () => {
   const login = async (username, password) => {
     try {
       const url = `${endpoint}/login`;
       const response = await fetch(url, {
-        method: "POST",
-        mode: "cors",
+        method: 'POST',
+        mode: 'cors',
         body: JSON.stringify({ username: username, password: password }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       const data = await response.json();
-
-      localStorage.setItem(
-        "current-user",
-        JSON.stringify({
-          id: data.userId,
-          token: data.access_token,
-        })
-      );
+      if (data.access_token && data.userId) {
+        localStorage.setItem(
+          'current-user',
+          JSON.stringify({
+            id: data.userId,
+            token: data.access_token,
+          })
+        );
+      }
     } catch (e) {
       console.log(e);
     }
@@ -45,7 +46,7 @@ const useCourses = () => {
 };
 
 const useUsers = () => {
-  const localUser = JSON.parse(localStorage.getItem("current-user"));
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const [users, setUsers] = useState([]);
   useEffect(() => {
     fetch(`${endpoint}/users`, {
@@ -100,10 +101,15 @@ const useComments = (courseId) => {
 };
 
 const useNotifications = (id) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
     if (id) {
-      fetch(`${endpoint}/users/${id}/notifications`)
+      fetch(`${endpoint}/users/${id}/notifications`, {
+        headers: {
+          Authorization: `Bearer ${localUser?.token}`,
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           setNotifications(data);
@@ -130,7 +136,7 @@ const useCourseStudents = (id) => {
 const useCoursesByTeacherId = (id) => {
   const [coursesByTeacherId, setCoursesByTeacherId] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/courses?teacherId=${id}`)
+    fetch(`${endpoint}/teachers/${id}/courses`)
       .then((res) => res.json())
       .then((data) => {
         setCoursesByTeacherId(data);
@@ -183,7 +189,7 @@ const useCourseDataByStudentId = (id) => {
 };
 
 const useCourseName = (id) => {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   useEffect(() => {
     fetch(`${endpoint}/courses?id=${id}`)
       .then((res) => res.json())
@@ -196,7 +202,7 @@ const useCourseName = (id) => {
 };
 
 const useUserById = (id) => {
-  const localUser = JSON.parse(localStorage.getItem("current-user"));
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const [user, setUser] = useState([]);
   useEffect(() => {
     if (id && localUser?.token) {
@@ -204,8 +210,8 @@ const useUserById = (id) => {
         const url = `${endpoint}/users/${id}`;
         try {
           const response = await fetch(url, {
-            method: "GET",
-            mode: "cors",
+            method: 'GET',
+            mode: 'cors',
             headers: {
               Authorization: `Bearer ${localUser?.token}`,
             },

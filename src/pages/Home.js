@@ -37,6 +37,7 @@ const Home = () => {
 
   useEffect(() => {
     if (beginSearch) {
+      // TODO: update using "courses/search" + body
       const params = createQuery(formContent);
       fetch(`${endpoint}/courses?published=true&${params}`)
         .then((res) => res.json())
