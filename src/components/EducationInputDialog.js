@@ -55,11 +55,11 @@ const style = {
 
 const EducationInputDialog = ({ open, closeDialog, addEducation }) => {
   const [education, setEducation] = useState({
-    name: '',
+    description: '',
     level: '',
     status: '',
   });
-  const { name, level, status } = education;
+  const { description, level, status } = education;
 
   const handleChange = (e) => {
     setEducation((prev) => ({
@@ -78,8 +78,8 @@ const EducationInputDialog = ({ open, closeDialog, addEducation }) => {
           autoComplete='off'
           variant='outlined'
           label='Estudio Cursado'
-          value={name}
-          name='name'
+          value={description}
+          name='description'
           onChange={handleChange}
         />
         <TextField
@@ -111,7 +111,7 @@ const EducationInputDialog = ({ open, closeDialog, addEducation }) => {
         <Button
           variant='contained'
           color='success'
-          disabled={name === ''}
+          disabled={description === ''}
           onClick={() => {
             closeDialog();
             setEducation({});

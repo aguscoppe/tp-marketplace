@@ -23,24 +23,28 @@ const style = {
 const Courses = () => {
   const currentUser = useContext(UserContext);
   const [courseList, setCourseList] = useState([]);
-  const coursesByTeacherId = useCoursesByTeacherId(currentUser?.id);
-  const coursesByStudentId = useCourseDataByStudentId(currentUser?.id);
+  // TODO: fill with data
+  const coursesByStudentId = [];
+  // const coursesByStudentId = useCourseDataByStudentId(currentUser?.id);
 
   const removeCourse = (id) => {
     setCourseList((prev) => prev.filter((course) => course.id !== id));
   };
 
   useEffect(() => {
-    if (coursesByStudentId?.length > 0) {
-      setCourseList(coursesByStudentId);
+    if (currentUser.role === TEACHER_ROLE) {
+      const courseMap = currentUser?.courses.map((c) => ({
+        ...c,
+        teacher: {
+          name: currentUser?.firstname,
+          lastname: currentUser?.lastname,
+        },
+      }));
+      setCourseList(courseMap);
+    } else {
+      // nada
     }
-  }, [coursesByStudentId]);
-
-  useEffect(() => {
-    if (coursesByTeacherId?.length > 0) {
-      setCourseList(coursesByTeacherId);
-    }
-  }, [coursesByTeacherId]);
+  }, [currentUser?.courses]);
 
   return (
     <>

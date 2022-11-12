@@ -7,56 +7,62 @@ import {
   MenuItem,
 } from '@mui/material';
 import Navbar from '../components/NavBar';
-import { useState, useEffect } from 'react';
-import { endpoint, useUsers } from '../hooks';
+import { useState, useContext } from 'react';
+import { endpoint, useLogin } from '../hooks';
+import { Navigate } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
 
 const Register = () => {
-  const userList = useUsers();
-  const [users, setUsers] = useState([]);
+  const { login } = useLogin();
+  const currentUser = useContext(UserContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    currentUser?.length ? true : false
+  );
   const [newUser, setNewUser] = useState({
-    name: '',
-    surname: '',
+    firstname: '',
+    lastname: '',
     email: '',
     password: '',
     phone: '',
     role: '',
   });
-  const { name, surname, email, password, phone, role } = newUser;
+  const { firstname, lastname, email, password, phone, role } = newUser;
 
   const roles = [
     { text: 'Profesor', value: 'profesor' },
     { text: 'Alumno', value: 'alumno' },
   ];
 
-  useEffect(() => {
-    if (userList !== undefined) {
-      setUsers(userList);
-    }
-  }, [userList]);
-
   const handleChange = (prop) => (event) => {
     setNewUser({ ...newUser, [prop]: event.target.value });
   };
 
   const handleRegister = () => {
-    if (users.some((el) => el.email === newUser.email)) {
-      alert('Ya existe una cuenta asociada al email ingresado');
-    } else {
-      fetch(`${endpoint}/users`, {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify(newUser),
-      });
-      setNewUser({
-        name: '',
-        surname: '',
-        email: '',
-        password: '',
-        phone: '',
-        role: '',
-      });
-    }
+    fetch(`${endpoint}/users`, {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json' },
+      body: JSON.stringify(newUser),
+    }).then(async (res) => {
+      if (res.status === 201) {
+        await login(email, password);
+        setIsLoggedIn(true);
+      } else {
+        alert('Email o contraseña incorrectos');
+      }
+    });
+    setNewUser({
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+      phone: '',
+      role: '',
+    });
   };
+
+  if (isLoggedIn) {
+    return <Navigate to='/' />;
+  }
 
   const styles = {
     width: '300px',
@@ -134,15 +140,15 @@ const Register = () => {
               <TextField
                 variant='outlined'
                 label='Nombre'
-                value={name}
-                onChange={handleChange('name')}
+                value={firstname}
+                onChange={handleChange('firstname')}
                 sx={styles}
               />
               <TextField
                 variant='outlined'
                 label='Apellido'
-                value={surname}
-                onChange={handleChange('surname')}
+                value={lastname}
+                onChange={handleChange('lastname')}
                 sx={styles}
               />
               <TextField
@@ -185,8 +191,8 @@ const Register = () => {
               <Button
                 variant='contained'
                 disabled={
-                  name === '' ||
-                  surname === '' ||
+                  firstname === '' ||
+                  lastname === '' ||
                   email === '' ||
                   password === '' ||
                   phone === '' ||
