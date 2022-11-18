@@ -8,7 +8,13 @@ import {
   STUDENT_ROLE,
 } from '../constants';
 import BlockCommentDialog from './BlockCommentDialog';
-import { endpoint, useCourseById, useCourseName, useUserById } from '../hooks';
+import {
+  endpoint,
+  useCourseById,
+  useCourseName,
+  useUserById,
+  useInscriptionById,
+} from '../hooks';
 import uuid from 'react-uuid';
 
 const style = {
@@ -24,27 +30,35 @@ const style = {
 };
 
 const Notification = ({ data, removeNotification }) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const {
     id,
-    type,
-    message,
+    objectId,
+    source,
     blockedComment,
     timeRangeFrom,
     timeRangeTo,
     sourceId,
     destinationId,
+    description,
     courseId,
   } = data;
+  // TODO: remove hard-coded data
+  const inscriptionData = useInscriptionById(courseId, objectId);
   const courseData = useCourseById(courseId);
   const courseName = useCourseName(courseId);
-  const sourceUser = useUserById(sourceId);
+  const sourceUser = useUserById(inscriptionData?.student?.id);
   const destinationUser = useUserById(destinationId);
   const [showBlockInput, setShowBlockInput] = useState(false);
 
+  // http://localhost:3000/users/:id/notifications/:notificationId
   const deleteNotification = () => {
-    fetch(`${endpoint}/notifications/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-type': 'application/json' },
+    fetch(`${endpoint}/users/${localUser?.id}/notifications/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
     });
     removeNotification();
   };
@@ -54,48 +68,46 @@ const Notification = ({ data, removeNotification }) => {
       courseId: courseId,
       sourceId: destinationId,
       destinationId: sourceId,
-      blockedComment: message,
-      type: COMMENT_NOTIFICATION,
-      message: comment,
+      blockedComment: inscriptionData?.reason,
+      source: COMMENT_NOTIFICATION,
+      reason: comment,
       id: uuid(),
     };
     fetch(`${endpoint}/notifications`, {
       method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+      },
       body: JSON.stringify(newNotification),
     });
     deleteNotification();
   };
 
-  const handleCourseNotification = (e) => {
+  const handleInscription = (e) => {
     const btnText = e.target.value;
     const updatedCourse = {
-      ...courseData,
-      students: [
-        ...courseData.students,
-        {
-          id: sourceId,
-          status:
-            btnText === 'Aceptar'
-              ? COURSE_STATUS_ACCEPTED
-              : COURSE_STATUS_CANCELLED,
-        },
-      ],
+      status:
+        btnText === 'Aceptar'
+          ? COURSE_STATUS_ACCEPTED
+          : COURSE_STATUS_CANCELLED,
     };
-    fetch(`${endpoint}/courses/${courseId}`, {
+    fetch(`${endpoint}/courses/${courseId}/inscriptions/${objectId}`, {
       method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(updatedCourse),
     });
     deleteNotification();
   };
 
-  const handleAccept = (type) => {
+  const handleAcceptComment = (type) => {
     const newComment = {
       id: uuid(),
       courseId: courseId,
       studentId: sourceId,
-      message: message,
+      reason: inscriptionData?.reason,
     };
     fetch(`${endpoint}/comments`, {
       method: 'POST',
@@ -105,7 +117,7 @@ const Notification = ({ data, removeNotification }) => {
     deleteNotification();
   };
 
-  const handleBlock = () => {
+  const handleBlockComment = () => {
     setShowBlockInput(true);
   };
 
@@ -127,7 +139,7 @@ const Notification = ({ data, removeNotification }) => {
         </Typography>
         <Typography variant='body2'>
           <strong>Motivo del bloqueo: </strong>
-          {message}
+          {description}
         </Typography>
         <Box display='flex' justifyContent='center'>
           <Button
@@ -148,12 +160,12 @@ const Notification = ({ data, removeNotification }) => {
   return (
     <Box sx={style}>
       <Typography variant='h6' textAlign='center'>
-        Solicitud de {type}
+        Solicitud de {source}
       </Typography>
       <Typography variant='body2'>
-        <strong>Alumno:</strong> {sourceUser.name} {sourceUser.surname}
+        <strong>Alumno:</strong> {sourceUser.firstname} {sourceUser.lastname}
       </Typography>
-      {type === COURSE_NOTIFICATION && (
+      {source === COURSE_NOTIFICATION && (
         <>
           <Typography variant='body2'>
             <strong>Email: </strong>
@@ -176,9 +188,9 @@ const Notification = ({ data, removeNotification }) => {
       ) : null}
       <Typography variant='body2'>
         <strong>
-          {type === COMMENT_NOTIFICATION ? 'Comentario: ' : 'Mensaje: '}
+          {source === COMMENT_NOTIFICATION ? 'Comentario: ' : 'Mensaje: '}
         </strong>
-        {message}
+        {description}
       </Typography>
       <BlockCommentDialog
         open={showBlockInput}
@@ -193,9 +205,9 @@ const Notification = ({ data, removeNotification }) => {
           sx={{ margin: '8px' }}
           value='Aceptar'
           onClick={
-            type === COURSE_NOTIFICATION
-              ? handleCourseNotification
-              : handleAccept
+            source === COURSE_NOTIFICATION
+              ? handleInscription
+              : handleAcceptComment
           }
         >
           Aceptar
@@ -205,14 +217,14 @@ const Notification = ({ data, removeNotification }) => {
           color='error'
           size='small'
           sx={{ margin: '8px' }}
-          value={type === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
+          value={source === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
           onClick={
-            type === COMMENT_NOTIFICATION
-              ? handleBlock
-              : handleCourseNotification
+            source === COMMENT_NOTIFICATION
+              ? handleBlockComment
+              : handleInscription
           }
         >
-          {type === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
+          {source === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
         </Button>
       </Box>
     </Box>

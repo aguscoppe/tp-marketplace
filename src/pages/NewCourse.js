@@ -45,18 +45,19 @@ const style = {
 
 const NewCourse = () => {
   const currentUser = useContext(UserContext);
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const initialState = {
     name: '',
     subject: '',
-    type: '',
-    teacherId: currentUser?.id,
-    students: [],
     duration: 60,
     frequency: '',
     price: 0,
     description: '',
+    type: '',
     published: false,
-    rating: 0,
+    teacher: { id: currentUser?.id },
+    inscriptions: [],
+    // rating: 0,
     imgSrc: '',
   };
   const { id } = useParams();
@@ -72,7 +73,7 @@ const NewCourse = () => {
     price,
     description,
     published,
-    students,
+    inscriptions,
     imgSrc,
   } = newCourse;
 
@@ -83,7 +84,7 @@ const NewCourse = () => {
   }, [id, course]);
 
   const handleCheckbox = () => {
-    if (students.length > 0) {
+    if (inscriptions?.length > 0) {
       alert('No puedes despublicar una clase con alumnos inscriptos');
     } else {
       setNewCourse((prev) => ({
@@ -103,11 +104,13 @@ const NewCourse = () => {
   const handleClick = () => {
     setNewCourse((prev) => ({
       ...prev,
-      id: uuid(),
     }));
     fetch(`${endpoint}/courses`, {
       method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(newCourse),
     });
     navigate('/courses');
@@ -116,7 +119,10 @@ const NewCourse = () => {
   const saveChanges = () => {
     fetch(`${endpoint}/courses/${id}`, {
       method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(newCourse),
     });
     navigate('/courses');
@@ -240,7 +246,7 @@ const NewCourse = () => {
         <FormHelperText sx={{ width: '300px' }}>
           Los alumnos solo podrán inscribirse a una clase si está publicada
         </FormHelperText>
-        {published && students.length > 0 ? (
+        {published && inscriptions?.length > 0 ? (
           <Box display='flex' flexDirection='column'>
             <Link to={`/students/${id}`}>
               <Button

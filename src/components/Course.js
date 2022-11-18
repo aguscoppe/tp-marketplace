@@ -167,7 +167,7 @@ const Course = ({ courseData, removeCourse }) => {
             <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
               {name}
             </Typography>
-            <Typography variant='h6'>{`${teacher.name} ${teacher.lastname}`}</Typography>
+            <Typography variant='h6'>{`${teacher.firstname} ${teacher.lastname}`}</Typography>
             <Typography>Clase de {subject}</Typography>
             <Typography>{capitalize(type)}</Typography>
             <Typography>{capitalize(frequency)}</Typography>

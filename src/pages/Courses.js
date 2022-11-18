@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Course from '../components/Course';
 import { COURSE_STATUS_PENDING, TEACHER_ROLE } from '../constants';
-import { useCourseDataByStudentId, useCoursesByTeacherId } from '../hooks';
+import { useTeacherCourses } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
 
 const style = {
@@ -22,6 +22,9 @@ const style = {
 
 const Courses = () => {
   const currentUser = useContext(UserContext);
+  const teacherCourses = useTeacherCourses(
+    currentUser.role === TEACHER_ROLE ? currentUser.id : undefined
+  );
   const [courseList, setCourseList] = useState([]);
   // TODO: fill with data
   const coursesByStudentId = [];
@@ -32,19 +35,12 @@ const Courses = () => {
   };
 
   useEffect(() => {
-    if (currentUser.role === TEACHER_ROLE) {
-      const courseMap = currentUser?.courses.map((c) => ({
-        ...c,
-        teacher: {
-          name: currentUser?.firstname,
-          lastname: currentUser?.lastname,
-        },
-      }));
-      setCourseList(courseMap);
+    if (currentUser.role === TEACHER_ROLE && teacherCourses) {
+      setCourseList(teacherCourses);
     } else {
       // nada
     }
-  }, [currentUser?.courses]);
+  }, [teacherCourses]);
 
   return (
     <>

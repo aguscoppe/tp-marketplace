@@ -177,7 +177,7 @@ const CourseDetail = () => {
           >
             <Typography variant='h5'>Sobre el Instructor</Typography>
             <Typography variant='h4'>
-              {teacherData?.name} {teacherData?.lastname}
+              {teacherData?.firstname} {teacherData?.lastname}
             </Typography>
             <Typography variant='body1'>{teacherData?.experience}</Typography>
           </Grid>
