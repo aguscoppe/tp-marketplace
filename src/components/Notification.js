@@ -1,6 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import {
+  BLOCK_COMMENT,
+  ACCEPT_COMMENT,
   COMMENT_NOTIFICATION,
   COURSE_NOTIFICATION,
   COURSE_STATUS_ACCEPTED,
@@ -8,8 +10,13 @@ import {
   STUDENT_ROLE,
 } from '../constants';
 import BlockCommentDialog from './BlockCommentDialog';
-import { endpoint, useCourseById, useCourseName, useUserById } from '../hooks';
-import uuid from 'react-uuid';
+import {
+  endpoint,
+  useCourseById,
+  useCourseName,
+  useUserById,
+  useInscriptionsComments,
+} from '../hooks';
 
 const style = {
   width: '300px',
@@ -24,88 +31,75 @@ const style = {
 };
 
 const Notification = ({ data, removeNotification }) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const {
     id,
-    type,
-    message,
+    objectId,
+    source,
     blockedComment,
     timeRangeFrom,
     timeRangeTo,
     sourceId,
     destinationId,
+    description,
     courseId,
   } = data;
+  const key = source === COURSE_NOTIFICATION ? 'inscriptions' : 'comments';
+  console.log('source: ', source);
+  const inscriptionData = useInscriptionsComments(key, courseId, objectId);
   const courseData = useCourseById(courseId);
   const courseName = useCourseName(courseId);
-  const sourceUser = useUserById(sourceId);
+  const sourceUser = useUserById(inscriptionData?.student?.id);
   const destinationUser = useUserById(destinationId);
   const [showBlockInput, setShowBlockInput] = useState(false);
 
   const deleteNotification = () => {
-    fetch(`${endpoint}/notifications/${id}`, {
-      method: 'DELETE',
-      headers: { 'Content-type': 'application/json' },
+    fetch(`${endpoint}/users/${localUser?.id}/notifications/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
     });
     removeNotification();
   };
 
-  const sendComment = (comment) => {
-    const newNotification = {
-      courseId: courseId,
-      sourceId: destinationId,
-      destinationId: sourceId,
-      blockedComment: message,
-      type: COMMENT_NOTIFICATION,
-      message: comment,
-      id: uuid(),
-    };
-    fetch(`${endpoint}/notifications`, {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify(newNotification),
-    });
-    deleteNotification();
-  };
-
-  const handleCourseNotification = (e) => {
+  const handleInscription = (e) => {
     const btnText = e.target.value;
     const updatedCourse = {
-      ...courseData,
-      students: [
-        ...courseData.students,
-        {
-          id: sourceId,
-          status:
-            btnText === 'Aceptar'
-              ? COURSE_STATUS_ACCEPTED
-              : COURSE_STATUS_CANCELLED,
-        },
-      ],
+      status:
+        btnText === 'Aceptar'
+          ? COURSE_STATUS_ACCEPTED
+          : COURSE_STATUS_CANCELLED,
     };
-    fetch(`${endpoint}/courses/${courseId}`, {
+    fetch(`${endpoint}/courses/${courseId}/inscriptions/${objectId}`, {
       method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(updatedCourse),
     });
     deleteNotification();
   };
 
-  const handleAccept = (type) => {
-    const newComment = {
-      id: uuid(),
-      courseId: courseId,
-      studentId: sourceId,
-      message: message,
-    };
-    fetch(`${endpoint}/comments`, {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+  const handleUpdateComment = (status, blockReason = undefined) => {
+    const newComment = { status: status };
+    if (blockReason) {
+      newComment.description = blockReason;
+    }
+    fetch(`${endpoint}/courses/${courseId}/comments/${objectId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(newComment),
     });
     deleteNotification();
   };
 
-  const handleBlock = () => {
+  const handleBlockComment = () => {
     setShowBlockInput(true);
   };
 
@@ -127,7 +121,7 @@ const Notification = ({ data, removeNotification }) => {
         </Typography>
         <Typography variant='body2'>
           <strong>Motivo del bloqueo: </strong>
-          {message}
+          {description}
         </Typography>
         <Box display='flex' justifyContent='center'>
           <Button
@@ -148,12 +142,12 @@ const Notification = ({ data, removeNotification }) => {
   return (
     <Box sx={style}>
       <Typography variant='h6' textAlign='center'>
-        Solicitud de {type}
+        Solicitud de {source}
       </Typography>
       <Typography variant='body2'>
-        <strong>Alumno:</strong> {sourceUser.name} {sourceUser.surname}
+        <strong>Alumno:</strong> {sourceUser.firstname} {sourceUser.lastname}
       </Typography>
-      {type === COURSE_NOTIFICATION && (
+      {source === COURSE_NOTIFICATION && (
         <>
           <Typography variant='body2'>
             <strong>Email: </strong>
@@ -176,14 +170,14 @@ const Notification = ({ data, removeNotification }) => {
       ) : null}
       <Typography variant='body2'>
         <strong>
-          {type === COMMENT_NOTIFICATION ? 'Comentario: ' : 'Mensaje: '}
+          {source === COMMENT_NOTIFICATION ? 'Comentario: ' : 'Mensaje: '}
         </strong>
-        {message}
+        {description}
       </Typography>
       <BlockCommentDialog
         open={showBlockInput}
         closeDialog={closeDialog}
-        sendComment={sendComment}
+        sendComment={handleUpdateComment}
       />
       <Box display='flex' justifyContent='center'>
         <Button
@@ -192,11 +186,11 @@ const Notification = ({ data, removeNotification }) => {
           size='small'
           sx={{ margin: '8px' }}
           value='Aceptar'
-          onClick={
-            type === COURSE_NOTIFICATION
-              ? handleCourseNotification
-              : handleAccept
-          }
+          onClick={() => {
+            source === COURSE_NOTIFICATION
+              ? handleInscription()
+              : handleUpdateComment(ACCEPT_COMMENT);
+          }}
         >
           Aceptar
         </Button>
@@ -205,14 +199,14 @@ const Notification = ({ data, removeNotification }) => {
           color='error'
           size='small'
           sx={{ margin: '8px' }}
-          value={type === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
+          value={source === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
           onClick={
-            type === COMMENT_NOTIFICATION
-              ? handleBlock
-              : handleCourseNotification
+            source === COMMENT_NOTIFICATION
+              ? handleBlockComment
+              : handleInscription
           }
         >
-          {type === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
+          {source === COMMENT_NOTIFICATION ? 'Bloquear' : 'Cancelar'}
         </Button>
       </Box>
     </Box>

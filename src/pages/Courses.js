@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Course from '../components/Course';
 import { COURSE_STATUS_PENDING, TEACHER_ROLE } from '../constants';
-import { useCourseDataByStudentId, useCoursesByTeacherId } from '../hooks';
+import { useTeacherStudentCourses } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
 
 const style = {
@@ -22,29 +22,21 @@ const style = {
 
 const Courses = () => {
   const currentUser = useContext(UserContext);
+  const teacherStudentCourses = useTeacherStudentCourses(
+    currentUser.role === TEACHER_ROLE ? 'by-teacher' : 'by-student',
+    currentUser.id
+  );
   const [courseList, setCourseList] = useState([]);
-  // TODO: fill with data
-  const coursesByStudentId = [];
-  // const coursesByStudentId = useCourseDataByStudentId(currentUser?.id);
 
   const removeCourse = (id) => {
     setCourseList((prev) => prev.filter((course) => course.id !== id));
   };
 
   useEffect(() => {
-    if (currentUser.role === TEACHER_ROLE) {
-      const courseMap = currentUser?.courses.map((c) => ({
-        ...c,
-        teacher: {
-          name: currentUser?.firstname,
-          lastname: currentUser?.lastname,
-        },
-      }));
-      setCourseList(courseMap);
-    } else {
-      // nada
+    if (teacherStudentCourses?.length) {
+      setCourseList(teacherStudentCourses);
     }
-  }, [currentUser?.courses]);
+  }, [teacherStudentCourses]);
 
   return (
     <>

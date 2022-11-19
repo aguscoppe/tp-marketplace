@@ -54,7 +54,7 @@ const useFullName = () => {
   function getFullName(id) {
     if (users.length) {
       const [user] = users.filter((user) => user.id === id);
-      return `${user.name} ${user.surname}`;
+      return `${user.firstname} ${user.lastname}`;
     }
   }
   return getFullName;

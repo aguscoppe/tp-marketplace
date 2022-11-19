@@ -78,11 +78,10 @@ const usePublishedCourses = () => {
 const useCourseById = (id) => {
   const [course, setCourse] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/courses?id=${id}`)
+    fetch(`${endpoint}/courses/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        const [courseData] = data;
-        setCourse(courseData);
+        setCourse(data);
       });
   }, [id]);
   return course;
@@ -131,6 +130,25 @@ const useCourseStudents = (id) => {
     }
   }, [id, publishedCourses]);
   return courses;
+};
+
+const useTeacherStudentCourses = (key, id) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
+  const [teacherCourses, setTeacherCourses] = useState([]);
+  useEffect(() => {
+    if (id) {
+      fetch(`${endpoint}/courses/${key}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localUser?.token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setTeacherCourses(data);
+        });
+    }
+  }, [id]);
+  return teacherCourses;
 };
 
 const useCoursesByTeacherId = (id) => {
@@ -252,6 +270,25 @@ const useTeacherByCourseId = (id) => {
   return user;
 };
 
+const useInscriptionsComments = (key, courseId, inscriptionId) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
+  const [inscription, setInscription] = useState([]);
+  useEffect(() => {
+    if (courseId && inscriptionId) {
+      fetch(`${endpoint}/courses/${courseId}/${key}/${inscriptionId}`, {
+        headers: {
+          Authorization: `Bearer ${localUser?.token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setInscription(data);
+        });
+    }
+  }, [courseId, inscriptionId]);
+  return inscription;
+};
+
 export {
   endpoint,
   useCourses,
@@ -269,4 +306,6 @@ export {
   useTeacherByCourseId,
   useTeacherById,
   useLogin,
+  useTeacherStudentCourses,
+  useInscriptionsComments,
 };

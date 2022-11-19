@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box, Button, Dialog, TextField, Typography } from '@mui/material';
+import { BLOCK_COMMENT } from '../constants';
 
 const style = {
   padding: '50px',
@@ -50,7 +51,7 @@ const BlockCommentDialog = ({ open, closeDialog, sendComment }) => {
           disabled={comment === ''}
           onClick={() => {
             closeDialog();
-            sendComment(comment);
+            sendComment(BLOCK_COMMENT, comment);
             setComment('');
           }}
         >

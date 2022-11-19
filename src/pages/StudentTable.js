@@ -16,7 +16,6 @@ import {
 import NavBar from '../components/NavBar';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { useFullName } from '../utils';
 import {
   COURSE_STATUS_ACCEPTED,
   COURSE_STATUS_CANCELLED,
@@ -33,16 +32,16 @@ const styles = {
 
 const StudentTable = () => {
   const { id } = useParams();
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const courseData = useCourseById(id);
-  const getFullName = useFullName();
-  const [students, setStudents] = useState([]);
+  const [inscriptions, setinscriptions] = useState([]);
   const [editing, setEditing] = useState({ studentId: null, isEditing: false });
   const [newStatus, setNewStatus] = useState('');
   const { studentId, isEditing } = editing;
 
   useEffect(() => {
     if (courseData !== undefined) {
-      setStudents(courseData.students);
+      setinscriptions(courseData.inscriptions);
     }
   }, [courseData]);
 
@@ -51,7 +50,6 @@ const StudentTable = () => {
       isEditing: !prev.isEditing,
       studentId: id,
     }));
-
   const handleChange = (e, id) => {
     const newValue = e.target.value;
     if (newValue !== COURSE_STATUS_PENDING) {
@@ -61,18 +59,15 @@ const StudentTable = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = (inscriptionId) => {
     if (newStatus !== '') {
-      const newStudentData = students.filter(
-        (student) => student.id !== studentId
-      );
-      const newData = {
-        ...courseData,
-        students: [...newStudentData, { id: studentId, status: newStatus }],
-      };
-      fetch(`${endpoint}/courses/${id}`, {
+      const newData = { status: newStatus };
+      fetch(`${endpoint}/courses/${id}/inscriptions/${inscriptionId}`, {
         method: 'PUT',
-        headers: { 'Content-type': 'application/json' },
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${localUser?.token}`,
+        },
         body: JSON.stringify(newData),
       });
     }
@@ -94,11 +89,12 @@ const StudentTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {students?.map((student) => (
-              <TableRow key={student.id}>
+            {inscriptions?.map((inscription) => (
+              <TableRow key={inscription.student.id}>
                 <TableCell>
                   <Typography variant='body2'>
-                    {getFullName(student.id)}
+                    {inscription.student.firstname}{' '}
+                    {inscription.student.lastname}
                   </Typography>
                 </TableCell>
                 <TableCell
@@ -111,17 +107,21 @@ const StudentTable = () => {
                   <TextField
                     select
                     value={
-                      student.id === studentId && newStatus !== ''
+                      inscription.student.id === studentId && newStatus !== ''
                         ? newStatus
-                        : student.status
+                        : inscription.status
                     }
-                    onChange={(e) => handleChange(e, student.id)}
+                    onChange={(e) => handleChange(e, inscription.student.id)}
                     fullWidth
-                    disabled={!isEditing || studentId !== student.id}
+                    disabled={
+                      !isEditing || studentId !== inscription.student.id
+                    }
                     sx={{
                       textTransform: 'capitalize',
                       backgroundColor:
-                        !isEditing || studentId !== student.id ? '' : '#fff',
+                        !isEditing || studentId !== inscription.student.id
+                          ? ''
+                          : '#fff',
                     }}
                   >
                     <MenuItem
@@ -157,17 +157,19 @@ const StudentTable = () => {
                       {COURSE_STATUS_FINISHED}
                     </MenuItem>
                   </TextField>
-                  {isEditing && studentId === student.id ? (
+                  {isEditing && studentId === inscription.student.id ? (
                     <IconButton
                       onClick={() => {
-                        handleClick(student.id);
-                        handleSave();
+                        handleClick(inscription.student.id);
+                        handleSave(inscription.id);
                       }}
                     >
                       <CheckIcon />
                     </IconButton>
                   ) : (
-                    <IconButton onClick={() => handleClick(student.id)}>
+                    <IconButton
+                      onClick={() => handleClick(inscription.student.id)}
+                    >
                       <EditIcon />
                     </IconButton>
                   )}

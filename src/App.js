@@ -20,7 +20,6 @@ import { theme } from './theme';
 
 const App = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
-  // TODO: make sure backend provides user data to store in context
   const user = useUserById(currentUserId);
 
   const signOut = () => {

@@ -2,9 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import NavBar from '../components/NavBar';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { endpoint, useTeacherByCourseId } from '../hooks';
-import uuid from 'react-uuid';
-import { COURSE_NOTIFICATION } from '../constants';
+import { endpoint } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
 
 const style = {
@@ -28,30 +26,19 @@ const style = {
 };
 
 const Enroll = () => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const currentUser = useContext(UserContext);
   const { id } = useParams();
   const initialState = {
-    courseId: id,
-    sourceId: currentUser?.id,
-    type: COURSE_NOTIFICATION,
     phone: '',
     email: '',
+    reason: '',
     timeRangeFrom: '',
     timeRangeTo: '',
-    message: '',
+    studentId: currentUser?.id,
   };
-  const teacher = useTeacherByCourseId(id);
   const [newEnrollment, setNewEnrollment] = useState(initialState);
-  const { phone, email, timeRangeFrom, timeRangeTo, message } = newEnrollment;
-
-  useEffect(() => {
-    if (teacher !== undefined) {
-      setNewEnrollment((prev) => ({
-        ...prev,
-        destinationId: teacher.id,
-      }));
-    }
-  }, [teacher]);
+  const { phone, email, timeRangeFrom, timeRangeTo, reason } = newEnrollment;
 
   useEffect(() => {
     setNewEnrollment((prev) => ({
@@ -71,11 +58,13 @@ const Enroll = () => {
   const handleClick = () => {
     const enrollment = {
       ...newEnrollment,
-      id: uuid(),
     };
-    fetch(`${endpoint}/notifications`, {
+    fetch(`${endpoint}/courses/${id}/inscriptions`, {
       method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(enrollment),
     });
     setNewEnrollment(initialState);
@@ -131,8 +120,8 @@ const Enroll = () => {
           autoComplete='off'
           variant='outlined'
           label='Mensaje'
-          value={message || ''}
-          name='message'
+          value={reason || ''}
+          name='reason'
           onChange={handleChange}
           multiline={true}
           rows={4}
@@ -146,7 +135,7 @@ const Enroll = () => {
             email === '' ||
             timeRangeFrom === '' ||
             timeRangeTo === '' ||
-            message === ''
+            reason === ''
           }
         >
           Inscribirse
