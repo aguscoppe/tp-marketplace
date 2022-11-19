@@ -12,12 +12,7 @@ import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
 import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
 import { isUserEnrolled, getRating } from '../utils';
-import {
-  endpoint,
-  useComments,
-  useCourseById,
-  useTeacherByCourseId,
-} from '../hooks';
+import { endpoint, useCourseById, useTeacherByCourseId } from '../hooks';
 import uuid from 'react-uuid';
 import { capitalize, canUserComment } from '../utils';
 import { UserContext } from '../contexts/UserContext';
@@ -49,7 +44,6 @@ const CourseDetail = () => {
   const currentUser = useContext(UserContext);
   const { id } = useParams();
   const course = useCourseById(id);
-  const comments = useComments(id);
   const [courseData, setCourseData] = useState({});
   const [userEnrolled, setUserEnrolled] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -68,10 +62,10 @@ const CourseDetail = () => {
   }, [course, currentUser?.id]);
 
   useEffect(() => {
-    if (comments !== undefined) {
-      setFilteredComments(comments);
+    if (courseData.comments?.length) {
+      setFilteredComments(courseData.comments);
     }
-  }, [comments, id]);
+  }, [courseData.comments, id]);
 
   useEffect(() => {
     if (course?.teacher !== undefined) {
@@ -229,8 +223,9 @@ const CourseDetail = () => {
                 filteredComments.map((comment) => (
                   <Comment
                     key={comment.message}
-                    message={comment.message}
-                    userId={comment.studentId}
+                    message={comment.description}
+                    firstname={capitalize(comment.student.firstname)}
+                    lastname={capitalize(comment.student.lastname)}
                   />
                 ))
               ) : (

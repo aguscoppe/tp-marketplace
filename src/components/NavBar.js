@@ -194,7 +194,7 @@ const NavBar = () => {
                 {notificationList.length > 0 ? (
                   notificationList.map((notification) => (
                     <Notification
-                      key={notification.message}
+                      key={notification.description}
                       data={notification}
                       removeNotification={() => {
                         removeNotification(notification.id);

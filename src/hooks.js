@@ -271,12 +271,12 @@ const useTeacherByCourseId = (id) => {
   return user;
 };
 
-const useInscriptionById = (courseId, inscriptionId) => {
+const useInscriptionsComments = (key, courseId, inscriptionId) => {
   const localUser = JSON.parse(localStorage.getItem('current-user'));
   const [inscription, setInscription] = useState([]);
   useEffect(() => {
     if (courseId && inscriptionId) {
-      fetch(`${endpoint}/courses/${courseId}/inscriptions/${inscriptionId}`, {
+      fetch(`${endpoint}/courses/${courseId}/${key}/${inscriptionId}`, {
         headers: {
           Authorization: `Bearer ${localUser?.token}`,
         },
@@ -308,5 +308,5 @@ export {
   useTeacherById,
   useLogin,
   useTeacherCourses,
-  useInscriptionById,
+  useInscriptionsComments,
 };

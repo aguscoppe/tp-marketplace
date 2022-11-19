@@ -1,6 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useState } from 'react';
 import {
+  BLOCK_COMMENT,
+  ACCEPT_COMMENT,
   COMMENT_NOTIFICATION,
   COURSE_NOTIFICATION,
   COURSE_STATUS_ACCEPTED,
@@ -13,9 +15,8 @@ import {
   useCourseById,
   useCourseName,
   useUserById,
-  useInscriptionById,
+  useInscriptionsComments,
 } from '../hooks';
-import uuid from 'react-uuid';
 
 const style = {
   width: '300px',
@@ -43,15 +44,14 @@ const Notification = ({ data, removeNotification }) => {
     description,
     courseId,
   } = data;
-  // TODO: remove hard-coded data
-  const inscriptionData = useInscriptionById(courseId, objectId);
+  const key = source === COURSE_NOTIFICATION ? 'inscriptions' : 'comments';
+  const inscriptionData = useInscriptionsComments(key, courseId, objectId);
   const courseData = useCourseById(courseId);
   const courseName = useCourseName(courseId);
   const sourceUser = useUserById(inscriptionData?.student?.id);
   const destinationUser = useUserById(destinationId);
   const [showBlockInput, setShowBlockInput] = useState(false);
 
-  // http://localhost:3000/users/:id/notifications/:notificationId
   const deleteNotification = () => {
     fetch(`${endpoint}/users/${localUser?.id}/notifications/${id}`, {
       method: 'POST',
@@ -61,26 +61,6 @@ const Notification = ({ data, removeNotification }) => {
       },
     });
     removeNotification();
-  };
-
-  const sendComment = (comment) => {
-    const newNotification = {
-      courseId: courseId,
-      sourceId: destinationId,
-      destinationId: sourceId,
-      blockedComment: inscriptionData?.reason,
-      source: COMMENT_NOTIFICATION,
-      reason: comment,
-      id: uuid(),
-    };
-    fetch(`${endpoint}/notifications`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(newNotification),
-    });
-    deleteNotification();
   };
 
   const handleInscription = (e) => {
@@ -102,16 +82,17 @@ const Notification = ({ data, removeNotification }) => {
     deleteNotification();
   };
 
-  const handleAcceptComment = (type) => {
-    const newComment = {
-      id: uuid(),
-      courseId: courseId,
-      studentId: sourceId,
-      reason: inscriptionData?.reason,
-    };
-    fetch(`${endpoint}/comments`, {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+  const handleUpdateComment = (status, blockReason = undefined) => {
+    const newComment = { status: status };
+    if (blockReason) {
+      newComment.description = blockReason;
+    }
+    fetch(`${endpoint}/courses/${courseId}/comments/${objectId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(newComment),
     });
     deleteNotification();
@@ -195,7 +176,7 @@ const Notification = ({ data, removeNotification }) => {
       <BlockCommentDialog
         open={showBlockInput}
         closeDialog={closeDialog}
-        sendComment={sendComment}
+        sendComment={handleUpdateComment}
       />
       <Box display='flex' justifyContent='center'>
         <Button
@@ -204,11 +185,11 @@ const Notification = ({ data, removeNotification }) => {
           size='small'
           sx={{ margin: '8px' }}
           value='Aceptar'
-          onClick={
+          onClick={() => {
             source === COURSE_NOTIFICATION
-              ? handleInscription
-              : handleAcceptComment
-          }
+              ? handleInscription()
+              : handleUpdateComment(ACCEPT_COMMENT);
+          }}
         >
           Aceptar
         </Button>

@@ -1,5 +1,4 @@
 import { Box, Avatar, Grid, Typography } from '@mui/material';
-import { useFullName } from '../utils';
 
 function generateColor() {
   const colors = [
@@ -40,16 +39,14 @@ const style = {
   marginTop: '12px',
 };
 
-const Comment = ({ message, userId }) => {
-  const getFullName = useFullName(userId);
-  const props = stringAvatar(getFullName(userId));
-
+const Comment = ({ message, firstname, lastname }) => {
+  const props = stringAvatar(`${firstname} ${lastname}`);
   return (
     <Box sx={style}>
       <Avatar {...props} />
       <Grid>
         <Typography variant='body2' sx={{ fontWeight: '700' }}>
-          {getFullName(userId)}
+          {firstname} {lastname}
         </Typography>
         <Typography variant='body1'>{message}</Typography>
       </Grid>
