@@ -45,6 +45,7 @@ const Notification = ({ data, removeNotification }) => {
     courseId,
   } = data;
   const key = source === COURSE_NOTIFICATION ? 'inscriptions' : 'comments';
+  console.log('source: ', source);
   const inscriptionData = useInscriptionsComments(key, courseId, objectId);
   const courseData = useCourseById(courseId);
   const courseName = useCourseName(courseId);

@@ -133,7 +133,7 @@ const NavBar = () => {
   const open = Boolean(anchorEl);
 
   useEffect(() => {
-    if (notifications !== undefined) {
+    if (notifications?.length) {
       setNotificationList(() =>
         notifications.filter((notification) => !notification.seen)
       );

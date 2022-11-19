@@ -11,8 +11,8 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
 import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
-import { isUserEnrolled, getRating } from '../utils';
-import { endpoint, useCourseById, useTeacherByCourseId } from '../hooks';
+import { getRating } from '../utils';
+import { endpoint, useCourseById } from '../hooks';
 import uuid from 'react-uuid';
 import { capitalize, canUserComment } from '../utils';
 import { UserContext } from '../contexts/UserContext';
@@ -54,9 +54,10 @@ const CourseDetail = () => {
   useEffect(() => {
     if (Object.keys(course).length > 0) {
       setCourseData(course);
-      //const result = isUserEnrolled(currentUser?.id, course);
-      // TODO: update it to actually check
-      setUserEnrolled(false);
+      const result = course.inscriptions.filter(
+        (inscription) => inscription.student.id === currentUser.id
+      );
+      setUserEnrolled(result.length > 0);
       setRatingValue(getRating(course.rating));
     }
   }, [course, currentUser?.id]);
@@ -222,7 +223,7 @@ const CourseDetail = () => {
               {filteredComments.length > 0 ? (
                 filteredComments.map((comment) => (
                   <Comment
-                    key={comment.message}
+                    key={comment.description}
                     message={comment.description}
                     firstname={capitalize(comment.student.firstname)}
                     lastname={capitalize(comment.student.lastname)}

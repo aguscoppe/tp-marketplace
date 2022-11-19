@@ -78,11 +78,10 @@ const usePublishedCourses = () => {
 const useCourseById = (id) => {
   const [course, setCourse] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/courses?id=${id}`)
+    fetch(`${endpoint}/courses/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        const [courseData] = data;
-        setCourse(courseData);
+        setCourse(data);
       });
   }, [id]);
   return course;
@@ -133,12 +132,12 @@ const useCourseStudents = (id) => {
   return courses;
 };
 
-const useTeacherCourses = (id) => {
+const useTeacherStudentCourses = (key, id) => {
   const localUser = JSON.parse(localStorage.getItem('current-user'));
   const [teacherCourses, setTeacherCourses] = useState([]);
   useEffect(() => {
     if (id) {
-      fetch(`${endpoint}/courses/by-teacher/${id}`, {
+      fetch(`${endpoint}/courses/${key}/${id}`, {
         headers: {
           Authorization: `Bearer ${localUser?.token}`,
         },
@@ -307,6 +306,6 @@ export {
   useTeacherByCourseId,
   useTeacherById,
   useLogin,
-  useTeacherCourses,
+  useTeacherStudentCourses,
   useInscriptionsComments,
 };

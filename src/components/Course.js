@@ -62,6 +62,7 @@ const styles = {
 };
 
 const Course = ({ courseData, removeCourse }) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const currentUser = useContext(UserContext);
   const {
     id,
@@ -71,16 +72,13 @@ const Course = ({ courseData, removeCourse }) => {
     frequency,
     rating,
     teacher,
-    students,
     imgSrc,
+    inscriptions,
   } = courseData;
   const { pathname } = useLocation();
-  const enrolledStudents = [];
-  /*
-  const enrolledStudents = students.filter(
-    (student) => student.id === currentUser?.id
+  const enrolledStudents = inscriptions.filter(
+    (inscription) => inscription.student.id === currentUser?.id
   );
-  */
   const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
   const [courseRating, setCourseRating] = useState(getRating(rating));
 
@@ -90,22 +88,21 @@ const Course = ({ courseData, removeCourse }) => {
       e.target.value !== COURSE_STATUS_PENDING &&
       e.target.value !== ''
     ) {
-      const newStudentData = students.filter(
-        (student) => student.id !== currentUser?.id
-      );
       const newData = {
-        ...courseData,
-        students: [
-          ...newStudentData,
-          { id: currentUser?.id, status: e.target.value },
-        ],
+        status: e.target.value,
       };
-      fetch(`${endpoint}/courses/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify(newData),
-      });
       setCourseSatus(e.target.value);
+      fetch(
+        `${endpoint}/courses/${id}/inscriptions/${enrolledStudents[0]?.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${localUser?.token}`,
+          },
+          body: JSON.stringify(newData),
+        }
+      );
     } else {
       alert('No puedes realizar esta acción');
     }
