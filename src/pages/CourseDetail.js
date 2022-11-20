@@ -199,7 +199,7 @@ const CourseDetail = () => {
                     value={newComment}
                     onChange={handleChange}
                     sx={{
-                      width: '82%',
+                      width: '74%',
                       '@media (max-width: 800px)': {
                         width: '100%',
                       },
@@ -210,7 +210,7 @@ const CourseDetail = () => {
                     disabled={newComment === ''}
                     onClick={handleSubmitComment}
                     sx={{
-                      width: '16%',
+                      width: '24%',
                       '@media (max-width: 800px)': {
                         width: '100%',
                       },

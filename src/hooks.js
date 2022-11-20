@@ -251,10 +251,15 @@ const useUserById = (id) => {
   return user;
 };
 
-const useTeacherById = (id) => {
+const useTeacherStudentById = (id, key) => {
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const [user, setUser] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/teachers/${id}`)
+    fetch(`${endpoint}/${key}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localUser?.token}`,
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         setUser(data);
@@ -266,7 +271,7 @@ const useTeacherById = (id) => {
 const useTeacherByCourseId = (id) => {
   const course = useCourseById(id);
   const teacherId = course?.teacherId;
-  const user = useTeacherById(teacherId);
+  const user = useTeacherStudentById(teacherId, 'teachers');
   return user;
 };
 
@@ -304,7 +309,7 @@ export {
   useCourseById,
   useUserById,
   useTeacherByCourseId,
-  useTeacherById,
+  useTeacherStudentById,
   useLogin,
   useTeacherStudentCourses,
   useInscriptionsComments,
