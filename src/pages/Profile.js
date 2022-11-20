@@ -15,7 +15,7 @@ import {
 import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
 import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { endpoint } from '../hooks';
+import { endpoint, useTeacherStudentById } from '../hooks';
 
 const style = {
   '& .MuiTextField-root': {
@@ -43,7 +43,10 @@ const style = {
 };
 
 const Profile = ({ signOut }) => {
-  const currentUser = useContext(UserContext);
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
+  const user = useContext(UserContext);
+  const key = user.role === TEACHER_ROLE ? 'teachers' : 'students';
+  const currentUser = useTeacherStudentById(user.id, key);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentProfile, setCurrentProfile] = useState({
     firstname: '',
@@ -71,7 +74,8 @@ const Profile = ({ signOut }) => {
           lastname: currentUser.lastname,
           email: currentUser.email,
           phone: currentUser.phone,
-          birthdate: currentUser.birthdate || '2000-01-01',
+          birthday:
+            currentUser.birthday || new Date('2000-01-01').toISOString(),
           educationalDegrees: currentUser.educationalDegrees || [],
         };
         setCurrentProfile(studentObj);
@@ -104,23 +108,22 @@ const Profile = ({ signOut }) => {
   const handleChange = (e) => {
     setCurrentProfile((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.name === 'birthday'
+          ? new Date(e.target.value).toISOString()
+          : e.target.value,
     }));
   };
 
   const handleClick = () => {
-    const localUser = JSON.parse(localStorage.getItem('current-user'));
-    if (currentUser.role === TEACHER_ROLE) {
-      fetch(`${endpoint}/teachers/${currentUser.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localUser?.token}`,
-        },
-        body: JSON.stringify(currentProfile),
-      });
-    } else {
-    }
+    fetch(`${endpoint}/${key}/${currentUser.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
+      body: JSON.stringify(currentProfile),
+    });
   };
 
   const handleRemove = (index) => {
@@ -130,13 +133,16 @@ const Profile = ({ signOut }) => {
     if (answer) {
       const newData = {
         ...currentProfile,
-        education: currentProfile.educationalDegrees.filter(
+        educationalDegrees: currentProfile.educationalDegrees.filter(
           (el, i) => i !== index
         ),
       };
-      fetch(`${endpoint}/users/${currentUser?.id}`, {
+      fetch(`${endpoint}/students/${currentUser?.id}`, {
         method: 'PUT',
-        headers: { 'Content-type': 'application/json' },
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${localUser?.token}`,
+        },
         body: JSON.stringify(newData),
       });
       setCurrentProfile(newData);
@@ -151,178 +157,178 @@ const Profile = ({ signOut }) => {
     setShowDialog(false);
   };
 
-  if (isLoggedIn) {
-    return (
-      <Box sx={{ display: 'flex', flexFlow: 'column' }}>
-        <NavBar />
-        <Box
+  if (!isLoggedIn) {
+    return <Home />;
+  }
+
+  return (
+    <Box sx={{ display: 'flex', flexFlow: 'column' }}>
+      <NavBar />
+      <Box
+        sx={{
+          display: 'flex',
+          flexFlow: 'column',
+          marginTop: '20px',
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          '@media (max-width: 480px)': {
+            width: '100vw',
+          },
+        }}
+      >
+        <Typography
+          variant='h4'
           sx={{
-            display: 'flex',
-            flexFlow: 'column',
-            marginTop: '20px',
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            '@media (max-width: 480px)': {
-              width: '100vw',
+            fontWeight: 900,
+            '@media (max-width: 700px)': {
+              fontSize: '24px',
             },
           }}
         >
-          <Typography
-            variant='h4'
-            sx={{
-              fontWeight: 900,
-              '@media (max-width: 700px)': {
-                fontSize: '24px',
-              },
-            }}
-          >
-            Mi Perfil
-          </Typography>
-          <Grid
-            container
-            sx={style}
-            flexDirection='column'
-            alignItems='center'
-            justifyContent='center'
-          >
-            <TextField
-              autoComplete='off'
-              variant='outlined'
-              label='Nombre'
-              value={currentProfile.firstname || ''}
-              name='firstname'
-              onChange={handleChange}
-            />
-            <TextField
-              autoComplete='off'
-              variant='outlined'
-              label='Apellido'
-              value={currentProfile.lastname || ''}
-              name='lastname'
-              onChange={handleChange}
-            />
-            <TextField
-              autoComplete='off'
-              variant='outlined'
-              label='Email'
-              value={currentProfile.email || ''}
-              name='email'
-              onChange={handleChange}
-            />
-            <TextField
-              autoComplete='off'
-              variant='outlined'
-              label='Teléfono'
-              value={currentProfile.phone || ''}
-              name='phone'
-              onChange={handleChange}
-              type='number'
-            />
-            {currentUser?.role === TEACHER_ROLE && (
-              <>
+          Mi Perfil
+        </Typography>
+        <Grid
+          container
+          sx={style}
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+        >
+          <TextField
+            autoComplete='off'
+            variant='outlined'
+            label='Nombre'
+            value={currentProfile.firstname || ''}
+            name='firstname'
+            onChange={handleChange}
+          />
+          <TextField
+            autoComplete='off'
+            variant='outlined'
+            label='Apellido'
+            value={currentProfile.lastname || ''}
+            name='lastname'
+            onChange={handleChange}
+          />
+          <TextField
+            autoComplete='off'
+            variant='outlined'
+            label='Email'
+            value={currentProfile.email || ''}
+            name='email'
+            onChange={handleChange}
+          />
+          <TextField
+            autoComplete='off'
+            variant='outlined'
+            label='Teléfono'
+            value={currentProfile.phone || ''}
+            name='phone'
+            onChange={handleChange}
+            type='number'
+          />
+          {currentUser?.role === TEACHER_ROLE && (
+            <>
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Título'
+                value={currentProfile.title || ''}
+                name='title'
+                onChange={handleChange}
+              />
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Experiencia'
+                value={currentProfile.experience || ''}
+                name='experience'
+                onChange={handleChange}
+                multiline
+                rows={4}
+              />
+            </>
+          )}
+          {currentUser?.role === STUDENT_ROLE && (
+            <>
+              <TextField
+                autoComplete='off'
+                variant='outlined'
+                label='Fecha de nacimiento'
+                value={currentProfile?.birthday.slice(0, 10) || '2000-01-01'}
+                name='birthday'
+                onChange={handleChange}
+                type='date'
+              />
+              {currentProfile?.educationalDegrees?.map((element, index) => (
                 <TextField
+                  key={index}
                   autoComplete='off'
                   variant='outlined'
-                  label='Título'
-                  value={currentProfile.title || ''}
-                  name='title'
-                  onChange={handleChange}
-                />
-                <TextField
-                  autoComplete='off'
-                  variant='outlined'
-                  label='Experiencia'
-                  value={currentProfile.experience || ''}
-                  name='experience'
-                  onChange={handleChange}
+                  label='Estudios Cursados'
+                  value={
+                    element === undefined
+                      ? ''
+                      : `${element.description}\n • ${capitalize(
+                          element.level
+                        )}\n • ${capitalize(element.status)}`
+                  }
                   multiline
                   rows={4}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='start'>
+                        <IconButton onClick={() => handleRemove(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
-              </>
-            )}
-            {currentUser?.role === STUDENT_ROLE && (
-              <>
-                <TextField
-                  autoComplete='off'
-                  variant='outlined'
-                  label='Fecha de nacimiento'
-                  value={currentProfile?.birthdate || ''}
-                  name='birthdate'
-                  onChange={handleChange}
-                  type='date'
-                />
-                {currentProfile?.educationalDegrees?.map((element, index) => (
-                  <TextField
-                    key={index}
-                    autoComplete='off'
-                    variant='outlined'
-                    label='Estudios Cursados'
-                    value={
-                      element === undefined
-                        ? ''
-                        : `${element.description}\n • ${capitalize(
-                            element.level
-                          )}\n • ${capitalize(element.status)}`
-                    }
-                    multiline
-                    rows={4}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position='start'>
-                          <IconButton onClick={() => handleRemove(index)}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                ))}
-                <EducationInputDialog
-                  open={showDialog}
-                  closeDialog={closeDialog}
-                  addEducation={addEducation}
-                />
-                <Button onClick={openDialog}>+ Agrear Estudio Cursado</Button>
-              </>
-            )}
-            <Box
-              className='buttonContainer'
-              display='flex'
-              flexDirection='column'
+              ))}
+              <EducationInputDialog
+                open={showDialog}
+                closeDialog={closeDialog}
+                addEducation={addEducation}
+              />
+              <Button onClick={openDialog}>+ Agrear Estudio Cursado</Button>
+            </>
+          )}
+          <Box
+            className='buttonContainer'
+            display='flex'
+            flexDirection='column'
+          >
+            <Button
+              variant='contained'
+              sx={{ height: '50px', margin: '10px' }}
+              disabled={
+                currentProfile.firstname === '' ||
+                currentProfile.lastname === '' ||
+                currentProfile.email === '' ||
+                currentProfile.phone === '' ||
+                currentProfile.title === '' ||
+                currentProfile.experience === ''
+              }
+              onClick={handleClick}
             >
-              <Button
-                variant='contained'
-                sx={{ height: '50px', margin: '10px' }}
-                disabled={
-                  currentProfile.firstname === '' ||
-                  currentProfile.lastname === '' ||
-                  currentProfile.email === '' ||
-                  currentProfile.phone === '' ||
-                  currentProfile.title === '' ||
-                  currentProfile.experience === ''
-                }
-                onClick={handleClick}
-              >
-                Guardar
-              </Button>
-              <Button
-                variant='contained'
-                sx={{ height: '50px', margin: '10px' }}
-                onClick={handleLogout}
-                color='error'
-              >
-                Cerrar Sesión
-              </Button>
-            </Box>
-          </Grid>
-        </Box>
+              Guardar
+            </Button>
+            <Button
+              variant='contained'
+              sx={{ height: '50px', margin: '10px' }}
+              onClick={handleLogout}
+              color='error'
+            >
+              Cerrar Sesión
+            </Button>
+          </Box>
+        </Grid>
       </Box>
-    );
-  } else {
-    return <Home />;
-  }
+    </Box>
+  );
 };
 
 export default Profile;

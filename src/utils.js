@@ -31,8 +31,10 @@ const isUserEnrolled = (userId, courseData) => {
 };
 
 const canUserComment = (userId, courseData) => {
-  const filtered = courseData?.students?.filter(
-    (student) => student?.id === userId
+  console.log('userId: ', userId);
+  console.log('courseData: ', courseData);
+  const filtered = courseData?.inscriptions?.filter(
+    (inscription) => inscription.student?.id === userId
   );
   if (filtered?.length > 0) {
     return (
