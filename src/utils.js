@@ -22,17 +22,15 @@ const capitalize = (str) => {
 
 const isUserEnrolled = (userId, courseData) => {
   if (!userId || !courseData) {
-    return null;
+    return false;
   }
-  const filtered = courseData.students.filter(
-    (student) => student?.id === userId
+  const filtered = courseData.inscriptions.filter(
+    (inscription) => inscription.student?.id === userId
   );
   return filtered.length > 0;
 };
 
 const canUserComment = (userId, courseData) => {
-  console.log('userId: ', userId);
-  console.log('courseData: ', courseData);
   const filtered = courseData?.inscriptions?.filter(
     (inscription) => inscription.student?.id === userId
   );

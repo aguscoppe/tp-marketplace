@@ -17,6 +17,7 @@ const ResetPassword = () => {
     const filtered = userList.filter((user) => user.email === email);
     if (filtered.length > 0) {
       setEmail('');
+      // TODO: agregar implementación con back
       alert('Recuperaste tu contraseña!');
       navigate('/login');
     } else {

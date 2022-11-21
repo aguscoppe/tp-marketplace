@@ -11,7 +11,7 @@ const COURSE_FREQUENCY_MONTHLY = 'mensual';
 const COURSE_NOTIFICATION = 'inscripcion';
 const COMMENT_NOTIFICATION = 'comentario';
 const BLOCK_COMMENT = 'bloqueado';
-const ACCEPT_COMMENT = 'bloqueado';
+const ACCEPT_COMMENT = 'aceptado';
 
 const EDUCATION_LEVEL_PRIMARY = 'primario';
 const EDUCATION_LEVEL_SECONDARY = 'secundario';

@@ -50,9 +50,9 @@ const BlockCommentDialog = ({ open, closeDialog, sendComment }) => {
           color='success'
           disabled={comment === ''}
           onClick={() => {
-            closeDialog();
             sendComment(BLOCK_COMMENT, comment);
             setComment('');
+            closeDialog();
           }}
         >
           Enviar

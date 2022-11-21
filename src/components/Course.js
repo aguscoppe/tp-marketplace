@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import {
   Box,
@@ -22,7 +22,7 @@ import {
   STUDENT_ROLE,
   TEACHER_ROLE,
 } from '../constants';
-import { isUserEnrolled, capitalize, getRating } from '../utils';
+import { capitalize } from '../utils';
 import { endpoint } from '../hooks';
 
 const statusItems = [
@@ -75,12 +75,23 @@ const Course = ({ courseData, removeCourse }) => {
     imgSrc,
     inscriptions,
   } = courseData;
-  const { pathname } = useLocation();
   const enrolledStudents = inscriptions.filter(
     (inscription) => inscription.student.id === currentUser?.id
   );
-  const [courseStatus, setCourseSatus] = useState(enrolledStudents[0]?.status);
-  const [courseRating, setCourseRating] = useState(getRating(rating));
+  const [userEnrolled, setUserEnrolled] = useState(false);
+  const { pathname } = useLocation();
+  const [courseStatus, setCourseSatus] = useState('');
+  const [courseRating, setCourseRating] = useState(rating);
+
+  useEffect(() => {
+    if (currentUser && courseData) {
+      const filtered = inscriptions.filter(
+        (inscription) => inscription.student?.id === currentUser.id
+      );
+      setUserEnrolled(filtered.length > 0);
+      setCourseSatus(enrolledStudents[0]?.status);
+    }
+  }, [currentUser, courseData]);
 
   const handleStatusChange = (e) => {
     if (
@@ -116,22 +127,33 @@ const Course = ({ courseData, removeCourse }) => {
       removeCourse();
       fetch(`${endpoint}/courses/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-type': 'application/json' },
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${localUser?.token}`,
+        },
       });
     }
   };
 
   const handleRatingChange = (newValue) => {
-    const newRating = courseData.rating.filter(
-      (el) => el.id !== currentUser?.id
+    const filteredRating = courseData.ratings.filter(
+      (el) => el.student.id === currentUser?.id
     );
+    const newRating = filteredRating.length === 0;
     const newData = {
-      ...courseData,
-      rating: [...newRating, { id: currentUser?.id, score: newValue }],
+      score: newValue,
+      student: {
+        id: currentUser.id,
+      },
     };
-    fetch(`${endpoint}/courses/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
+    const params = newRating ? '' : `/${filteredRating[0].id}`;
+    const method = newRating ? 'POST' : 'PUT';
+    fetch(`${endpoint}/courses/${id}/ratings${params}`, {
+      method: method,
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(newData),
     });
     setCourseRating(newValue);
@@ -182,8 +204,7 @@ const Course = ({ courseData, removeCourse }) => {
               handleRatingChange(newValue);
             }}
             readOnly={
-              /* TODO: usar inscriptos para activar rating
-              !isUserEnrolled(currentUser?.id, courseData) || */
+              !userEnrolled ||
               courseStatus === COURSE_STATUS_PENDING ||
               courseStatus === COURSE_STATUS_CANCELLED
             }
