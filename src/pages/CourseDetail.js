@@ -10,10 +10,8 @@ import {
 import { Link, Navigate, useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import Comment from '../components/Comment';
-import { STUDENT_ROLE, COMMENT_NOTIFICATION } from '../constants';
-import { getRating } from '../utils';
+import { STUDENT_ROLE, ACCEPT_COMMENT } from '../constants';
 import { endpoint, useCourseById } from '../hooks';
-import uuid from 'react-uuid';
 import { capitalize, canUserComment } from '../utils';
 import { UserContext } from '../contexts/UserContext';
 
@@ -42,6 +40,7 @@ const styles = {
 
 const CourseDetail = () => {
   const currentUser = useContext(UserContext);
+  const localUser = JSON.parse(localStorage.getItem('current-user'));
   const { id } = useParams();
   const course = useCourseById(id);
   const [courseData, setCourseData] = useState({});
@@ -58,13 +57,17 @@ const CourseDetail = () => {
         (inscription) => inscription.student.id === currentUser.id
       );
       setUserEnrolled(result.length > 0);
-      setRatingValue(getRating(course.rating));
+      setRatingValue(course.rating);
     }
   }, [course, currentUser?.id]);
 
   useEffect(() => {
     if (courseData.comments?.length) {
-      setFilteredComments(courseData.comments);
+      setFilteredComments(() =>
+        courseData.comments.filter(
+          (comment) => comment.status === ACCEPT_COMMENT
+        )
+      );
     }
   }, [courseData.comments, id]);
 
@@ -79,16 +82,24 @@ const CourseDetail = () => {
   };
 
   const handleRatingChange = (newValue) => {
-    const newRating = courseData.rating.filter(
-      (el) => el.id !== currentUser?.id
+    const filteredRating = courseData.ratings.filter(
+      (el) => el.student.id === currentUser?.id
     );
+    const newRating = filteredRating.length === 0;
     const newData = {
-      ...courseData,
-      rating: [...newRating, { id: currentUser?.id, score: newValue }],
+      score: newValue,
+      student: {
+        id: currentUser.id,
+      },
     };
-    fetch(`${endpoint}/courses/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
+    const params = newRating ? '' : `/${filteredRating[0].id}`;
+    const method = newRating ? 'POST' : 'PUT';
+    fetch(`${endpoint}/courses/${id}/ratings${params}`, {
+      method: method,
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(newData),
     });
     setRatingValue(newValue);
@@ -96,16 +107,15 @@ const CourseDetail = () => {
 
   const handleSubmitComment = () => {
     const comment = {
-      id: uuid(),
-      courseId: id,
-      sourceId: currentUser?.id,
-      destinationId: courseData.teacherId,
-      type: COMMENT_NOTIFICATION,
-      message: newComment,
+      studentId: currentUser?.id,
+      description: newComment,
     };
-    fetch(`${endpoint}/notifications`, {
+    fetch(`${endpoint}/courses/${id}/comments`, {
       method: 'POST',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(comment),
     });
     setNewComment('');

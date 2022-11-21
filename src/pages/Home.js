@@ -7,23 +7,20 @@ import { Box, Grid } from '@mui/material';
 import { endpoint, usePublishedCourses } from '../hooks';
 
 const createQuery = (paramsObj) => {
-  let params = new URLSearchParams(paramsObj);
-  let keysForDel = [];
-  params.forEach((value, key) => {
-    if (value === '') {
-      keysForDel.push(key);
-    }
-  });
-  keysForDel.forEach((key) => {
-    params.delete(key);
-  });
-  return params.toString();
+  const params = Object.entries(paramsObj);
+  const result = params.filter((el) => el[1] !== '');
+  const entries = new Map(result);
+  const obj = Object.fromEntries(entries);
+  return obj;
 };
+
+console.log('borrame');
 
 const Home = () => {
   const publishedCourses = usePublishedCourses();
   const [formContent, setFormContent] = useState({
     name: '',
+    subject: '',
     type: '',
     frequency: '',
     rating: '',
@@ -37,9 +34,12 @@ const Home = () => {
 
   useEffect(() => {
     if (beginSearch) {
-      // TODO: update using "courses/search" + body
       const params = createQuery(formContent);
-      fetch(`${endpoint}/courses?published=true&${params}`)
+      fetch(`${endpoint}/courses/search`, {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(params),
+      })
         .then((res) => res.json())
         .then((data) => {
           setFilteredCourses(data);

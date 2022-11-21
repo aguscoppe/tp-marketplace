@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
-  BLOCK_COMMENT,
   ACCEPT_COMMENT,
   COMMENT_NOTIFICATION,
   COURSE_NOTIFICATION,
@@ -13,10 +12,10 @@ import BlockCommentDialog from './BlockCommentDialog';
 import {
   endpoint,
   useCourseById,
-  useCourseName,
   useUserById,
   useInscriptionsComments,
 } from '../hooks';
+import { UserContext } from '../contexts/UserContext';
 
 const style = {
   width: '300px',
@@ -32,25 +31,21 @@ const style = {
 
 const Notification = ({ data, removeNotification }) => {
   const localUser = JSON.parse(localStorage.getItem('current-user'));
+  const currentUser = useContext(UserContext);
   const {
     id,
     objectId,
     source,
-    blockedComment,
     timeRangeFrom,
     timeRangeTo,
-    sourceId,
-    destinationId,
     description,
     courseId,
+    senderUser,
   } = data;
   const key = source === COURSE_NOTIFICATION ? 'inscriptions' : 'comments';
-  console.log('source: ', source);
   const inscriptionData = useInscriptionsComments(key, courseId, objectId);
   const courseData = useCourseById(courseId);
-  const courseName = useCourseName(courseId);
   const sourceUser = useUserById(inscriptionData?.student?.id);
-  const destinationUser = useUserById(destinationId);
   const [showBlockInput, setShowBlockInput] = useState(false);
 
   const deleteNotification = () => {
@@ -84,9 +79,9 @@ const Notification = ({ data, removeNotification }) => {
   };
 
   const handleUpdateComment = (status, blockReason = undefined) => {
-    const newComment = { status: status };
+    let newComment = { status: status };
     if (blockReason) {
-      newComment.description = blockReason;
+      newComment = { ...newComment, description: blockReason };
     }
     fetch(`${endpoint}/courses/${courseId}/comments/${objectId}`, {
       method: 'PUT',
@@ -107,17 +102,18 @@ const Notification = ({ data, removeNotification }) => {
     setShowBlockInput(false);
   };
 
-  if (destinationUser.role === STUDENT_ROLE) {
+  if (currentUser?.role === STUDENT_ROLE) {
     return (
       <Box sx={style}>
         <Typography variant='h6' textAlign='center'>
           Comentario rechazado
         </Typography>
         <Typography variant='body2'>
-          <strong>Profesor: </strong> {sourceUser.name} {sourceUser.surname}
+          <strong>Profesor: </strong> {senderUser.firstname}{' '}
+          {senderUser.lastname}
         </Typography>
         <Typography variant='body2'>
-          <strong>Tu comentario: </strong> {blockedComment}
+          <strong>Tu comentario: </strong> {inscriptionData?.description}
         </Typography>
         <Typography variant='body2'>
           <strong>Motivo del bloqueo: </strong>
@@ -160,7 +156,7 @@ const Notification = ({ data, removeNotification }) => {
         </>
       )}
       <Typography variant='body2'>
-        <strong>Clase:</strong> {courseName}
+        <strong>Clase:</strong> {courseData?.name || ''}
       </Typography>
       {timeRangeFrom && timeRangeTo ? (
         <Typography variant='body2'>
@@ -186,9 +182,9 @@ const Notification = ({ data, removeNotification }) => {
           size='small'
           sx={{ margin: '8px' }}
           value='Aceptar'
-          onClick={() => {
+          onClick={(e) => {
             source === COURSE_NOTIFICATION
-              ? handleInscription()
+              ? handleInscription(e)
               : handleUpdateComment(ACCEPT_COMMENT);
           }}
         >
