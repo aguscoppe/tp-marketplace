@@ -17,7 +17,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { typeItems, frequencyItems } from '../components/SearchBar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import uuid from 'react-uuid';
 import { endpoint, useCourseById } from '../hooks';
 
 const style = {
@@ -113,7 +112,15 @@ const NewCourse = () => {
       },
       body: JSON.stringify(newCourse),
     });
-    navigate('/courses');
+    navigate('/courses', {
+      state: {
+        snackbar: {
+          open: true,
+          type: 'success',
+          message: 'El curso fue creado con éxito!',
+        },
+      },
+    });
   };
 
   const saveChanges = () => {
@@ -125,7 +132,15 @@ const NewCourse = () => {
       },
       body: JSON.stringify(newCourse),
     });
-    navigate('/courses');
+    navigate('/courses', {
+      state: {
+        snackbar: {
+          open: true,
+          type: 'success',
+          message: 'El curso fue modificado con éxito!',
+        },
+      },
+    });
   };
 
   return (

@@ -14,6 +14,7 @@ import { STUDENT_ROLE, ACCEPT_COMMENT } from '../constants';
 import { endpoint, useCourseById } from '../hooks';
 import { capitalize, canUserComment } from '../utils';
 import { UserContext } from '../contexts/UserContext';
+import Snack from '../components/Snack';
 
 const styles = {
   marginTop: '60px',
@@ -49,6 +50,7 @@ const CourseDetail = () => {
   const [teacherData, setTeacherData] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [ratingValue, setRatingValue] = useState(0);
+  const [snackbarData, setSnackbarData] = useState(null);
 
   useEffect(() => {
     if (Object.keys(course).length > 0) {
@@ -103,6 +105,11 @@ const CourseDetail = () => {
       body: JSON.stringify(newData),
     });
     setRatingValue(newValue);
+    setSnackbarData({
+      open: true,
+      message: 'Puntuaste la clase correctamente!',
+      type: 'success',
+    });
   };
 
   const handleSubmitComment = () => {
@@ -119,6 +126,16 @@ const CourseDetail = () => {
       body: JSON.stringify(comment),
     });
     setNewComment('');
+    setSnackbarData({
+      open: true,
+      message:
+        'El comentario se ha realizado correctamente y esta a la espera de aprobacion.',
+      type: 'info',
+    });
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
 
   if (course.length && !Object.keys(courseData).length) {
@@ -245,6 +262,14 @@ const CourseDetail = () => {
                 </Typography>
               )}
             </Box>
+            {snackbarData !== null && (
+              <Snack
+                open={snackbarData.open}
+                type={snackbarData.type}
+                message={snackbarData.message}
+                onClose={handleCloseSnack}
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>

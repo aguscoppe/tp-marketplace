@@ -4,6 +4,7 @@ import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { endpoint } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
+import Snack from '../components/Snack';
 
 const style = {
   height: '100%',
@@ -38,6 +39,7 @@ const Enroll = () => {
     studentId: currentUser?.id,
   };
   const [newEnrollment, setNewEnrollment] = useState(initialState);
+  const [snackbarData, setSnackbarData] = useState(null);
   const { phone, email, timeRangeFrom, timeRangeTo, reason } = newEnrollment;
 
   useEffect(() => {
@@ -68,6 +70,15 @@ const Enroll = () => {
       body: JSON.stringify(enrollment),
     });
     setNewEnrollment(initialState);
+    setSnackbarData({
+      open: true,
+      message: 'Has solicitado inscribirte a la materia.',
+      type: 'success',
+    });
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
 
   return (
@@ -140,6 +151,14 @@ const Enroll = () => {
         >
           Inscribirse
         </Button>
+        {snackbarData !== null && (
+          <Snack
+            open={snackbarData.open}
+            type={snackbarData.type}
+            message={snackbarData.message}
+            onClose={handleCloseSnack}
+          />
+        )}
       </Grid>
     </>
   );
