@@ -14,8 +14,6 @@ const createQuery = (paramsObj) => {
   return obj;
 };
 
-console.log('borrame');
-
 const Home = () => {
   const publishedCourses = usePublishedCourses();
   const [formContent, setFormContent] = useState({
