@@ -128,8 +128,9 @@ const CourseDetail = () => {
     setNewComment('');
     setSnackbarData({
       open: true,
-      message: 'El comentario se ha realizado correctamente!',
-      type: 'success',
+      message:
+        'El comentario se ha realizado correctamente y esta a la espera de aprobacion.',
+      type: 'info',
     });
   };
 
