@@ -16,6 +16,7 @@ import { STUDENT_ROLE, TEACHER_ROLE } from '../constants';
 import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { endpoint, useTeacherStudentById } from '../hooks';
+import Snack from '../components/Snack';
 
 const style = {
   '& .MuiTextField-root': {
@@ -55,6 +56,7 @@ const Profile = ({ signOut }) => {
     phone: '',
   });
   const [showDialog, setShowDialog] = useState(false);
+  const [snackbarData, setSnackbarData] = useState(null);
 
   useEffect(() => {
     if (currentUser !== undefined) {
@@ -124,6 +126,12 @@ const Profile = ({ signOut }) => {
       },
       body: JSON.stringify(currentProfile),
     });
+
+    setSnackbarData({
+      open: true,
+      message: 'Se actualizaron tus datos!',
+      type: 'success',
+    });
   };
 
   const handleRemove = (index) => {
@@ -151,6 +159,10 @@ const Profile = ({ signOut }) => {
 
   const openDialog = () => {
     setShowDialog(true);
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
 
   const closeDialog = () => {
@@ -324,6 +336,14 @@ const Profile = ({ signOut }) => {
             >
               Cerrar Sesión
             </Button>
+            {snackbarData !== null && (
+              <Snack
+                open={snackbarData.open}
+                type={snackbarData.type}
+                message={snackbarData.message}
+                onClose={handleCloseSnack}
+              />
+            )}
           </Box>
         </Grid>
       </Box>
