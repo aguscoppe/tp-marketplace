@@ -117,7 +117,7 @@ const NewCourse = () => {
         snackbar: {
           open: true,
           type: 'success',
-          message: 'El curso fue creado con éxito!',
+          message: 'El curso fue creado correctamente.',
         },
       },
     });
@@ -137,7 +137,7 @@ const NewCourse = () => {
         snackbar: {
           open: true,
           type: 'success',
-          message: 'El curso fue modificado con éxito!',
+          message: 'El curso fue modificado correctamente.',
         },
       },
     });
