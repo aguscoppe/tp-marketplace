@@ -72,7 +72,7 @@ const Enroll = () => {
     setNewEnrollment(initialState);
     setSnackbarData({
       open: true,
-      message: 'Has solicitado inscribirte a la materia.',
+      message: 'Tu solicitud de inscripción se realizó correctamente.',
       type: 'success',
     });
   };

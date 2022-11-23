@@ -35,7 +35,7 @@ const Courses = () => {
   const removeCourse = (id) => {
     setCourseList((prev) => prev.filter((course) => course.id !== id));
     setSnackbarData({
-      message: 'El curso fue eliminado.',
+      message: 'El curso fue eliminado correctamente.',
       open: true,
       type: 'success',
     });

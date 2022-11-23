@@ -129,7 +129,7 @@ const CourseDetail = () => {
     setSnackbarData({
       open: true,
       message:
-        'El comentario se ha realizado correctamente y esta a la espera de aprobacion.',
+        'El comentario será revisado por el docente antes de ser publicado.',
       type: 'info',
     });
   };
