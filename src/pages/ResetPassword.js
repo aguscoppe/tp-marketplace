@@ -1,28 +1,45 @@
 import { Box, Typography, TextField, Button } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/NavBar';
-import { useUsers } from '../hooks';
+import Snack from '../components/Snack';
+import { endpoint } from '../hooks';
 
 const ResetPassword = () => {
-  const userList = useUsers();
-  const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [snackbarData, setSnackbarData] = useState(null);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
   };
 
   const handleRecovery = () => {
-    const filtered = userList.filter((user) => user.email === email);
-    if (filtered.length > 0) {
+    fetch(`${endpoint}/forgotPassword`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ email: email }),
+    }).then(async (res) => {
+      if (res.status === 200) {
+        setSnackbarData({
+          message: 'Revisa tu mail para ver tu nueva contraseña.',
+          open: true,
+          type: 'success',
+        });
+      } else {
+        setSnackbarData({
+          message: 'Se ha producido un error. Intenta nuevamente.',
+          open: true,
+          type: 'error',
+        });
+      }
       setEmail('');
-      // TODO: agregar implementación con back
-      alert('Recuperaste tu contraseña!');
-      navigate('/login');
-    } else {
-      alert('No existe un usuario asociado al email ingresado');
-    }
+    });
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
 
   return (
@@ -138,6 +155,14 @@ const ResetPassword = () => {
             </Typography>
           </Box>
         </Box>
+        {snackbarData !== null && (
+          <Snack
+            open={snackbarData.open}
+            type={snackbarData.type}
+            message={snackbarData.message}
+            onClose={handleCloseSnack}
+          />
+        )}
       </Box>
     </>
   );

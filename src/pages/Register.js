@@ -7,10 +7,18 @@ import {
   MenuItem,
 } from '@mui/material';
 import Navbar from '../components/NavBar';
+import Snack from '../components/Snack';
 import { useState, useContext } from 'react';
 import { endpoint, useLogin } from '../hooks';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
+
+const styles = {
+  width: '300px',
+  margin: '10px',
+  backgroundColor: '#fff',
+  borderRadius: '8px',
+};
 
 const Register = () => {
   const { login } = useLogin();
@@ -27,6 +35,7 @@ const Register = () => {
     role: '',
   });
   const { firstname, lastname, email, password, phone, role } = newUser;
+  const [snackbarData, setSnackbarData] = useState(null);
 
   const roles = [
     { text: 'Profesor', value: 'profesor' },
@@ -45,9 +54,17 @@ const Register = () => {
     }).then(async (res) => {
       if (res.status === 201) {
         await login(email, password);
-        setIsLoggedIn(true);
+        setSnackbarData({
+          message: 'Te has registrado correctamente.',
+          open: true,
+          type: 'success',
+        });
       } else {
-        alert('Email o contraseña incorrectos');
+        setSnackbarData({
+          message: 'Email o contraseña incorrectos.',
+          open: true,
+          type: 'error',
+        });
       }
     });
     setNewUser({
@@ -64,12 +81,10 @@ const Register = () => {
     return <Navigate to='/' />;
   }
 
-  const styles = {
-    width: '300px',
-    margin: '10px',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
+
   return (
     <>
       <Box sx={{ display: 'flex', flexFlow: 'column', height: '100vh' }}>
@@ -215,6 +230,14 @@ const Register = () => {
             </Grid>
           </Box>
         </Box>
+        {snackbarData !== null && (
+          <Snack
+            open={snackbarData.open}
+            type={snackbarData.type}
+            message={snackbarData.message}
+            onClose={handleCloseSnack}
+          />
+        )}
       </Box>
     </>
   );

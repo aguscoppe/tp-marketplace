@@ -7,7 +7,6 @@ import { COURSE_STATUS_PENDING, TEACHER_ROLE } from '../constants';
 import { useTeacherStudentCourses } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
 import Snack from '../components/Snack';
-import { useInsertionEffect } from 'react';
 
 const style = {
   display: 'flex',
@@ -45,11 +44,13 @@ const Courses = () => {
     if (teacherStudentCourses?.length) {
       setCourseList(teacherStudentCourses);
     }
+  }, [teacherStudentCourses]);
 
+  useEffect(() => {
     if (location.state?.snackbar) {
       setSnackbarData(location.state.snackbar);
     }
-  }, [teacherStudentCourses]);
+  }, [location.state?.snackbar]);
 
   const handleCloseSnack = () => {
     setSnackbarData({ ...snackbarData, open: false });

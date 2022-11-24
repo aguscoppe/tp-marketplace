@@ -125,12 +125,21 @@ const Profile = ({ signOut }) => {
         Authorization: `Bearer ${localUser?.token}`,
       },
       body: JSON.stringify(currentProfile),
-    });
-
-    setSnackbarData({
-      open: true,
-      message: 'Se actualizaron tus datos!',
-      type: 'success',
+    }).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        setSnackbarData({
+          open: true,
+          message: 'Tus datos se actualizaron correctamente.',
+          type: 'success',
+        });
+      } else {
+        setSnackbarData({
+          message: 'Error en la actualización de datos.',
+          open: true,
+          type: 'error',
+        });
+      }
     });
   };
 
