@@ -23,6 +23,7 @@ import {
   COURSE_STATUS_PENDING,
 } from '../constants';
 import { endpoint, useCourseById } from '../hooks';
+import Snack from '../components/Snack';
 
 const styles = {
   margin: '60px auto',
@@ -37,6 +38,7 @@ const StudentTable = () => {
   const [inscriptions, setinscriptions] = useState([]);
   const [editing, setEditing] = useState({ studentId: null, isEditing: false });
   const [newStatus, setNewStatus] = useState('');
+  const [snackbarData, setSnackbarData] = useState(null);
   const { studentId, isEditing } = editing;
 
   useEffect(() => {
@@ -55,7 +57,11 @@ const StudentTable = () => {
     if (newValue !== COURSE_STATUS_PENDING) {
       setNewStatus(newValue);
     } else {
-      alert('No puedes realizar esta acción');
+      setSnackbarData({
+        message: 'No puedes realizar esta acción.',
+        open: true,
+        type: 'error',
+      });
     }
   };
 
@@ -69,8 +75,26 @@ const StudentTable = () => {
           Authorization: `Bearer ${localUser?.token}`,
         },
         body: JSON.stringify(newData),
+      }).then((res) => {
+        if (res.status === 200) {
+          setSnackbarData({
+            message: 'Los datos se actualizaron correctamente.',
+            open: true,
+            type: 'success',
+          });
+        } else {
+          setSnackbarData({
+            message: 'Error en la actualización de datos.',
+            open: true,
+            type: 'error',
+          });
+        }
       });
     }
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
 
   return (
@@ -179,6 +203,14 @@ const StudentTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {snackbarData !== null && (
+        <Snack
+          open={snackbarData.open}
+          type={snackbarData.type}
+          message={snackbarData.message}
+          onClose={handleCloseSnack}
+        />
+      )}
     </>
   );
 };

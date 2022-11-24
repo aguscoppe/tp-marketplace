@@ -54,9 +54,9 @@ const NewCourse = () => {
     description: '',
     type: '',
     published: false,
-    teacher: { id: currentUser?.id },
+    teacherId: currentUser?.id,
     inscriptions: [],
-    // rating: 0,
+    rating: 0,
     imgSrc: '',
   };
   const { id } = useParams();

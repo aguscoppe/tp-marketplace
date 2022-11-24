@@ -24,6 +24,10 @@ const App = () => {
 
   const signOut = () => {
     setCurrentUserId(null);
+    const currentUser = localStorage.getItem('current-user');
+    if (!currentUser) {
+      window.location.reload();
+    }
   };
 
   const signIn = () => {

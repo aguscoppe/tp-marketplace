@@ -78,11 +78,13 @@ const usePublishedCourses = () => {
 const useCourseById = (id) => {
   const [course, setCourse] = useState([]);
   useEffect(() => {
-    fetch(`${endpoint}/courses/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCourse(data);
-      });
+    if (id) {
+      fetch(`${endpoint}/courses/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCourse(data);
+        });
+    }
   }, [id]);
   return course;
 };

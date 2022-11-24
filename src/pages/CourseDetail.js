@@ -107,7 +107,7 @@ const CourseDetail = () => {
     setRatingValue(newValue);
     setSnackbarData({
       open: true,
-      message: 'Puntuaste la clase correctamente!',
+      message: 'Se registró tu puntuación.',
       type: 'success',
     });
   };
