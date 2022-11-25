@@ -243,7 +243,10 @@ const Course = ({ courseData, removeCourse }) => {
               label='Estado'
               name='status'
               onChange={handleStatusChange}
-              disabled={courseStatus === COURSE_STATUS_CANCELLED}
+              disabled={
+                courseStatus === COURSE_STATUS_CANCELLED ||
+                courseStatus === COURSE_STATUS_PENDING
+              }
               sx={{
                 marginTop: '10px',
                 width: '90%',
