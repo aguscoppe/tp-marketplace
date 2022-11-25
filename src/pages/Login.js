@@ -10,9 +10,9 @@ import {
   OutlinedInput,
   InputLabel,
 } from '@mui/material';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { VisibilityOff, Visibility } from '@mui/icons-material/';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/NavBar';
 import Snack from '../components/Snack';
 import { useLogin } from '../hooks';
@@ -21,6 +21,7 @@ import { UserContext } from '../contexts/UserContext';
 const Login = ({ signIn }) => {
   const { login } = useLogin();
   const navigate = useNavigate();
+  const location = useLocation();
   const currentUser = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(
     currentUser?.length ? true : false
@@ -32,6 +33,12 @@ const Login = ({ signIn }) => {
   });
   const [snackbarData, setSnackbarData] = useState(null);
   const { email, password } = values;
+
+  useEffect(() => {
+    if (location.state?.snackbar) {
+      setSnackbarData(location.state.snackbar);
+    }
+  }, [location.state?.snackbar]);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
