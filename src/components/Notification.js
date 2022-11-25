@@ -4,6 +4,7 @@ import {
   ACCEPT_COMMENT,
   COMMENT_NOTIFICATION,
   COURSE_NOTIFICATION,
+  COURSE_ACCEPTED_NOTIFICATION,
   COURSE_STATUS_ACCEPTED,
   COURSE_STATUS_CANCELLED,
   STUDENT_ROLE,
@@ -42,7 +43,10 @@ const Notification = ({ data, removeNotification }) => {
     courseId,
     senderUser,
   } = data;
-  const key = source === COURSE_NOTIFICATION ? 'inscriptions' : 'comments';
+  const key =
+    source === COURSE_NOTIFICATION || source === COURSE_ACCEPTED_NOTIFICATION
+      ? 'inscriptions'
+      : 'comments';
   const inscriptionData = useInscriptionsComments(key, courseId, objectId);
   const courseData = useCourseById(courseId);
   const sourceUser = useUserById(inscriptionData?.student?.id);
@@ -103,6 +107,38 @@ const Notification = ({ data, removeNotification }) => {
   };
 
   if (currentUser?.role === STUDENT_ROLE) {
+    if (source === COURSE_ACCEPTED_NOTIFICATION) {
+      return (
+        <Box sx={style}>
+          <Typography variant='h6' textAlign='center'>
+            Inscripcion Aceptada
+          </Typography>
+          <Typography variant='body2'>
+            <strong>Curso: </strong> {courseData?.name || ''}
+          </Typography>
+          <Typography variant='body2'>
+            <strong>Profesor: </strong> {senderUser.firstname}{' '}
+            {senderUser.lastname}
+          </Typography>
+          <Typography variant='body2'>
+            <strong>Mensaje: </strong>
+            {description}
+          </Typography>
+          <Box display='flex' justifyContent='center'>
+            <Button
+              variant='contained'
+              color='success'
+              size='small'
+              sx={{ margin: '8px' }}
+              value='Aceptar'
+              onClick={deleteNotification}
+            >
+              Aceptar
+            </Button>
+          </Box>
+        </Box>
+      );
+    }
     return (
       <Box sx={style}>
         <Typography variant='h6' textAlign='center'>
