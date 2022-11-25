@@ -76,7 +76,7 @@ const StudentTable = () => {
         },
         body: JSON.stringify(newData),
       }).then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 || res.status === 204) {
           setSnackbarData({
             message: 'Los datos se actualizaron correctamente.',
             open: true,

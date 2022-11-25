@@ -111,7 +111,7 @@ const Notification = ({ data, removeNotification }) => {
       return (
         <Box sx={style}>
           <Typography variant='h6' textAlign='center'>
-            Inscripcion Aceptada
+            Inscripción Aceptada
           </Typography>
           <Typography variant='body2'>
             <strong>Curso: </strong> {courseData?.name || ''}

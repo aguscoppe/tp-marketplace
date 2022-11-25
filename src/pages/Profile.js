@@ -17,6 +17,7 @@ import EducationInputDialog from '../components/EducationInputDialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { endpoint, useTeacherStudentById } from '../hooks';
 import Snack from '../components/Snack';
+import ConfirmationDialog from '../components/ConfirmationDialog';
 
 const style = {
   '& .MuiTextField-root': {
@@ -57,6 +58,8 @@ const Profile = ({ signOut }) => {
   });
   const [showDialog, setShowDialog] = useState(false);
   const [snackbarData, setSnackbarData] = useState(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [answer, setAnswer] = useState({ value: false, index: null });
 
   useEffect(() => {
     if (currentUser !== undefined) {
@@ -84,6 +87,31 @@ const Profile = ({ signOut }) => {
       }
     }
   }, [currentUser]);
+
+  useEffect(() => {
+    if (answer.value) {
+      const newData = {
+        ...currentProfile,
+        educationalDegrees: currentProfile.educationalDegrees.filter(
+          (el, i) => i !== answer.index
+        ),
+      };
+      fetch(`${endpoint}/students/${currentUser?.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${localUser?.token}`,
+        },
+        body: JSON.stringify(newData),
+      });
+      setCurrentProfile(newData);
+      setSnackbarData({
+        open: true,
+        message: 'Tus datos se actualizaron correctamente.',
+        type: 'success',
+      });
+    }
+  }, [answer]);
 
   const addEducation = (newEducation) => {
     const updatedProfile = {
@@ -146,26 +174,18 @@ const Profile = ({ signOut }) => {
   };
 
   const handleRemove = (index) => {
-    const answer = window.confirm(
-      '¿Estás seguro/a de que quieres realizar esta acción?'
-    );
-    if (answer) {
-      const newData = {
-        ...currentProfile,
-        educationalDegrees: currentProfile.educationalDegrees.filter(
-          (el, i) => i !== index
-        ),
-      };
-      fetch(`${endpoint}/students/${currentUser?.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localUser?.token}`,
-        },
-        body: JSON.stringify(newData),
-      });
-      setCurrentProfile(newData);
-    }
+    setShowConfirmDialog(true);
+    setAnswer((prev) => ({ ...prev, index: index }));
+  };
+
+  const handleConfirm = () => {
+    setAnswer((prev) => ({ ...prev, value: true }));
+    setShowConfirmDialog(false);
+  };
+
+  const handleCancel = () => {
+    setAnswer((prev) => ({ ...prev, value: false }));
+    setShowConfirmDialog(false);
   };
 
   const openDialog = () => {
@@ -353,6 +373,13 @@ const Profile = ({ signOut }) => {
                 type={snackbarData.type}
                 message={snackbarData.message}
                 onClose={handleCloseSnack}
+              />
+            )}
+            {showConfirmDialog && (
+              <ConfirmationDialog
+                open={true}
+                handleConfirm={handleConfirm}
+                handleCancel={handleCancel}
               />
             )}
           </Box>
