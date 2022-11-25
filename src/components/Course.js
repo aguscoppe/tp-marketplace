@@ -64,6 +64,9 @@ const styles = {
 const Course = ({ courseData, removeCourse }) => {
   const localUser = JSON.parse(localStorage.getItem('current-user'));
   const currentUser = useContext(UserContext);
+  console.log('courseData', courseData);
+  console.log('currentUser', currentUser);
+  console.log('localUser', localUser);
   const {
     id,
     name,
@@ -210,7 +213,7 @@ const Course = ({ courseData, removeCourse }) => {
             }
           />
           <Box>
-            {currentUser?.role === TEACHER_ROLE ? (
+            {currentUser?.id === teacher.id ? (
               <>
                 <Link to={`edit/${id}`}>
                   <IconButton>
