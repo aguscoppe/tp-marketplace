@@ -1,10 +1,11 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, IconButton, Typography } from '@mui/material';
 import { useContext, useState } from 'react';
 import {
   ACCEPT_COMMENT,
   COMMENT_NOTIFICATION,
   COURSE_NOTIFICATION,
   COURSE_ACCEPTED_NOTIFICATION,
+  COURSE_REJECTED_NOTIFICATION,
   COURSE_STATUS_ACCEPTED,
   COURSE_STATUS_CANCELLED,
   STUDENT_ROLE,
@@ -17,6 +18,8 @@ import {
   useInscriptionsComments,
 } from '../hooks';
 import { UserContext } from '../contexts/UserContext';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const style = {
   width: '300px',
@@ -44,7 +47,9 @@ const Notification = ({ data, removeNotification }) => {
     senderUser,
   } = data;
   const key =
-    source === COURSE_NOTIFICATION || source === COURSE_ACCEPTED_NOTIFICATION
+    source === COURSE_NOTIFICATION ||
+    source === COURSE_ACCEPTED_NOTIFICATION ||
+    source === COURSE_REJECTED_NOTIFICATION
       ? 'inscriptions'
       : 'comments';
   const inscriptionData = useInscriptionsComments(key, courseId, objectId);
@@ -107,12 +112,36 @@ const Notification = ({ data, removeNotification }) => {
   };
 
   if (currentUser?.role === STUDENT_ROLE) {
-    if (source === COURSE_ACCEPTED_NOTIFICATION) {
+    if (
+      source === COURSE_ACCEPTED_NOTIFICATION ||
+      source === COURSE_REJECTED_NOTIFICATION
+    ) {
       return (
         <Box sx={style}>
-          <Typography variant='h6' textAlign='center'>
-            Inscripción Aceptada
-          </Typography>
+          <Box display='flex' alignItems='center'>
+            <Typography variant='h6' textAlign='center'>
+              Inscripción
+              {source === COURSE_ACCEPTED_NOTIFICATION
+                ? ' Aceptada'
+                : ' Rechazada'}
+            </Typography>
+            <IconButton
+              disableTouchRipple
+              disableFocusRipple
+              disableRipple
+              sx={{
+                color:
+                  source === COURSE_ACCEPTED_NOTIFICATION ? 'green' : 'red',
+                cursor: 'default',
+              }}
+            >
+              {source === COURSE_ACCEPTED_NOTIFICATION ? (
+                <CheckCircleIcon />
+              ) : (
+                <CancelIcon />
+              )}
+            </IconButton>
+          </Box>
           <Typography variant='body2'>
             <strong>Curso: </strong> {courseData?.name || ''}
           </Typography>
