@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import NavBar from '../components/NavBar';
+import Snack from '../components/Snack';
 import {
   Box,
   Button,
@@ -62,6 +63,7 @@ const NewCourse = () => {
   const { id } = useParams();
   const course = useCourseById(id);
   const navigate = useNavigate();
+  const [snackbarData, setSnackbarData] = useState(null);
   const [newCourse, setNewCourse] = useState(initialState);
   const {
     name,
@@ -84,7 +86,11 @@ const NewCourse = () => {
 
   const handleCheckbox = () => {
     if (inscriptions?.length > 0) {
-      alert('No puedes despublicar una clase con alumnos inscriptos');
+      setSnackbarData({
+        message: 'No puedes despublicar una clase con alumnos inscriptos.',
+        open: true,
+        type: 'error',
+      });
     } else {
       setNewCourse((prev) => ({
         ...prev,
@@ -141,6 +147,10 @@ const NewCourse = () => {
         },
       },
     });
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
   };
 
   return (
@@ -299,6 +309,14 @@ const NewCourse = () => {
           </Button>
         )}
       </Grid>
+      {snackbarData !== null && (
+        <Snack
+          open={snackbarData.open}
+          type={snackbarData.type}
+          message={snackbarData.message}
+          onClose={handleCloseSnack}
+        />
+      )}
     </>
   );
 };

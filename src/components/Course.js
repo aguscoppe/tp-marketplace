@@ -20,10 +20,11 @@ import {
   COURSE_STATUS_FINISHED,
   COURSE_STATUS_PENDING,
   STUDENT_ROLE,
-  TEACHER_ROLE,
 } from '../constants';
 import { capitalize } from '../utils';
 import { endpoint } from '../hooks';
+import Snack from './Snack';
+import ConfirmationDialog from './ConfirmationDialog';
 
 const statusItems = [
   { key: 1, value: '', label: 'Estado' },
@@ -82,6 +83,9 @@ const Course = ({ courseData, removeCourse }) => {
   const { pathname } = useLocation();
   const [courseStatus, setCourseSatus] = useState('');
   const [courseRating, setCourseRating] = useState(rating);
+  const [snackbarData, setSnackbarData] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [answer, setAnswer] = useState(false);
 
   useEffect(() => {
     if (currentUser && courseData) {
@@ -92,6 +96,19 @@ const Course = ({ courseData, removeCourse }) => {
       setCourseSatus(enrolledStudents[0]?.status);
     }
   }, [currentUser, courseData]);
+
+  useEffect(() => {
+    if (answer) {
+      removeCourse();
+      fetch(`${endpoint}/courses/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json',
+          Authorization: `Bearer ${localUser?.token}`,
+        },
+      });
+    }
+  }, [answer]);
 
   const handleStatusChange = (e) => {
     if (
@@ -115,7 +132,11 @@ const Course = ({ courseData, removeCourse }) => {
         }
       );
     } else {
-      alert('No puedes realizar esta acción');
+      setSnackbarData({
+        message: 'No puedes realizar esta acción.',
+        open: true,
+        type: 'error',
+      });
     }
   };
 
@@ -124,21 +145,13 @@ const Course = ({ courseData, removeCourse }) => {
       (i) => i.status === COURSE_STATUS_ACCEPTED
     );
     if (acceptedInscriptions.length) {
-      alert('No puedes eliminar un curso con alumnos inscriptos.');
+      setSnackbarData({
+        message: 'No puedes eliminar un curso con alumnos inscriptos.',
+        open: true,
+        type: 'error',
+      });
     } else {
-      const answer = window.confirm(
-        '¿Estás seguro/a de que quieres realizar esta acción?'
-      );
-      if (answer) {
-        removeCourse();
-        fetch(`${endpoint}/courses/${id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-type': 'application/json',
-            Authorization: `Bearer ${localUser?.token}`,
-          },
-        });
-      }
+      setShowDialog(true);
     }
   };
 
@@ -166,106 +179,137 @@ const Course = ({ courseData, removeCourse }) => {
     setCourseRating(newValue);
   };
 
+  const handleConfirm = () => {
+    setAnswer(true);
+    setShowDialog(false);
+  };
+
+  const handleCancel = () => {
+    setAnswer(false);
+    setShowDialog(false);
+  };
+
+  const handleCloseSnack = () => {
+    setSnackbarData({ ...snackbarData, open: false });
+  };
+
   return (
-    <Card sx={styles}>
-      <CardContent sx={{ padding: 0 }}>
-        <Link to={`/course/${id}`} style={{ textDecoration: 'none' }}>
-          <Box
-            component='img'
-            sx={{
-              height: '100%',
-              width: '100%',
-              maxHeight: { xs: 233, md: 167 },
-              maxWidth: { xs: 350, md: 300 },
-              objectFit: 'cover',
-            }}
-            alt={name}
-            src={imgSrc}
-          />
-          <Box
-            sx={{
-              padding: '16px',
-              '@media (max-width: 700px)': {
-                paddingBottom: '0',
-              },
-            }}
-          >
-            <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
-              {name}
-            </Typography>
-            <Typography variant='h6'>{`${teacher.firstname} ${teacher.lastname}`}</Typography>
-            <Typography>Clase de {subject}</Typography>
-            <Typography>{capitalize(type)}</Typography>
-            <Typography>{capitalize(frequency)}</Typography>
-          </Box>
-        </Link>
-        <Box
-          display='flex'
-          alignItems='center'
-          justifyContent='space-between'
-          sx={{ padding: '0px 16px 0px 16px' }}
-        >
-          <Rating
-            value={courseRating}
-            onChange={(event, newValue) => {
-              handleRatingChange(newValue);
-            }}
-            readOnly={
-              !userEnrolled ||
-              courseStatus === COURSE_STATUS_PENDING ||
-              courseStatus === COURSE_STATUS_CANCELLED
-            }
-          />
-          <Box>
-            {currentUser?.id === teacher.id ? (
-              <>
-                <Link to={`edit/${id}`}>
-                  <IconButton>
-                    <EditIcon />
-                  </IconButton>
-                </Link>
-                <Link to=''>
-                  <IconButton onClick={handleRemoveCourse}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Link>
-              </>
-            ) : (
-              <Link to={`/course/${id}`}>
-                <IconButton>
-                  <CommentIcon />
-                </IconButton>
-              </Link>
-            )}
-          </Box>
-        </Box>
-        {currentUser?.role === STUDENT_ROLE && pathname.includes('courses') && (
-          <Box display='flex' justifyContent='center'>
-            <TextField
-              value={courseStatus || ''}
-              select
-              label='Estado'
-              name='status'
-              onChange={handleStatusChange}
-              disabled={
-                courseStatus === COURSE_STATUS_CANCELLED ||
-                courseStatus === COURSE_STATUS_PENDING
-              }
+    <>
+      <Card sx={styles}>
+        <CardContent sx={{ padding: 0 }}>
+          <Link to={`/course/${id}`} style={{ textDecoration: 'none' }}>
+            <Box
+              component='img'
               sx={{
-                marginTop: '10px',
-                width: '90%',
+                height: '100%',
+                width: '100%',
+                maxHeight: { xs: 233, md: 167 },
+                maxWidth: { xs: 350, md: 300 },
+                objectFit: 'cover',
+              }}
+              alt={name}
+              src={imgSrc}
+            />
+            <Box
+              sx={{
+                padding: '16px',
+                '@media (max-width: 700px)': {
+                  paddingBottom: '0',
+                },
               }}
             >
-              {statusItems.map((item, index) => (
-                <MenuItem key={item.label} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </TextField>
+              <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
+                {name}
+              </Typography>
+              <Typography variant='h6'>{`${teacher.firstname} ${teacher.lastname}`}</Typography>
+              <Typography>Clase de {subject}</Typography>
+              <Typography>{capitalize(type)}</Typography>
+              <Typography>{capitalize(frequency)}</Typography>
+            </Box>
+          </Link>
+          <Box
+            display='flex'
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ padding: '0px 16px 0px 16px' }}
+          >
+            <Rating
+              value={courseRating}
+              onChange={(event, newValue) => {
+                handleRatingChange(newValue);
+              }}
+              readOnly={
+                !userEnrolled ||
+                courseStatus === COURSE_STATUS_PENDING ||
+                courseStatus === COURSE_STATUS_CANCELLED
+              }
+            />
+            <Box>
+              {currentUser?.id === teacher.id ? (
+                <>
+                  <Link to={`edit/${id}`}>
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </Link>
+                  <Link to=''>
+                    <IconButton onClick={handleRemoveCourse}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Link>
+                </>
+              ) : (
+                <Link to={`/course/${id}`}>
+                  <IconButton>
+                    <CommentIcon />
+                  </IconButton>
+                </Link>
+              )}
+            </Box>
           </Box>
-        )}
-      </CardContent>
-    </Card>
+          {currentUser?.role === STUDENT_ROLE && pathname.includes('courses') && (
+            <Box display='flex' justifyContent='center'>
+              <TextField
+                value={courseStatus || ''}
+                select
+                label='Estado'
+                name='status'
+                onChange={handleStatusChange}
+                disabled={
+                  courseStatus === COURSE_STATUS_CANCELLED ||
+                  courseStatus === COURSE_STATUS_PENDING
+                }
+                sx={{
+                  marginTop: '10px',
+                  width: '90%',
+                }}
+              >
+                {statusItems.map((item, index) => (
+                  <MenuItem key={item.label} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+      {snackbarData !== null && (
+        <Snack
+          open={snackbarData.open}
+          type={snackbarData.type}
+          message={snackbarData.message}
+          onClose={handleCloseSnack}
+        />
+      )}
+      {showDialog && (
+        <ConfirmationDialog
+          open={true}
+          handleConfirm={handleConfirm}
+          handleCancel={handleCancel}
+        />
+      )}
+    </>
   );
 };
 
