@@ -64,9 +64,6 @@ const styles = {
 const Course = ({ courseData, removeCourse }) => {
   const localUser = JSON.parse(localStorage.getItem('current-user'));
   const currentUser = useContext(UserContext);
-  console.log('courseData', courseData);
-  console.log('currentUser', currentUser);
-  console.log('localUser', localUser);
   const {
     id,
     name,
@@ -123,18 +120,25 @@ const Course = ({ courseData, removeCourse }) => {
   };
 
   const handleRemoveCourse = () => {
-    const answer = window.confirm(
-      '¿Estás seguro/a de que quieres realizar esta acción?'
+    const acceptedInscriptions = inscriptions.filter(
+      (i) => i.status === COURSE_STATUS_ACCEPTED
     );
-    if (answer) {
-      removeCourse();
-      fetch(`${endpoint}/courses/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-type': 'application/json',
-          Authorization: `Bearer ${localUser?.token}`,
-        },
-      });
+    if (acceptedInscriptions.length) {
+      alert('No puedes eliminar un curso con alumnos inscriptos.');
+    } else {
+      const answer = window.confirm(
+        '¿Estás seguro/a de que quieres realizar esta acción?'
+      );
+      if (answer) {
+        removeCourse();
+        fetch(`${endpoint}/courses/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${localUser?.token}`,
+          },
+        });
+      }
     }
   };
 
@@ -243,7 +247,10 @@ const Course = ({ courseData, removeCourse }) => {
               label='Estado'
               name='status'
               onChange={handleStatusChange}
-              disabled={courseStatus === COURSE_STATUS_CANCELLED}
+              disabled={
+                courseStatus === COURSE_STATUS_CANCELLED ||
+                courseStatus === COURSE_STATUS_PENDING
+              }
               sx={{
                 marginTop: '10px',
                 width: '90%',
