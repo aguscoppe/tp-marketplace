@@ -120,7 +120,10 @@ const Course = ({ courseData, removeCourse }) => {
   };
 
   const handleRemoveCourse = () => {
-    if (inscriptions.length) {
+    const acceptedInscriptions = inscriptions.filter(
+      (i) => i.status === COURSE_STATUS_ACCEPTED
+    );
+    if (acceptedInscriptions.length) {
       alert('No puedes eliminar un curso con alumnos inscriptos.');
     } else {
       const answer = window.confirm(
