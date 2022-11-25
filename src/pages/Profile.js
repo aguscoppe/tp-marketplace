@@ -129,7 +129,6 @@ const Profile = ({ signOut }) => {
       },
       body: JSON.stringify(currentProfile),
     }).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         setSnackbarData({
           open: true,
