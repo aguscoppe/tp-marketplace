@@ -90,9 +90,12 @@ const Profile = ({ signOut }) => {
       ...currentProfile,
       educationalDegrees: [...currentProfile.educationalDegrees, newEducation],
     };
-    fetch(`${endpoint}/users/${currentUser?.id}`, {
+    fetch(`${endpoint}/students/${currentUser?.id}`, {
       method: 'PUT',
-      headers: { 'Content-type': 'application/json' },
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${localUser?.token}`,
+      },
       body: JSON.stringify(updatedProfile),
     });
     setCurrentProfile((prev) => ({

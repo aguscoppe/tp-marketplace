@@ -9,8 +9,8 @@ import {
 import Navbar from '../components/NavBar';
 import Snack from '../components/Snack';
 import { useState, useContext } from 'react';
-import { endpoint, useLogin } from '../hooks';
-import { Navigate } from 'react-router-dom';
+import { endpoint } from '../hooks';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
 
 const styles = {
@@ -21,9 +21,9 @@ const styles = {
 };
 
 const Register = () => {
-  const { login } = useLogin();
+  const navigate = useNavigate();
   const currentUser = useContext(UserContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(
+  const [isRegistered, setIsRegistered] = useState(
     currentUser?.length ? true : false
   );
   const [newUser, setNewUser] = useState({
@@ -53,12 +53,7 @@ const Register = () => {
       body: JSON.stringify(newUser),
     }).then(async (res) => {
       if (res.status === 201) {
-        await login(email, password);
-        setSnackbarData({
-          message: 'Te has registrado correctamente.',
-          open: true,
-          type: 'success',
-        });
+        setIsRegistered(true);
       } else {
         setSnackbarData({
           message: 'Email o contraseña incorrectos.',
@@ -77,8 +72,16 @@ const Register = () => {
     });
   };
 
-  if (isLoggedIn) {
-    return <Navigate to='/' />;
+  if (isRegistered) {
+    return navigate('/login', {
+      state: {
+        snackbar: {
+          open: true,
+          type: 'success',
+          message: 'Te has registrado correctamente!',
+        },
+      },
+    });
   }
 
   const handleCloseSnack = () => {
